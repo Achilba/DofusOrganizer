@@ -78,6 +78,7 @@ public class MainViewModel : ObservableObject
     public RelayCommand ShowMiniCommand { get; }
     public RelayCommand ShowMainCommand { get; }
     public RelayCommand ExportCommand { get; }
+    public RelayCommand CopyBackupCommand { get; }
     public RelayCommand ImportCommand { get; }
     public RelayCommand OpenFolderCommand { get; }
     public RelayCommand UndoCommand { get; }
@@ -180,6 +181,7 @@ public class MainViewModel : ObservableObject
         ShowMiniCommand = new RelayCommand(() => MiniModeRequested?.Invoke(true));
         ShowMainCommand = new RelayCommand(() => MiniModeRequested?.Invoke(false));
         ExportCommand = new RelayCommand(Export);
+        CopyBackupCommand = new RelayCommand(CopyBackup);
         ImportCommand = new RelayCommand(Import);
         OpenFolderCommand = new RelayCommand(() => System.Diagnostics.Process.Start("explorer.exe", Storage.Dir));
         UndoCommand = new RelayCommand(RunUndo);
@@ -542,6 +544,21 @@ public class MainViewModel : ObservableObject
         if (dlg.ShowDialog() != true) return;
         try { Storage.ExportTo(dlg.FileName, Data); ShowToast("Données exportées"); }
         catch (Exception ex) { Status = "Export impossible : " + ex.Message; }
+    }
+
+    private void CopyBackup()
+    {
+        var dlg = new Microsoft.Win32.OpenFolderDialog { Title = "Choisir le dossier où copier la sauvegarde" };
+        if (!string.IsNullOrEmpty(Data.ExternalBackupDir) && System.IO.Directory.Exists(Data.ExternalBackupDir)) dlg.InitialDirectory = Data.ExternalBackupDir;
+        if (dlg.ShowDialog() != true) return;
+        try
+        {
+            Storage.CopyTo(dlg.FolderName, Data);
+            Data.ExternalBackupDir = dlg.FolderName;
+            RequestSave();
+            ShowToast("Sauvegarde copiée");
+        }
+        catch (Exception ex) { Status = "Copie impossible : " + ex.Message; }
     }
 
     private void Import()

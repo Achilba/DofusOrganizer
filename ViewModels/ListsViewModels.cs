@@ -44,8 +44,11 @@ public class DungeonsViewModel : ObservableObject
     private string _query = "";
     private string _sort = "niveau croissant";
     private bool _hideDone;
+    private string _levelFilter = "tous";
 
     public ObservableCollection<DungeonItem> View { get; } = new();
+    public string[] LevelFilterChoices { get; } = { "tous", "1 à 50", "51 à 100", "101 à 150", "151 et plus" };
+    public string LevelFilter { get => _levelFilter; set { if (value != null && Set(ref _levelFilter, value)) Refresh(); } }
     public string[] SortChoices { get; } = { "niveau croissant", "niveau décroissant", "nom (A → Z)" };
 
     public DungeonsViewModel(MainViewModel main)
@@ -79,11 +82,20 @@ public class DungeonsViewModel : ObservableObject
         if (_hideDone) Refresh();
     }
 
+    private bool InLevelRange(int n) => _levelFilter switch
+    {
+        "1 à 50" => n <= 50,
+        "51 à 100" => n >= 51 && n <= 100,
+        "101 à 150" => n >= 101 && n <= 150,
+        "151 et plus" => n >= 151,
+        _ => true
+    };
+
     private void Refresh()
     {
         var q = _query.Trim().ToLowerInvariant();
         IEnumerable<DungeonItem> items = _all.Where(d =>
-            (!_hideDone || !d.Done) &&
+            (!_hideDone || !d.Done) && InLevelRange(d.LevelNum) &&
             (q.Length == 0 || (d.Name + " " + d.LevelText + " " + d.Pos).ToLowerInvariant().Contains(q)));
 
         items = _sort switch

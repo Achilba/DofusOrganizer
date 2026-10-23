@@ -90,6 +90,15 @@ public class Storage
         File.Copy(FilePath, path, true);
     }
 
+    /// <summary>Copie les données actuelles dans un dossier choisi (autre disque, clé USB, cloud…).</summary>
+    public string CopyTo(string folder, AppData data)
+    {
+        Save(data);
+        var dest = Path.Combine(folder, "DofusTeamOrganizer-" + DateTime.Now.ToString("yyyyMMdd-HHmm") + ".json");
+        File.Copy(FilePath, dest, true);
+        return dest;
+    }
+
     /// <summary>Importe un fichier exporté. Renvoie null si le fichier n'est pas valide.</summary>
     public AppData Import(string path)
     {

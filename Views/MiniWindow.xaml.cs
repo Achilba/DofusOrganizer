@@ -41,19 +41,35 @@ public partial class MiniWindow : Window
         {
             _placed = true;
             var wa = SystemParameters.WorkArea;
-            Left = vm.Data.MiniLeft ?? (wa.Left + (wa.Width - Width) / 2);
-            Top = vm.Data.MiniTop ?? (wa.Top + 8);
+            vm.Data.MiniPositions ??= new();
+            if (vm.Data.MiniPositions.TryGetValue(ScreenKey(), out var p) && p != null && p.Length == 2)
+            {
+                Left = p[0];
+                Top = p[1];
+            }
+            else
+            {
+                Left = vm.Data.MiniLeft ?? (wa.Left + (wa.Width - Width) / 2);
+                Top = vm.Data.MiniTop ?? (wa.Top + 8);
+            }
             // garde la barre à l'écran si l'écran a changé
             Left = Math.Max(SystemParameters.VirtualScreenLeft, Math.Min(Left, SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth - 100));
             Top = Math.Max(SystemParameters.VirtualScreenTop, Math.Min(Top, SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight - 60));
         }
     }
 
+    /// <summary>Identifie la configuration d'écrans actuelle (nombre, taille et position des écrans).</summary>
+    private static string ScreenKey() =>
+        (int)SystemParameters.VirtualScreenLeft + "," + (int)SystemParameters.VirtualScreenTop + "," +
+        (int)SystemParameters.VirtualScreenWidth + "x" + (int)SystemParameters.VirtualScreenHeight;
+
     private void RememberPosition()
     {
         if (!_placed || Vm == null || !IsVisible) return;
         Vm.Data.MiniLeft = Left;
         Vm.Data.MiniTop = Top;
+        Vm.Data.MiniPositions ??= new();
+        Vm.Data.MiniPositions[ScreenKey()] = new[] { Left, Top };
         Vm.RequestSave();
     }
 

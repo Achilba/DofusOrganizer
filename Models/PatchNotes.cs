@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.17";
+    public const string Current = "0.4.18";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.18", "23/10/2026", new[]
+        {
+            "NOUVEAU — Mini-barre : la position est mémorisée pour chaque configuration d'écrans (changement d'écran ou de résolution : la barre retrouve sa place).",
+            "NOUVEAU — Donjons : filtre par niveau (1 à 50, 51 à 100, 101 à 150, 151 et plus).",
+            "NOUVEAU — Paramètres : bouton « Copier ailleurs » pour copier tes données dans un autre dossier (autre disque, clé USB, cloud).",
+        }),
         new("0.4.17", "23/10/2026", new[]
         {
             "AMÉLIORÉ — Mini-barre : la pastille de mise à jour est sur le bouton de retour au format normal (en barre compacte, qui n'a pas ce bouton, elle reste sur le triangle).",

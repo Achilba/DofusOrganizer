@@ -53,6 +53,7 @@
                         <Button Content="Exporter mes données" Command="{Binding ExportCommand}" Style="{StaticResource Big}" Background="{StaticResource Accent}"
                                 Foreground="{StaticResource AccentText}" BorderBrush="{StaticResource Accent}" Margin="0,0,8,0"/>
                         <Button Content="Importer une sauvegarde" Command="{Binding ImportCommand}" Style="{StaticResource Big}" Margin="0,0,8,0"/>
+                        <Button Content="Copier ailleurs" Command="{Binding CopyBackupCommand}" Style="{StaticResource Big}" Margin="0,0,8,0" ToolTip="Copie tes données dans un autre dossier (autre disque, clé USB, cloud)"/>
                         <Button Content="Ouvrir le dossier" Command="{Binding OpenFolderCommand}" Style="{StaticResource Big}"/>
                     </StackPanel>
                 </StackPanel>

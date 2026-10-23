@@ -103,11 +103,15 @@ public class AppData
     public double MiniOpacity { get; set; } = 1.0;
     public double? MiniLeft { get; set; }
     public double? MiniTop { get; set; }
+    /// <summary>Position de la mini-barre mémorisée par configuration d'écrans (clé = taille et origine de l'écran virtuel).</summary>
+    public Dictionary<string, double[]> MiniPositions { get; set; } = new();
     public bool StartInMini { get; set; } = false;
     public bool AutoBackup { get; set; } = true;
     public bool RememberMiniPosition { get; set; } = true;
     public bool MiniCompact { get; set; } = false;
     public string LastBackup { get; set; } = "";
+    /// <summary>Dernier dossier choisi pour « Copier ailleurs ».</summary>
+    public string ExternalBackupDir { get; set; } = "";
     public string LastSeenVersion { get; set; } = "";
 
     public List<string> FavoriteZaaps { get; set; } = new(ZaapData.DefaultFavorites);
