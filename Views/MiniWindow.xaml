@@ -28,13 +28,13 @@
 
                         <!-- Compacte / complète -->
             <Button Grid.Column="1" Command="{Binding ToggleCompactCommand}" Width="44" Height="44" Padding="0" Margin="0,0,10,0" ToolTip="Barre compacte / complète">
-                <Path Stroke="{StaticResource Text}" Width="18" Height="18">
+                <Path Width="14" Height="14" Stretch="Uniform" Fill="{StaticResource Text}" Stroke="{StaticResource Text}" StrokeThickness="2" StrokeLineJoin="Round">
                     <Path.Style>
-                        <Style TargetType="Path" BasedOn="{StaticResource Icon}">
-                            <Setter Property="Data" Value="{StaticResource IcoMinus}"/>
+                        <Style TargetType="Path">
+                            <Setter Property="Data" Value="M16 4L6 12L16 20Z"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding MiniCompact}" Value="True">
-                                    <Setter Property="Data" Value="{StaticResource IcoExpand}"/>
+                                    <Setter Property="Data" Value="M8 4L18 12L8 20Z"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -49,9 +49,6 @@
                     <ControlTemplate TargetType="ToggleButton">
                         <Border x:Name="b" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="8" Padding="12,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Border Background="{StaticResource KeyBg}" CornerRadius="5" Padding="7,1" Margin="0,0,10,0">
-                                    <TextBlock Text="*" FontFamily="{StaticResource BodyXB}" FontSize="12" Foreground="{StaticResource Text}"/>
-                                </Border>
                                 <TextBlock x:Name="lbl" Text="OFF" Foreground="{StaticResource Muted}" FontFamily="{StaticResource BodyXB}" MinWidth="26" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                 <Border x:Name="track" Width="42" Height="24" CornerRadius="12" Background="#3A4150">
                                     <Ellipse x:Name="knob" Width="18" Height="18" Fill="{StaticResource Muted}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
@@ -80,9 +77,6 @@
                     Background="{StaticResource Accent}" Foreground="{StaticResource AccentText}" BorderBrush="{StaticResource Accent}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Invitations"/>
-                    <Border Background="{StaticResource AccentText}" CornerRadius="5" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="F12" FontSize="11" Foreground="{StaticResource Accent}"/>
-                    </Border>
                 </StackPanel>
             </Button>
 

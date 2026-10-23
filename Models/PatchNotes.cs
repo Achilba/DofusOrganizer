@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.12";
+    public const string Current = "0.4.13";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.13", "23/10/2026", new[]
+        {
+            "AMÉLIORÉ — Mini-barre : le bouton compacte/complète est un triangle plein (◀ réduire, ▶ agrandir).",
+            "AMÉLIORÉ — Mini-barre : les indications de touches (* et F12) ne sont plus affichées.",
+        }),
         new("0.4.12", "23/10/2026", new[]
         {
             "CORRIGÉ — Personnages : le niveau (ex. 300) n'était plus affiché en entier, le champ est élargi.",
