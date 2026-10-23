@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.8";
+    public const string Current = "0.4.9";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.9", "23/10/2026", new[]
+        {
+            "AMÉLIORÉ — Mini-barre compacte : la fenêtre s'ajuste exactement à son contenu, plus d'espace vide à droite.",
+        }),
         new("0.4.8", "23/10/2026", new[]
         {
             "AMÉLIORÉ — Les listes et champs (personnage, classe, niveau, faction, ordre, métier, version, tri) sont ajustés à la taille du plus long mot qu'ils peuvent contenir. Les Zaaps ne changent pas.",

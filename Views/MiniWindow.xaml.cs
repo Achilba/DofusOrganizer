@@ -27,7 +27,16 @@ public partial class MiniWindow : Window
         var vm = Vm;
         if (vm == null) return;
         Topmost = vm.Data.MiniAlwaysOnTop;
-        Width = vm.Data.MiniCompact ? 520 : 940;
+        if (vm.Data.MiniCompact)
+        {
+            // Barre compacte : la fenêtre s'ajuste exactement à son contenu (plus d'espace vide à droite)
+            SizeToContent = SizeToContent.Width;
+        }
+        else
+        {
+            SizeToContent = SizeToContent.Manual;
+            Width = 940;
+        }
         if (!_placed)
         {
             _placed = true;
