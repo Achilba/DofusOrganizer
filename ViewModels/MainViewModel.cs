@@ -21,6 +21,23 @@ public class NavItem : ObservableObject
     public bool Badge { get => _badge; set => Set(ref _badge, value); }
 }
 
+/// <summary>Une ligne de la liste des raccourcis dans Paramètres.</summary>
+public class ShortcutRow : ObservableObject
+{
+    private string _keyText = "";
+    private bool _capturing;
+    private string _message = "";
+
+    public ShortcutRow(string action) { Action = action; Label = ShortcutDefs.Label(action); }
+
+    public string Action { get; }
+    public string Label { get; }
+    public string KeyText { get => _keyText; set { if (Set(ref _keyText, value)) Raise(nameof(ButtonText)); } }
+    public bool Capturing { get => _capturing; set { if (Set(ref _capturing, value)) Raise(nameof(ButtonText)); } }
+    public string Message { get => _message; set => Set(ref _message, value); }
+    public string ButtonText => _capturing ? "Appuie sur une touche…" : _keyText;
+}
+
 public class NoteHit
 {
     public string Key { get; set; }
@@ -66,6 +83,72 @@ public class MainViewModel : ObservableObject
     public ObservableCollection<DofusItem> SpecialDofus { get; } = new();
     public ObservableCollection<string> NoteKeys { get; } = new();
     public ObservableCollection<NavItem> NavItems { get; } = new();
+    /// <summary>Onglets du haut de la barre latérale (tous sauf Paramètres).</summary>
+    public ObservableCollection<NavItem> TopNavItems { get; } = new();
+    /// <summary>Onglet du bas de la barre latérale (Paramètres).</summary>
+    public ObservableCollection<NavItem> BottomNavItems { get; } = new();
+
+    // ── Raccourcis modifiables ──
+    public ObservableCollection<ShortcutRow> ShortcutRows { get; } = new();
+    public RelayCommand ShortcutClickCommand { get; private set; }
+    public RelayCommand ResetShortcutsCommand { get; private set; }
+
+    public ShortcutSpec GetShortcut(string action)
+        => Data.Shortcuts != null && Data.Shortcuts.TryGetValue(action, out var s) && s != null && s.Vk > 0 ? s : ShortcutDefs.Default(action);
+
+    private void BuildShortcutRows()
+    {
+        ShortcutRows.Clear();
+        foreach (var a in ShortcutDefs.All)
+            ShortcutRows.Add(new ShortcutRow(a) { KeyText = ShortcutDefs.Display(GetShortcut(a)) });
+    }
+
+    /// <summary>Clic sur une touche : la ligne attend la prochaine touche pressée.</summary>
+    private void ShortcutClick(object p)
+    {
+        foreach (var r in ShortcutRows) { r.Capturing = false; r.Message = ""; }
+        if (p is ShortcutRow row) row.Capturing = true;
+    }
+
+    /// <summary>Appelée par la page Paramètres quand une touche est pressée pendant la saisie.</summary>
+    public void AssignShortcut(ShortcutRow row, int mods, int vk)
+    {
+        if (vk == 0x6A && mods == 0) vk = 0xDC; // * du pavé numérique = * (les deux sont enregistrés ensemble)
+
+        string error = null;
+        if (vk == 0x7B && mods == 0 && row.Action != ShortcutDefs.Invites)
+            error = "F12 est réservée à « Copier les invitations » (Windows la refuse pour les autres raccourcis).";
+        else if (row.Action == ShortcutDefs.Toggle && (mods & (1 | 2 | 8)) == 0)
+            error = "Le raccourci global doit contenir Ctrl, Alt ou Windows, sinon il bloquerait cette touche partout.";
+        else if (row.Action != ShortcutDefs.Toggle && (mods & (1 | 2 | 8)) == 0 && !ShortcutDefs.AllowedAlone(vk))
+            error = "Une lettre ou un chiffre seul gênerait l'écriture dans DOFUS : choisis une touche F1…F12, * ou ajoute Ctrl / Alt.";
+        else
+        {
+            var spec = new ShortcutSpec(mods, vk);
+            foreach (var other in ShortcutDefs.All)
+                if (other != row.Action && GetShortcut(other).Same(spec))
+                { error = "Déjà utilisé par « " + ShortcutDefs.Label(other) + " »."; break; }
+        }
+
+        if (error != null) { row.Message = error; row.Capturing = false; return; }
+
+        Data.Shortcuts ??= new();
+        Data.Shortcuts[row.Action] = new ShortcutSpec(mods, vk);
+        row.KeyText = ShortcutDefs.Display(Data.Shortcuts[row.Action]);
+        row.Message = "";
+        row.Capturing = false;
+        RequestSave();
+        Hotkeys.Apply(GetShortcut);
+    }
+
+    private void ResetShortcuts()
+    {
+        Data.Shortcuts?.Clear();
+        BuildShortcutRows();
+        RequestSave();
+        Hotkeys.Apply(GetShortcut);
+        ShowToast("Raccourcis rétablis");
+    }
 
     public CharactersViewModel CharactersPage { get; private set; }
     public DungeonsViewModel Dungeons { get; private set; }
@@ -173,7 +256,13 @@ public class MainViewModel : ObservableObject
                                             ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"),
                                             ("notes", "Notes", "IcoNotes"), ("settings", "Paramètres", "IcoSettings") })
             NavItems.Add(new NavItem(k, l, Application.Current.TryFindResource(ico) as Geometry));
+        foreach (var n in NavItems) (n.Key == "settings" ? BottomNavItems : TopNavItems).Add(n);
         UpdateNav();
+
+        ShortcutClickCommand = new RelayCommand(ShortcutClick);
+        ResetShortcutsCommand = new RelayCommand(ResetShortcuts);
+        BuildShortcutRows();
+        Hotkeys.Apply(GetShortcut);
 
         NavigateCommand = new RelayCommand(p => Page = (string)p);
         CopyInvitesCommand = new RelayCommand(CopyInvites);
@@ -386,12 +475,14 @@ public class MainViewModel : ObservableObject
     }
 
     private DofusItem NewDofus(string name, string color, bool special, string future)
-        => new(name, color, special, future, Data.DofusDone.Contains(name), OnDofusChanged);
+        => new(name, color, special, future, Data.DofusDone.Contains(name), Data.DofusStarted.Contains(name), OnDofusChanged);
 
     private void OnDofusChanged(DofusItem item)
     {
         if (item.Done) { if (!Data.DofusDone.Contains(item.Name)) Data.DofusDone.Add(item.Name); }
         else Data.DofusDone.Remove(item.Name);
+        if (item.Started) { if (!Data.DofusStarted.Contains(item.Name)) Data.DofusStarted.Add(item.Name); }
+        else Data.DofusStarted.Remove(item.Name);
         Raise(nameof(MainCounter)); Raise(nameof(MainPct)); Raise(nameof(SpecialCounter)); Raise(nameof(SpecialPct)); Raise(nameof(SpecialCounterSpaced));
         RequestSave();
     }

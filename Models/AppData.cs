@@ -105,6 +105,8 @@ public class AppData
     public double? MiniTop { get; set; }
     /// <summary>Position de la mini-barre mémorisée par configuration d'écrans (clé = taille et origine de l'écran virtuel).</summary>
     public Dictionary<string, double[]> MiniPositions { get; set; } = new();
+    /// <summary>Raccourcis personnalisés (clé = action). Absent : valeur par défaut.</summary>
+    public Dictionary<string, ShortcutSpec> Shortcuts { get; set; } = new();
     public bool StartInMini { get; set; } = false;
     public bool AutoBackup { get; set; } = true;
     public bool RememberMiniPosition { get; set; } = true;
@@ -116,6 +118,8 @@ public class AppData
 
     public List<string> FavoriteZaaps { get; set; } = new(ZaapData.DefaultFavorites);
     public List<string> DofusDone { get; set; } = new();
+    /// <summary>Dofus au statut « Démarré » (ni à faire, ni terminé).</summary>
+    public List<string> DofusStarted { get; set; } = new();
     public List<string> DungeonsDone { get; set; } = new();
     public List<string> AlmanaxDone { get; set; } = new();
     public List<string> AlmanaxPrepared { get; set; } = new();

@@ -9,15 +9,17 @@ namespace DofusTeamOrganizer.ViewModels;
 public class DofusItem : ObservableObject
 {
     private bool _done;
+    private bool _started;
     private readonly Action<DofusItem> _changed;
 
-    public DofusItem(string name, string color, bool special, string future, bool done, Action<DofusItem> changed)
+    public DofusItem(string name, string color, bool special, string future, bool done, bool started, Action<DofusItem> changed)
     {
         Name = name;
         Color = color;
         Special = special;
         Future = future;
         _done = done;
+        _started = started && !done;
         _changed = changed;
         Icon = LoadIcon(name);
     }
@@ -92,12 +94,30 @@ public class DofusItem : ObservableObject
         ["Dotruche"] = 110
     };
 
-    public bool Done
+    public bool Done => _done;
+    public bool Started => _started;
+
+    /// <summary>Texte du statut, écrit sous le niveau.</summary>
+    public string StatusText => _done ? "Terminé" : (_started ? "En cours" : "À faire");
+
+    /// <summary>
+    /// État de la case, qui passe à chaque clic de « À faire » (false) à « En cours » (true) puis « Terminé » (null),
+    /// puis revient à « À faire » (c'est l'ordre des états d'une case à trois états).
+    /// </summary>
+    public bool? CheckState
     {
-        get => _done;
+        get => _done ? null : (_started ? true : false);
         set
         {
-            if (!Set(ref _done, value)) return;
+            var done = value == null;
+            var started = value == true;
+            if (done == _done && started == _started) return;
+            _done = done;
+            _started = started;
+            Raise(nameof(CheckState));
+            Raise(nameof(Done));
+            Raise(nameof(Started));
+            Raise(nameof(StatusText));
             _changed?.Invoke(this);
         }
     }

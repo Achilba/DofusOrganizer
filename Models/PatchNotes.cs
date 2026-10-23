@@ -5,11 +5,20 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.18";
+    public const string Current = "0.5.0";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.5.0", "23/10/2026", new[]
+        {
+            "NOUVEAU — Raccourcis modifiables (Paramètres > Raccourcis) : clique sur une touche puis appuie sur la nouvelle. Chaque raccourci est contrôlé (pas de doublon, pas de lettre seule qui gênerait le chat de DOFUS) et un bouton rétablit les valeurs par défaut.",
+            "NOUVEAU — Dofus : trois statuts au clic, « À faire », puis « En cours » (orange), puis « Terminé » (vert), écrits sous le niveau. Les compteurs ne comptent que les Dofus terminés.",
+        }),
+        new("0.4.19", "23/10/2026", new[]
+        {
+            "AMÉLIORÉ — Barre latérale : « Paramètres » est en bas de la liste ; le bloc « Listes intégrées / Ctrl+Alt+O Masquer / version » est retiré (la version reste visible ici, dans les notes de version).",
+        }),
         new("0.4.18", "23/10/2026", new[]
         {
             "NOUVEAU — Mini-barre : la position est mémorisée pour chaque configuration d'écrans (changement d'écran ou de résolution : la barre retrouve sa place).",

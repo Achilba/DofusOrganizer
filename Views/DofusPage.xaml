@@ -4,7 +4,8 @@
     <UserControl.Resources>
         <Style x:Key="EggTileStyle" TargetType="ToggleButton">
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Height" Value="96"/>
+            <Setter Property="Height" Value="116"/>
+            <Setter Property="IsThreeState" Value="True"/>
             <Setter Property="Foreground" Value="{StaticResource Text}"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -47,12 +48,18 @@
                                         </Canvas>
                                     </Viewbox>
                                     <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="14" TextAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/>
-                                    <TextBlock x:Name="st" Text="{Binding Subtitle}" Foreground="{StaticResource Muted}" FontSize="11.5" TextAlignment="Center"/>
+                                    <TextBlock Text="{Binding Subtitle}" Foreground="{StaticResource Muted}" FontSize="11.5" TextAlignment="Center"/>
+                                    <TextBlock x:Name="st" Text="{Binding StatusText}" Foreground="{StaticResource Dim}" FontFamily="{StaticResource BodyXB}" FontSize="11.5" TextAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="#26F2963C"/>
+                                <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Warn}"/>
+                                <Setter TargetName="st" Property="Foreground" Value="{StaticResource WarnText}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
                                 <Setter TargetName="b" Property="Background" Value="#243DD68C"/>
                                 <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Good}"/>
                                 <Setter TargetName="badge" Property="Visibility" Value="Visible"/>
@@ -67,7 +74,7 @@
             </Setter>
         </Style>
         <DataTemplate x:Key="EggTile">
-            <ToggleButton Style="{StaticResource EggTileStyle}" IsChecked="{Binding Done, Mode=TwoWay}" Margin="0,0,12,12"/>
+            <ToggleButton Style="{StaticResource EggTileStyle}" IsChecked="{Binding CheckState, Mode=TwoWay}" Margin="0,0,12,12"/>
         </DataTemplate>
     </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">

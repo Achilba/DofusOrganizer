@@ -1,12 +1,14 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using DofusTeamOrganizer.Models;
 
 namespace DofusTeamOrganizer.Services;
 
 /// <summary>
-/// Raccourcis via RegisterHotKey. Seul Ctrl+Alt+O est global ;
+/// Raccourcis via RegisterHotKey. Seul « Afficher / masquer » (Ctrl+Alt+O par défaut) est global ;
 /// les autres ne sont enregistrés que lorsque DOFUS est au premier plan.
+/// Les raccourcis sont modifiables dans Paramètres (voir ShortcutDefs).
 /// </summary>
 public class HotkeyService : IDisposable
 {
@@ -15,6 +17,8 @@ public class HotkeyService : IDisposable
     private readonly HwndSource _source;
     private bool _contextual;
     private bool _swapKeys;
+    private Func<string, ShortcutSpec> _get = ShortcutDefs.Default;
+    private int _hookVk; // touche captée par le hook clavier (F12 uniquement), 0 si aucune
 
     public event Action<int> Pressed;
 
@@ -32,19 +36,38 @@ public class HotkeyService : IDisposable
         };
         _source = new HwndSource(p);
         _source.AddHook(Hook);
-        // Ctrl+Alt+O (global)
-        Native.RegisterHotKey(_source.Handle, ToggleId, Native.MOD_CONTROL | Native.MOD_ALT | Native.MOD_NOREPEAT, 0x4F);
+        RegisterToggle();
 
         _hookProc = KeyboardHook;
         _hook = Native.SetWindowsHookEx(Native.WH_KEYBOARD_LL, _hookProc, Native.GetModuleHandle(null), 0);
     }
 
+    /// <summary>Applique les raccourcis choisis (appelé au démarrage et après chaque modification).</summary>
+    public void Apply(Func<string, ShortcutSpec> get)
+    {
+        _get = get ?? ShortcutDefs.Default;
+        Native.UnregisterHotKey(_source.Handle, ToggleId);
+        RegisterToggle();
+
+        // Force le ré-enregistrement des raccourcis contextuels
+        var active = _contextual;
+        var swap = _swapKeys;
+        _contextual = !active;
+        SetContextual(active, swap);
+    }
+
+    private void RegisterToggle()
+    {
+        var t = _get(ShortcutDefs.Toggle);
+        Native.RegisterHotKey(_source.Handle, ToggleId, (uint)t.Mods | Native.MOD_NOREPEAT, (uint)t.Vk);
+    }
+
     private IntPtr KeyboardHook(int nCode, IntPtr wParam, IntPtr lParam)
     {
-        if (nCode >= 0 && _contextual && wParam == (IntPtr)Native.WM_KEYDOWN)
+        if (nCode >= 0 && _contextual && _hookVk != 0 && wParam == (IntPtr)Native.WM_KEYDOWN)
         {
             int vk = Marshal.ReadInt32(lParam);
-            if (vk == 0x7B) // F12
+            if (vk == _hookVk)
             {
                 Application.Current?.Dispatcher.BeginInvoke(new Action(() => Pressed?.Invoke(InvitesId)));
                 return (IntPtr)1; // touche consommée
@@ -63,6 +86,12 @@ public class HotkeyService : IDisposable
         return IntPtr.Zero;
     }
 
+    private void Reg(int id, ShortcutSpec s)
+    {
+        if (s == null || s.Vk == 0) return;
+        Native.RegisterHotKey(_source.Handle, id, (uint)s.Mods | Native.MOD_NOREPEAT, (uint)s.Vk);
+    }
+
     /// <summary>Active ou désactive les raccourcis qui ne doivent fonctionner que dans DOFUS.</summary>
     public void SetContextual(bool dofusActive, bool swapEnabled)
     {
@@ -70,22 +99,31 @@ public class HotkeyService : IDisposable
         Unregister();
         _contextual = dofusActive;
         _swapKeys = swapEnabled;
+        _hookVk = 0;
         if (!dofusActive) return;
 
-        var h = _source.Handle;
-        Native.RegisterHotKey(h, MainCharId, Native.MOD_NOREPEAT, 0x70);  // F1
+        Reg(MainCharId, _get(ShortcutDefs.Main));
+
+        // « Copier les invitations » : F12 seule passe par le hook clavier, les autres touches par RegisterHotKey
+        var inv = _get(ShortcutDefs.Invites);
+        if (inv.Mods == 0 && inv.Vk == 0x7B) _hookVk = 0x7B;
+        else Reg(InvitesId, inv);
+
         if (swapEnabled)
         {
-            Native.RegisterHotKey(h, NextId, Native.MOD_NOREPEAT, 0x6A);    // * pavé numérique
-            Native.RegisterHotKey(h, NextAltId, Native.MOD_NOREPEAT, 0xDC); // touche * (AZERTY)
-            Native.RegisterHotKey(h, PrevId, Native.MOD_NOREPEAT, 0x75);    // F6
+            var next = _get(ShortcutDefs.Next);
+            Reg(NextId, next);
+            // Le * existe en deux versions (touche AZERTY et pavé numérique) : on enregistre les deux
+            if (next.Mods == 0 && next.Vk == 0xDC) Reg(NextAltId, new ShortcutSpec(0, 0x6A));
+            else if (next.Mods == 0 && next.Vk == 0x6A) Reg(NextAltId, new ShortcutSpec(0, 0xDC));
+            Reg(PrevId, _get(ShortcutDefs.Prev));
         }
     }
 
     private void Unregister()
     {
         var h = _source.Handle;
-        foreach (var id in new[] { MainCharId, NextId, NextAltId, PrevId })
+        foreach (var id in new[] { MainCharId, InvitesId, NextId, NextAltId, PrevId })
             Native.UnregisterHotKey(h, id);
     }
 

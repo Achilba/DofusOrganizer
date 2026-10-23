@@ -5,6 +5,23 @@
         Title="DOFUS Team Organizer" Width="1056" Height="839" MinWidth="960" MinHeight="680"
         Background="{StaticResource Bg}" Foreground="{StaticResource Text}"
         FontFamily="{StaticResource Body}" FontSize="13" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <DataTemplate x:Key="NavItemTemplate">
+            <Button x:Name="nav" Style="{StaticResource NavButton}" Margin="0,0,0,4"
+                    Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                    CommandParameter="{Binding Key}">
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource Icon}" Data="{Binding Icon}" Width="18" Height="18" StrokeThickness="1.8"
+                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    <TextBlock Text="{Binding Label}" Margin="12,0,0,0" FontFamily="{StaticResource BodyXB}" FontSize="14"
+                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Margin="8,0,0,0" VerticalAlignment="Center"
+                             ToolTip="Mise à jour disponible"
+                             Visibility="{Binding Badge, Converter={StaticResource BoolVis}}"/>
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -14,39 +31,8 @@
         <!-- Barre latérale -->
         <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,1,0">
             <DockPanel Margin="12,16">
-                <StackPanel DockPanel.Dock="Bottom" Margin="8,0,0,0">
-                    <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="0,12,0,0">
-                        <StackPanel>
-                            <TextBlock Text="Listes intégrées à l'appli" Foreground="{StaticResource Dim}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                <Border Style="{StaticResource KeyCap}" Padding="6,2">
-                                    <TextBlock Text="Ctrl+Alt+O" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
-                                </Border>
-                                <TextBlock Text="Masquer" Foreground="{StaticResource Muted}" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
-                            </StackPanel>
-                            <TextBlock Text="{Binding VersionText}" Foreground="{StaticResource Muted}" FontSize="12"/>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-                <ItemsControl ItemsSource="{Binding NavItems}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button x:Name="nav" Style="{StaticResource NavButton}" Margin="0,0,0,4"
-                                    Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                    CommandParameter="{Binding Key}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Path Style="{StaticResource Icon}" Data="{Binding Icon}" Width="18" Height="18" StrokeThickness="1.8"
-                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
-                                    <TextBlock Text="{Binding Label}" Margin="12,0,0,0" FontFamily="{StaticResource BodyXB}" FontSize="14"
-                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
-                                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Margin="8,0,0,0" VerticalAlignment="Center"
-                                             ToolTip="Mise à jour disponible"
-                                             Visibility="{Binding Badge, Converter={StaticResource BoolVis}}"/>
-                                </StackPanel>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding BottomNavItems}" ItemTemplate="{StaticResource NavItemTemplate}" Margin="0,8,0,0"/>
+                <ItemsControl ItemsSource="{Binding TopNavItems}" ItemTemplate="{StaticResource NavItemTemplate}"/>
             </DockPanel>
         </Border>
 
