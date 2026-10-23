@@ -1,3 +1,9 @@
+using System.Globalization;
+using System.Text;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
 namespace DofusTeamOrganizer.ViewModels;
 
 public class DofusItem : ObservableObject
@@ -13,6 +19,33 @@ public class DofusItem : ObservableObject
         Future = future;
         _done = done;
         _changed = changed;
+        Icon = LoadIcon(name);
+    }
+
+    /// <summary>Icône officielle (Assets\&lt;nom&gt;.png), null si le fichier n'existe pas : l'œuf coloré est alors affiché.</summary>
+    public ImageSource Icon { get; }
+
+    private static ImageSource LoadIcon(string name)
+    {
+        try
+        {
+            var sb = new StringBuilder();
+            foreach (var ch in name.Normalize(NormalizationForm.FormD))
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(ch) == UnicodeCategory.NonSpacingMark) continue;
+                sb.Append(char.IsLetterOrDigit(ch) ? char.ToLowerInvariant(ch) : '-');
+            }
+            var uri = new Uri("pack://application:,,,/Assets/" + sb.ToString().Trim('-') + ".png", UriKind.Absolute);
+            if (Application.GetResourceStream(uri) == null) return null;
+            var bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.UriSource = uri;
+            bmp.CacheOption = BitmapCacheOption.OnLoad;
+            bmp.EndInit();
+            bmp.Freeze();
+            return bmp;
+        }
+        catch { return null; }
     }
 
     public string Name { get; }

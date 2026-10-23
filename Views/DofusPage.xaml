@@ -17,7 +17,28 @@
                                           StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
                                 </Border>
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Image Source="{Binding Icon}" Width="40" Height="40" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
                                     <Viewbox Width="34" Height="40" HorizontalAlignment="Center">
+                                        <Viewbox.Style>
+                                            <Style TargetType="Viewbox">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Viewbox.Style>
                                         <Canvas Width="40" Height="48">
                                             <Path Data="{StaticResource IcoEgg}" Fill="{Binding Color, Converter={StaticResource HexBrush}}" Stroke="#59FFFFFF" StrokeThickness="1.5"/>
                                             <Ellipse Canvas.Left="10" Canvas.Top="9" Width="8" Height="14" Fill="#59FFFFFF" RenderTransformOrigin="0.5,0.5">

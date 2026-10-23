@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.2";
+    public const string Current = "0.4.3";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.3", "23/10/2026", new[]
+        {
+            "NOUVEAU — Icône officielle du Dofus Pourpre. Les autres icônes s'afficheront dès que leur fichier sera ajouté (dossier Assets).",
+        }),
         new("0.4.2", "23/10/2026", new[]
         {
             "NOUVEAU — Pastille orange sur « Paramètres » quand une nouvelle version est disponible.",
