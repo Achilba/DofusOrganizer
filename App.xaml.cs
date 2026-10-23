@@ -56,8 +56,8 @@ public partial class App : Application
         if (data.StartInMini) SetMini(true); else SetMini(false);
 
         _ = _vm.CheckUpdateAsync(silent: true);
-        // Revérifie toutes les 30 minutes tant que l'appli est ouverte (la pastille « Paramètres » apparaît alors toute seule)
-        var updateTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMinutes(30) };
+        // Revérifie toutes les 5 minutes tant que l'appli est ouverte (la pastille « Paramètres » apparaît alors toute seule)
+        var updateTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
         updateTimer.Tick += (_, _) => _ = _vm.CheckUpdateAsync(silent: true);
         updateTimer.Start();
 

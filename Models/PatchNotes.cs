@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.4";
+    public const string Current = "0.4.5";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.5", "23/10/2026", new[]
+        {
+            "AMÉLIORÉ — Vérification des mises à jour toutes les 5 minutes (au lieu de 30) : la pastille « Paramètres » apparaît plus vite, sans relancer l'appli.",
+        }),
         new("0.4.4", "23/10/2026", new[]
         {
             "AMÉLIORÉ — L'appli revérifie les mises à jour toutes les 30 minutes : la pastille orange apparaît sur « Paramètres » sans avoir à relancer.",
