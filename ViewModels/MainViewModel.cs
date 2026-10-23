@@ -92,6 +92,7 @@ public class MainViewModel : ObservableObject
     private UpdateInfo _update;
     private string _updateText = "";
     private bool _updateBusy;
+    private string _notifiedVersion = "";
     public string UpdateText { get => _updateText; private set => Set(ref _updateText, value); }
     private void RaiseUpdate()
     {
@@ -115,7 +116,11 @@ public class MainViewModel : ObservableObject
             if (_update != null)
             {
                 UpdateText = "Version " + _update.Version + " disponible.";
-                if (silent) ShowToast("Mise à jour " + _update.Version + " disponible (Paramètres)");
+                if (silent && _notifiedVersion != _update.Version)
+                {
+                    _notifiedVersion = _update.Version;
+                    ShowToast("Mise à jour " + _update.Version + " disponible (Paramètres)");
+                }
             }
             else if (!silent) UpdateText = "Tu as la dernière version (" + PatchNotes.Current + ").";
             else UpdateText = "";
