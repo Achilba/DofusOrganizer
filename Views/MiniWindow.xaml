@@ -28,6 +28,7 @@
 
                         <!-- Compacte / complète -->
             <Button Grid.Column="1" Command="{Binding ToggleCompactCommand}" Width="44" Height="44" Padding="0" Margin="0,0,10,0" ToolTip="Barre compacte / complète">
+                <Grid>
                 <Path Width="14" Height="14" Stretch="Uniform" Fill="{StaticResource Text}" Stroke="{StaticResource Text}" StrokeThickness="2" StrokeLineJoin="Round">
                     <Path.Style>
                         <Style TargetType="Path">
@@ -40,6 +41,10 @@
                         </Style>
                     </Path.Style>
                 </Path>
+                    <Ellipse Width="12" Height="12" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-17,-17,0"
+                             ToolTip="Mise à jour disponible (Paramètres)"
+                             Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
+                </Grid>
             </Button>
 
             <!-- Touche * -->

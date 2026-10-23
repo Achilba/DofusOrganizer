@@ -116,7 +116,7 @@ public class MainViewModel : ObservableObject
             if (_update != null)
             {
                 UpdateText = "Version " + _update.Version + " disponible.";
-                if (silent && _notifiedVersion != _update.Version)
+                if (silent && _notifiedVersion != _update.Version && !Data.StartInMini)
                 {
                     _notifiedVersion = _update.Version;
                     ShowToast("Mise à jour " + _update.Version + " disponible (Paramètres)");
