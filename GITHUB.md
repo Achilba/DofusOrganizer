@@ -12,25 +12,13 @@ Dans le dossier du projet (celui qui contient DofusTeamOrganizer.csproj), ouvre 
     git remote add origin https://github.com/Achilba/DofusOrganizer.git
     git push -u origin main
 
-## 2. Publier la version (GitHub compile pour toi)
-
-    git tag v0.4.0
-    git push origin v0.4.0
-
-Onglet « Actions » du dépôt : la compilation prend 2 à 3 minutes.
-Ensuite, onglet « Releases » : tu y trouves DofusTeamOrganizer.exe.
+## 2. Publier une version
+Rien à faire de plus : à chaque envoi sur la branche main, GitHub compile la version écrite dans
+DofusTeamOrganizer.csproj et la publie dans « Releases » (onglet Actions : 2 à 3 minutes).
 
 ## 3. Les fois suivantes
-Je te donne les fichiers modifiés (ou le zip). Tu remplaces les fichiers du dossier, puis :
-
-    git add .
-    git commit -m "Version 0.4.1"
-    git push
-    git tag v0.4.1
-    git push origin v0.4.1
-
-Les appli déjà installées proposent la mise à jour dans Paramètres > Mises à jour
-(et affichent « Mise à jour disponible » au lancement).
+Remplace les fichiers du dossier, puis : git add . / git commit / git push.
+Les appli déjà installées proposent la mise à jour dans Paramètres > Mises à jour.
 
 ## Dépôt privé ?
 Le plus simple est un dépôt public (le code ne contient aucune donnée personnelle).

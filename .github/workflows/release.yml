@@ -1,10 +1,13 @@
 name: Publier une version
 
-# Se déclenche quand tu envoies une étiquette de version, par exemple v0.4.1
+# À chaque envoi sur la branche main, la version écrite dans DofusTeamOrganizer.csproj est compilée
+# puis publiée dans « Releases » (si cette version n'existe pas encore).
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,13 +22,20 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Lire la version
+        id: ver
+        shell: pwsh
+        run: |
+          $xml = [xml](Get-Content DofusTeamOrganizer.csproj)
+          $v = $xml.Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+          "version=$v" >> $env:GITHUB_OUTPUT
+
       - name: Compiler
         shell: pwsh
         run: |
-          $version = "${{ github.ref_name }}".TrimStart('v')
           dotnet publish DofusTeamOrganizer.csproj -c Release -r win-x64 --self-contained true `
             -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
-            -p:Version=$version -o publish
+            -p:Version=${{ steps.ver.outputs.version }} -o publish
           if (-not (Test-Path publish/DofusTeamOrganizer.exe)) { throw "exe introuvable" }
 
       - name: Publier la release
@@ -33,9 +43,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag = "${{ github.ref_name }}"
+          $tag = "v${{ steps.ver.outputs.version }}"
           gh release view $tag 2>$null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $tag --title "Version $($tag.TrimStart('v'))" --generate-notes
+            gh release create $tag --target ${{ github.sha }} --title "Version ${{ steps.ver.outputs.version }}" --generate-notes
           }
           gh release upload $tag publish/DofusTeamOrganizer.exe --clobber
