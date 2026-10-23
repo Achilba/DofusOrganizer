@@ -2,13 +2,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:DofusTeamOrganizer.Views"
-        Title="DOFUS Team Organizer (mini)" Height="52" Width="980" ResizeMode="NoResize" WindowStyle="None"
+        Title="DOFUS Team Organizer (mini)" Height="44" Width="980" ResizeMode="NoResize" WindowStyle="None"
         AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False" Topmost="True"
         Foreground="{StaticResource Text}" FontFamily="{StaticResource Body}" WindowStartupLocation="Manual"
         Opacity="{Binding MiniOpacity}">
-    <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="12" Height="44" Margin="4"
+    <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="12" Height="44" Margin="0"
             MouseLeftButtonDown="Drag_MouseLeftButtonDown">
-        <Border.Effect><DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.5" Color="Black"/></Border.Effect>
         <Grid Margin="8,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

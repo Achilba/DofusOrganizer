@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.15";
+    public const string Current = "0.4.16";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.16", "23/10/2026", new[]
+        {
+            "AMÉLIORÉ — Mini-barre complète raccourcie (800 px) : la liste Zaap est plus courte pour que la barre tienne entre les éléments de l'interface DOFUS.",
+            "AMÉLIORÉ — La fenêtre de la mini-barre a exactement la taille de la barre : l'aperçu pendant le déplacement correspond à sa taille (ombre portée retirée).",
+        }),
         new("0.4.15", "23/10/2026", new[]
         {
             "AMÉLIORÉ — Mini-barre plus fine : 44 px de haut au lieu de 68, boutons de 32 px.",

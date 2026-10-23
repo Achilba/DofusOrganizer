@@ -35,7 +35,7 @@ public partial class MiniWindow : Window
         else
         {
             SizeToContent = SizeToContent.Manual;
-            Width = 940;
+            Width = 800;
         }
         if (!_placed)
         {
