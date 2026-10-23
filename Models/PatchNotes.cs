@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.9";
+    public const string Current = "0.4.10";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.10", "23/10/2026", new[]
+        {
+            "AMÉLIORÉ — Donjons : la bande « Annuler » après un clic est supprimée (il suffit de décocher).",
+        }),
         new("0.4.9", "23/10/2026", new[]
         {
             "AMÉLIORÉ — Mini-barre compacte : la fenêtre s'ajuste exactement à son contenu, plus d'espace vide à droite.",

@@ -76,15 +76,6 @@ public class DungeonsViewModel : ObservableObject
         _main.RequestSave();
         Raise(nameof(Counter));
 
-        bool now = item.Done;
-        _main.ShowUndo((now ? "Coché : " : "Décoché : ") + item.Name, () =>
-        {
-            item.SetSilently(!now);
-            if (item.Done) { if (!list.Contains(item.Name)) list.Add(item.Name); } else list.Remove(item.Name);
-            _main.RequestSave();
-            Raise(nameof(Counter));
-            Refresh();
-        });
         if (_hideDone) Refresh();
     }
 
