@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.0";
+    public const string Current = "0.4.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.1", "23/10/2026", new[]
+        {
+            "NOUVEAU — Onglet Almanax dans la barre latérale (entre Dofus et Donjons).",
+        }),
         new("0.4.0", "23/10/2026", new[]
         {
             "NOUVEAU — Mises à jour automatiques : l'appli vérifie au lancement s'il existe une nouvelle version sur GitHub et l'installe en un clic (Paramètres > Mises à jour).",

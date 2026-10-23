@@ -156,7 +156,7 @@ public class MainViewModel : ObservableObject
         Status = warning;
         _loadWarning = warning;
 
-        foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"),
+        foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"), ("almanax", "Almanax", "IcoCalendar"),
                                             ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"),
                                             ("notes", "Notes", "IcoNotes"), ("settings", "Paramètres", "IcoSettings") })
             NavItems.Add(new NavItem(k, l, Application.Current.TryFindResource(ico) as Geometry));
@@ -244,7 +244,7 @@ public class MainViewModel : ObservableObject
 
     private void UpdateNav()
     {
-        foreach (var n in NavItems) n.IsActive = n.Key == _page || (_page == "almanax" && n.Key == "home");
+        foreach (var n in NavItems) n.IsActive = n.Key == _page;
     }
 
     public string Toast
