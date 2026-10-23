@@ -63,7 +63,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                             <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
-                            <TextBox Width="66" TextAlignment="Right" Text="{Binding Selected.CharLevel, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,16,0"/>
+                            <TextBox Width="88" TextAlignment="Right" Text="{Binding Selected.CharLevel, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,16,0"/>
                             <Border BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="16" Padding="14,7" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Selected.LevelText}" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}"/>
                             </Border>

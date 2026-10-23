@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.11";
+    public const string Current = "0.4.12";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.12", "23/10/2026", new[]
+        {
+            "CORRIGÉ — Personnages : le niveau (ex. 300) n'était plus affiché en entier, le champ est élargi.",
+        }),
         new("0.4.11", "23/10/2026", new[]
         {
             "NOUVEAU — Nouvelle icône de l'appli (logo recyclage avec le Dofus Émeraude) pour le fichier .exe et la barre des tâches.",
