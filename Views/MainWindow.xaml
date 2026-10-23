@@ -39,6 +39,9 @@
                                           Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
                                     <TextBlock Text="{Binding Label}" Margin="12,0,0,0" FontFamily="{StaticResource BodyXB}" FontSize="14"
                                                Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Margin="8,0,0,0" VerticalAlignment="Center"
+                                             ToolTip="Mise à jour disponible"
+                                             Visibility="{Binding Badge, Converter={StaticResource BoolVis}}"/>
                                 </StackPanel>
                             </Button>
                         </DataTemplate>

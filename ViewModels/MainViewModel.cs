@@ -17,6 +17,8 @@ public class NavItem : ObservableObject
     public string Key { get; }
     public string Label { get; }
     public bool IsActive { get => _active; set => Set(ref _active, value); }
+    private bool _badge;
+    public bool Badge { get => _badge; set => Set(ref _badge, value); }
 }
 
 public class NoteHit
@@ -91,8 +93,13 @@ public class MainViewModel : ObservableObject
     private string _updateText = "";
     private bool _updateBusy;
     public string UpdateText { get => _updateText; private set => Set(ref _updateText, value); }
+    private void RaiseUpdate()
+    {
+        Raise(nameof(UpdateAvailable));
+        foreach (var n in NavItems) if (n.Key == "settings") n.Badge = UpdateAvailable;
+    }
     public bool UpdateAvailable => _update != null && !_updateBusy;
-    public bool UpdateBusy { get => _updateBusy; private set { if (Set(ref _updateBusy, value)) Raise(nameof(UpdateAvailable)); } }
+    public bool UpdateBusy { get => _updateBusy; private set { if (Set(ref _updateBusy, value)) RaiseUpdate(); } }
     public string InstallUpdateLabel => _update == null ? "" : "Installer la version " + _update.Version;
 
     public async System.Threading.Tasks.Task CheckUpdateAsync(bool silent)
@@ -103,7 +110,7 @@ public class MainViewModel : ObservableObject
         try
         {
             _update = await new Updater(Storage.Dir).CheckAsync(PatchNotes.Current);
-            Raise(nameof(UpdateAvailable));
+            RaiseUpdate();
             Raise(nameof(InstallUpdateLabel));
             if (_update != null)
             {
@@ -116,7 +123,7 @@ public class MainViewModel : ObservableObject
         catch (Exception ex)
         {
             _update = null;
-            Raise(nameof(UpdateAvailable));
+            RaiseUpdate();
             // Sans connexion ou dépôt privé sans jeton : silencieux au lancement, explicite si demandé.
             UpdateText = silent ? "" : "Impossible de vérifier (connexion ou accès au dépôt) : " + ex.Message;
             Storage.LogError("Mise à jour : " + ex.Message);

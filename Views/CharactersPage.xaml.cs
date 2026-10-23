@@ -12,6 +12,22 @@ public partial class CharactersPage : UserControl
 {
     public CharactersPage() { InitializeComponent(); }
 
+    private void Align_Inc(object sender, RoutedEventArgs e)
+    {
+        if ((DataContext as CharactersViewModel)?.Selected is { } c) c.AlignLevel++;
+    }
+
+    private void Align_Dec(object sender, RoutedEventArgs e)
+    {
+        if ((DataContext as CharactersViewModel)?.Selected is { } c) c.AlignLevel--;
+    }
+
+    private void Align_LostFocus(object sender, RoutedEventArgs e)
+    {
+        // Réaffiche la valeur réellement retenue (limitée entre 1 et 100)
+        ((TextBox)sender).GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+    }
+
     private void Job_Inc(object sender, RoutedEventArgs e)
     {
         if (((FrameworkElement)sender).Tag is JobEntry j) j.Level++;

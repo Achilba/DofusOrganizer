@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.1";
+    public const string Current = "0.4.2";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.2", "23/10/2026", new[]
+        {
+            "NOUVEAU — Pastille orange sur « Paramètres » quand une nouvelle version est disponible.",
+            "AMÉLIORÉ — Personnages > Alignement : le niveau se règle avec une saisie et des flèches − / + (1 à 100), comme les compteurs.",
+        }),
         new("0.4.1", "23/10/2026", new[]
         {
             "NOUVEAU — Onglet Almanax dans la barre latérale (entre Dofus et Donjons).",

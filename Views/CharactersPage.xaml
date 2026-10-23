@@ -68,7 +68,13 @@
                             <TextBlock Text="Ordre" Style="{StaticResource Lbl}"/>
                             <ComboBox MinWidth="150" ItemsSource="{Binding Selected.Orders}" SelectedItem="{Binding Selected.Order, Mode=TwoWay}" Margin="0,0,16,0"/>
                             <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
-                            <ComboBox MinWidth="80" ItemsSource="{Binding AlignLevelChoices}" SelectedItem="{Binding Selected.AlignLevel, Mode=TwoWay}"/>
+                            <Border Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="40" ClipToBounds="True" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <RepeatButton Style="{StaticResource StepBtn}" Content="−" Click="Align_Dec"/>
+                                    <TextBox Style="{StaticResource StepBox}" Text="{Binding Selected.AlignLevel, Mode=TwoWay}" LostFocus="Align_LostFocus"/>
+                                    <RepeatButton Style="{StaticResource StepBtn}" Content="+" Click="Align_Inc"/>
+                                </StackPanel>
+                            </Border>
                         </WrapPanel>
                     </StackPanel>
                 </Border>
