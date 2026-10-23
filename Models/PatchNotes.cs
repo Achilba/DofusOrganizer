@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.10";
+    public const string Current = "0.4.11";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.11", "23/10/2026", new[]
+        {
+            "NOUVEAU — Nouvelle icône de l'appli (logo recyclage avec le Dofus Émeraude) pour le fichier .exe et la barre des tâches.",
+        }),
         new("0.4.10", "23/10/2026", new[]
         {
             "NOUVEAU — Dofus : le niveau d'équipement est affiché sous chaque Dofus (données DofusDB).",
