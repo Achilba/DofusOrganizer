@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.6";
+    public const string Current = "0.4.7";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.7", "23/10/2026", new[]
+        {
+            "NOUVEAU — Icônes des classes dans Personnages (liste des personnages et choix de la classe). Steamer et Forgelance n'ont pas encore d'icône.",
+            "CORRIGÉ — Fermer la fenêtre des notes de version ne réduit plus l'appli.",
+            "AMÉLIORÉ — Dofus : phrase sur les icônes provisoires retirée.",
+        }),
         new("0.4.6", "23/10/2026", new[]
         {
             "NOUVEAU — Icônes officielles de tous les Dofus (principaux et particuliers). DDE et DDE Cristallin gardent l'œuf coloré, car ils ne sont pas encore sortis.",

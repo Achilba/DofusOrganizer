@@ -73,6 +73,13 @@ public partial class App : Application
     {
         var w = new PatchNotesWindow();
         if (_main.IsVisible) w.Owner = _main;
+        // Fermer les notes ne doit pas réduire l'appli : on remet la fenêtre principale au premier plan.
+        w.Closed += (_, _) =>
+        {
+            if (!_main.IsVisible) return;
+            if (_main.WindowState == WindowState.Minimized) _main.WindowState = WindowState.Normal;
+            _main.Activate();
+        };
         w.Show();
     }
 

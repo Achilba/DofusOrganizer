@@ -119,11 +119,6 @@
                           Visibility="{Binding SpecOpen, Converter={StaticResource BoolVis}}">
                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
             </ItemsControl>
-
-            <Border Background="{StaticResource Panel}" BorderBrush="#4A5160" BorderThickness="1" CornerRadius="8" Padding="14,10" Margin="0,8,0,0">
-                <TextBlock Text="Icônes provisoires : elles seront remplacées par les PNG officiels de DOFUS 3 une fois les fichiers fournis."
-                           Foreground="{StaticResource Muted}" FontSize="12.5" TextWrapping="Wrap"/>
-            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

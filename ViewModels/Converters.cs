@@ -99,3 +99,42 @@ public class StrikeConverter : IValueConverter
         => value is true ? TextDecorations.Strikethrough : null;
     public object ConvertBack(object value, Type t, object parameter, CultureInfo c) => throw new NotSupportedException();
 }
+
+/// <summary>Nom de classe → icône (Assets\&lt;classe&gt;.png). Renvoie null si l'icône n'existe pas.</summary>
+public class ClassIconConverter : IValueConverter
+{
+    private static readonly System.Collections.Generic.Dictionary<string, System.Windows.Media.ImageSource> Cache = new();
+
+    public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        var name = value as string;
+        if (string.IsNullOrWhiteSpace(name)) return null;
+        if (Cache.TryGetValue(name, out var cached)) return cached;
+        System.Windows.Media.ImageSource img = null;
+        try
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (var ch in name.Normalize(System.Text.NormalizationForm.FormD))
+            {
+                if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(ch) == System.Globalization.UnicodeCategory.NonSpacingMark) continue;
+                sb.Append(char.IsLetterOrDigit(ch) ? char.ToLowerInvariant(ch) : '-');
+            }
+            var uri = new System.Uri("pack://application:,,,/Assets/" + sb.ToString().Trim('-') + ".png", System.UriKind.Absolute);
+            if (System.Windows.Application.GetResourceStream(uri) != null)
+            {
+                var bmp = new System.Windows.Media.Imaging.BitmapImage();
+                bmp.BeginInit();
+                bmp.UriSource = uri;
+                bmp.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                bmp.EndInit();
+                bmp.Freeze();
+                img = bmp;
+            }
+        }
+        catch { img = null; }
+        Cache[name] = img;
+        return img;
+    }
+
+    public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new System.NotSupportedException();
+}

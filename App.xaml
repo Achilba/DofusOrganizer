@@ -64,6 +64,7 @@
         <vm:InverseBoolVisibilityConverter x:Key="InvBoolVis"/>
         <vm:OpenAngleConverter x:Key="OpenAngle"/>
         <vm:StrikeConverter x:Key="Strike"/>
+        <vm:ClassIconConverter x:Key="ClassIcon"/>
 
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="{StaticResource Body}"/>
