@@ -12,6 +12,7 @@ public static class PatchNotes
     {
         new("0.4.10", "23/10/2026", new[]
         {
+            "NOUVEAU — Dofus : le niveau d'équipement est affiché sous chaque Dofus (données DofusDB).",
             "AMÉLIORÉ — Donjons : la bande « Annuler » après un clic est supprimée (il suffit de décocher).",
         }),
         new("0.4.9", "23/10/2026", new[]

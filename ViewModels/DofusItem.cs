@@ -54,7 +54,43 @@ public class DofusItem : ObservableObject
     /// <summary>Version où le Dofus arrive (ex. "3.8"), null s'il est déjà disponible.</summary>
     public string Future { get; }
     public bool Available => Future == null;
-    public string Subtitle => Done ? "Terminé" : (Future ?? "À faire");
+    /// <summary>Niveau requis pour équiper le Dofus (source : DofusDB), 0 si inconnu.</summary>
+    public int Level => Levels.TryGetValue(Name, out var l) ? l : 0;
+    /// <summary>Sous le nom : version d'arrivée pour un Dofus à venir, sinon niveau d'équipement.</summary>
+    public string Subtitle => Future != null ? Future : (Level > 0 ? "Niv. " + Level : "");
+
+    private static readonly System.Collections.Generic.Dictionary<string, int> Levels = new()
+    {
+        ["Argenté"] = 20,
+        ["Cawotte"] = 60,
+        ["Dokoko"] = 80,
+        ["Veilleurs"] = 100,
+        ["Émeraude"] = 100,
+        ["Pourpre"] = 110,
+        ["Domakuro"] = 120,
+        ["Dorigami"] = 150,
+        ["Turquoise"] = 160,
+        ["DDG"] = 180,
+        ["Ocre"] = 160,
+        ["Nébuleux"] = 180,
+        ["Abyssal"] = 180,
+        ["Tacheté"] = 180,
+        ["Ivoire"] = 180,
+        ["Ébène"] = 180,
+        ["Vulbis"] = 180,
+        ["Forgelave"] = 180,
+        ["Argenté Scintillant"] = 180,
+        ["Cauchemar"] = 180,
+        ["Dom de Pin"] = 180,
+        ["Sylvestre"] = 180,
+        ["Dolmanax"] = 100,
+        ["Cacao"] = 50,
+        ["Dokille"] = 80,
+        ["Dofawa"] = 6,
+        ["Dofoozbz"] = 170,
+        ["Kaliptus"] = 100,
+        ["Dotruche"] = 110
+    };
 
     public bool Done
     {
@@ -62,7 +98,6 @@ public class DofusItem : ObservableObject
         set
         {
             if (!Set(ref _done, value)) return;
-            Raise(nameof(Subtitle));
             _changed?.Invoke(this);
         }
     }
