@@ -41,8 +41,22 @@
                     </Path.Style>
                 </Path>
                     <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-13,-13,0"
-                             ToolTip="Mise à jour disponible (Paramètres)"
-                             Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
+                             ToolTip="Mise à jour disponible (Paramètres)">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding UpdateAvailable}" Value="True"/>
+                                            <Condition Binding="{Binding MiniFull}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
                 </Grid>
             </Button>
 
@@ -116,7 +130,12 @@
             <!-- Retour à la fenêtre complète -->
             <Button Grid.Column="9" Command="{Binding ShowMainCommand}" Width="32" Height="32" MinHeight="0" Padding="0" Margin="0" BorderBrush="{StaticResource Text}"
                     ToolTip="Revenir à l'interface complète" Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}">
-                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCompress}" Stroke="{StaticResource Text}" Width="14" Height="14"/>
+                <Grid>
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCompress}" Stroke="{StaticResource Text}" Width="14" Height="14"/>
+                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-13,-13,0"
+                             ToolTip="Mise à jour disponible (Paramètres)"
+                             Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
+                </Grid>
             </Button>
 
         </Grid>
