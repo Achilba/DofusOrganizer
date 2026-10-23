@@ -58,7 +58,7 @@
         </StackPanel>
         <DockPanel Grid.Row="1" Margin="0,0,0,14" LastChildFill="False">
             <TextBox DockPanel.Dock="Left" Width="300" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom, niveau ou coordonnées" Margin="0,0,10,0"/>
-            <ComboBox DockPanel.Dock="Left" Width="210" ItemsSource="{Binding SortChoices}" ItemStringFormat="Tri : {0}" SelectedItem="{Binding Sort, Mode=TwoWay}" Margin="0,0,10,0"/>
+            <ComboBox DockPanel.Dock="Left" Width="216" ItemsSource="{Binding SortChoices}" ItemStringFormat="Tri : {0}" SelectedItem="{Binding Sort, Mode=TwoWay}" Margin="0,0,10,0"/>
             <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding HideDone, Mode=TwoWay}" Height="40" Cursor="Hand">
                 <ToggleButton.Template>
                     <ControlTemplate TargetType="ToggleButton">

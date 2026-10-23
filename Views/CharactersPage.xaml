@@ -29,7 +29,7 @@
         <!-- Choix du personnage -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,14">
             <TextBlock Text="Personnage" Style="{StaticResource Lbl}" FontFamily="{StaticResource BodyXB}" Foreground="{StaticResource Muted}" Margin="0,0,10,0"/>
-            <ComboBox Width="240" Height="44" FontSize="15" BorderBrush="{StaticResource Accent}" ItemsSource="{Binding Characters}"
+            <ComboBox Width="260" Height="44" FontSize="15" BorderBrush="{StaticResource Accent}" ItemsSource="{Binding Characters}"
                       SelectedItem="{Binding Selected, Mode=TwoWay}" Margin="0,0,12,0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -52,7 +52,7 @@
                         <TextBlock Text="Détails" Style="{StaticResource H2}" Margin="0,0,0,12"/>
                         <WrapPanel>
                             <TextBlock Text="Classe" Style="{StaticResource Lbl}"/>
-                            <ComboBox Width="190" ItemsSource="{Binding ClassChoices}" SelectedItem="{Binding Selected.ClassName, Mode=TwoWay}" Margin="0,0,16,0">
+                            <ComboBox Width="176" ItemsSource="{Binding ClassChoices}" SelectedItem="{Binding Selected.ClassName, Mode=TwoWay}" Margin="0,0,16,0">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -63,7 +63,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                             <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
-                            <TextBox Width="100" TextAlignment="Right" Text="{Binding Selected.CharLevel, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,16,0"/>
+                            <TextBox Width="66" TextAlignment="Right" Text="{Binding Selected.CharLevel, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,16,0"/>
                             <Border BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="16" Padding="14,7" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Selected.LevelText}" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}"/>
                             </Border>
@@ -78,9 +78,9 @@
                         <TextBlock Text="Alignement" Style="{StaticResource H2}" Margin="0,0,0,12"/>
                         <WrapPanel>
                             <TextBlock Text="Faction" Style="{StaticResource Lbl}"/>
-                            <ComboBox MinWidth="100" ItemsSource="{Binding FactionChoices}" SelectedItem="{Binding Selected.Faction, Mode=TwoWay}" Margin="0,0,16,0"/>
+                            <ComboBox Width="112" ItemsSource="{Binding FactionChoices}" SelectedItem="{Binding Selected.Faction, Mode=TwoWay}" Margin="0,0,16,0"/>
                             <TextBlock Text="Ordre" Style="{StaticResource Lbl}"/>
-                            <ComboBox MinWidth="150" ItemsSource="{Binding Selected.Orders}" SelectedItem="{Binding Selected.Order, Mode=TwoWay}" Margin="0,0,16,0"/>
+                            <ComboBox Width="162" ItemsSource="{Binding Selected.Orders}" SelectedItem="{Binding Selected.Order, Mode=TwoWay}" Margin="0,0,16,0"/>
                             <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
                             <Border Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="40" ClipToBounds="True" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
@@ -120,7 +120,7 @@
                         </ItemsControl>
                         <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,8,0,0">
                             <WrapPanel>
-                                <ComboBox MinWidth="200" ItemsSource="{Binding AvailableJobs}" SelectedItem="{Binding NewJob, Mode=TwoWay}" Margin="0,0,10,0"/>
+                                <ComboBox Width="146" ItemsSource="{Binding AvailableJobs}" SelectedItem="{Binding NewJob, Mode=TwoWay}" Margin="0,0,10,0"/>
                                 <Button Content="Ajouter ce métier" Style="{StaticResource Accent40}" Command="{Binding AddJobCommand}"/>
                             </WrapPanel>
                         </Border>
@@ -134,7 +134,7 @@
                         <TextBlock Text="Colle le lien de ton stuff (site de ton choix). L'appli ne garde que le lien : aucune base d'objets."
                                    Foreground="{StaticResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,12"/>
                         <DockPanel Margin="0,0,0,12">
-                            <ComboBox DockPanel.Dock="Right" MinHeight="34" Height="34" MinWidth="110" FontSize="12" ItemsSource="{Binding VersionFilters}" SelectedItem="{Binding VerFilter, Mode=TwoWay}"/>
+                            <ComboBox DockPanel.Dock="Right" MinHeight="34" Height="34" Width="90" FontSize="12" ItemsSource="{Binding VersionFilters}" SelectedItem="{Binding VerFilter, Mode=TwoWay}"/>
                             <ListBox ItemsSource="{Binding TagFilters}" SelectedItem="{Binding TagFilter, Mode=TwoWay}" ItemContainerStyle="{StaticResource Pill}"
                                      Background="Transparent" BorderThickness="0" Foreground="{StaticResource Text}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                 <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
@@ -179,8 +179,8 @@
                         <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,4,0,0">
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" Content="Ajouter" Style="{StaticResource Accent40}" Command="{Binding AddStuffCommand}" Margin="10,0,0,0"/>
-                                <ComboBox DockPanel.Dock="Left" Width="90" ItemsSource="{Binding VersionChoices}" ItemStringFormat="v{0}" SelectedItem="{Binding NewVersion, Mode=TwoWay}" Margin="0,0,10,0"/>
-                                <ComboBox DockPanel.Dock="Left" Width="110" ItemsSource="{Binding TagChoices}" SelectedItem="{Binding NewTag, Mode=TwoWay}" Margin="0,0,10,0"/>
+                                <ComboBox DockPanel.Dock="Left" Width="80" ItemsSource="{Binding VersionChoices}" ItemStringFormat="v{0}" SelectedItem="{Binding NewVersion, Mode=TwoWay}" Margin="0,0,10,0"/>
+                                <ComboBox DockPanel.Dock="Left" Width="100" ItemsSource="{Binding TagChoices}" SelectedItem="{Binding NewTag, Mode=TwoWay}" Margin="0,0,10,0"/>
                                 <Grid DockPanel.Dock="Left" Width="200" Margin="0,0,10,0">
                                     <TextBox x:Name="NameBox" Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom du stuff"/>
                                     <TextBlock Text="Nom du stuff (ex. Stuff PvM)" Foreground="{StaticResource Dim}" IsHitTestVisible="False" Margin="12,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
