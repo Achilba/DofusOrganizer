@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.5";
+    public const string Current = "0.4.6";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.6", "23/10/2026", new[]
+        {
+            "NOUVEAU — Icônes officielles de tous les Dofus (principaux et particuliers). DDE et DDE Cristallin gardent l'œuf coloré, car ils ne sont pas encore sortis.",
+        }),
         new("0.4.5", "23/10/2026", new[]
         {
             "AMÉLIORÉ — Vérification des mises à jour toutes les 5 minutes (au lieu de 30) : la pastille « Paramètres » apparaît plus vite, sans relancer l'appli.",
