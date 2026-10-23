@@ -1,0 +1,203 @@
+<UserControl x:Class="DofusTeamOrganizer.Views.CharactersPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="Accent40" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource Accent}"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentText}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+        </Style>
+        <Style x:Key="Lbl" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Body}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="0,0,0,14">
+            <TextBlock Text="Personnages" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="Alignement, métiers et liens de stuff, personnage par personnage" Style="{StaticResource PageSub}"/>
+        </StackPanel>
+
+        <!-- Choix du personnage -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,14">
+            <TextBlock Text="Personnage" Style="{StaticResource Lbl}" FontFamily="{StaticResource BodyXB}" Foreground="{StaticResource Muted}" Margin="0,0,10,0"/>
+            <ComboBox Width="240" Height="44" FontSize="15" BorderBrush="{StaticResource Accent}" ItemsSource="{Binding Characters}"
+                      SelectedItem="{Binding Selected, Mode=TwoWay}" Margin="0,0,12,0">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate><TextBlock Text="{Binding Name}"/></DataTemplate>
+                </ComboBox.ItemTemplate>
+                
+            </ComboBox>
+            <Button Content="Copier le résumé" Command="{Binding CopySummaryCommand}"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,10,0">
+                <!-- Détails -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Détails" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                        <WrapPanel>
+                            <TextBlock Text="Classe" Style="{StaticResource Lbl}"/>
+                            <ComboBox Width="170" ItemsSource="{Binding ClassChoices}" SelectedItem="{Binding Selected.ClassName, Mode=TwoWay}" Margin="0,0,16,0"/>
+                            <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
+                            <TextBox Width="100" TextAlignment="Right" Text="{Binding Selected.CharLevel, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,16,0"/>
+                            <Border BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="16" Padding="14,7" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Selected.LevelText}" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}"/>
+                            </Border>
+                        </WrapPanel>
+                        <TextBlock Text="Au-delà de 200, le niveau s'affiche en Oméga : 260 devient « Oméga 60 »." Foreground="{StaticResource Dim}" FontSize="12" Margin="0,12,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Alignement -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Alignement" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                        <WrapPanel>
+                            <TextBlock Text="Faction" Style="{StaticResource Lbl}"/>
+                            <ComboBox MinWidth="100" ItemsSource="{Binding FactionChoices}" SelectedItem="{Binding Selected.Faction, Mode=TwoWay}" Margin="0,0,16,0"/>
+                            <TextBlock Text="Ordre" Style="{StaticResource Lbl}"/>
+                            <ComboBox MinWidth="150" ItemsSource="{Binding Selected.Orders}" SelectedItem="{Binding Selected.Order, Mode=TwoWay}" Margin="0,0,16,0"/>
+                            <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
+                            <ComboBox MinWidth="80" ItemsSource="{Binding AlignLevelChoices}" SelectedItem="{Binding Selected.AlignLevel, Mode=TwoWay}"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Métiers -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Métiers" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                        <TextBlock Text="Aucun métier enregistré" Foreground="{StaticResource Dim}" Margin="0,0,0,12"
+                                   Visibility="{Binding NoJobs, Converter={StaticResource BoolVis}}"/>
+                        <ItemsControl ItemsSource="{Binding Selected.Jobs}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel MinHeight="44" Margin="0,0,0,2">
+                                        <Button DockPanel.Dock="Right" Content="Supprimer" Margin="10,0,0,0"
+                                                Command="{Binding DataContext.RemoveJobCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
+                                        <Border DockPanel.Dock="Right" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="38" ClipToBounds="True">
+                                            <StackPanel Orientation="Horizontal">
+                                                <RepeatButton Style="{StaticResource StepBtn}" Content="−" Tag="{Binding}" Click="Job_Dec" IsEnabled="{Binding CanDec}"/>
+                                                <TextBox Style="{StaticResource StepBox}" Text="{Binding Level, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <RepeatButton Style="{StaticResource StepBtn}" Content="+" Tag="{Binding}" Click="Job_Inc"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="14" VerticalAlignment="Center"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,8,0,0">
+                            <WrapPanel>
+                                <ComboBox MinWidth="200" ItemsSource="{Binding AvailableJobs}" SelectedItem="{Binding NewJob, Mode=TwoWay}" Margin="0,0,10,0"/>
+                                <Button Content="Ajouter ce métier" Style="{StaticResource Accent40}" Command="{Binding AddJobCommand}"/>
+                            </WrapPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Stuffs -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Stuffs" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                        <TextBlock Text="Colle le lien de ton stuff (site de ton choix). L'appli ne garde que le lien : aucune base d'objets."
+                                   Foreground="{StaticResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                        <DockPanel Margin="0,0,0,12">
+                            <ComboBox DockPanel.Dock="Right" MinHeight="34" Height="34" MinWidth="110" FontSize="12" ItemsSource="{Binding VersionFilters}" SelectedItem="{Binding VerFilter, Mode=TwoWay}"/>
+                            <ListBox ItemsSource="{Binding TagFilters}" SelectedItem="{Binding TagFilter, Mode=TwoWay}" ItemContainerStyle="{StaticResource Pill}"
+                                     Background="Transparent" BorderThickness="0" Foreground="{StaticResource Text}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
+                            </ListBox>
+                        </DockPanel>
+
+                        <TextBlock Text="Aucun lien enregistré" Foreground="{StaticResource Dim}" Margin="0,0,0,10"
+                                   Visibility="{Binding NoStuff, Converter={StaticResource BoolVis}}"/>
+                        <ItemsControl ItemsSource="{Binding VisibleStuffs}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8" Padding="12,4" Margin="0,0,0,8" MinHeight="48">
+                                        <DockPanel>
+                                            <Button DockPanel.Dock="Right" Content="Supprimer" Margin="10,0,0,0"
+                                                    Command="{Binding DataContext.RemoveStuffCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"/>
+                                            <Button DockPanel.Dock="Right" Content="Copier" Margin="10,0,0,0"
+                                                    Command="{Binding DataContext.CopyStuffCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"/>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
+                                                    <Border BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="6" Padding="8,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Tag}" FontSize="11" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}"/>
+                                                    </Border>
+                                                    <Border Background="{StaticResource KeyBg}" CornerRadius="6" Padding="8,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Version, StringFormat=v{0}}" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock TextTrimming="CharacterEllipsis" FontSize="12">
+                                                    <Hyperlink NavigateUri="{Binding Url}" RequestNavigate="Link_Navigate" Foreground="{StaticResource Accent}">
+                                                        <Run Text="{Binding Url, Mode=OneWay}"/>
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,4,0,0">
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="Ajouter" Style="{StaticResource Accent40}" Command="{Binding AddStuffCommand}" Margin="10,0,0,0"/>
+                                <ComboBox DockPanel.Dock="Left" Width="90" ItemsSource="{Binding VersionChoices}" ItemStringFormat="v{0}" SelectedItem="{Binding NewVersion, Mode=TwoWay}" Margin="0,0,10,0"/>
+                                <ComboBox DockPanel.Dock="Left" Width="110" ItemsSource="{Binding TagChoices}" SelectedItem="{Binding NewTag, Mode=TwoWay}" Margin="0,0,10,0"/>
+                                <Grid DockPanel.Dock="Left" Width="200" Margin="0,0,10,0">
+                                    <TextBox x:Name="NameBox" Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom du stuff"/>
+                                    <TextBlock Text="Nom du stuff (ex. Stuff PvM)" Foreground="{StaticResource Dim}" IsHitTestVisible="False" Margin="12,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Text, ElementName=NameBox}" Value="">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                                <Grid>
+                                    <TextBox x:Name="UrlBox" Text="{Binding NewUrl, UpdateSourceTrigger=PropertyChanged}" KeyDown="Url_KeyDown" ToolTip="Lien du stuff"/>
+                                    <TextBlock Text="Colle ton lien ici (https://…)" Foreground="{StaticResource Dim}" IsHitTestVisible="False" Margin="12,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Text, ElementName=UrlBox}" Value="">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                            </DockPanel>
+                        </Border>
+                        <TextBlock Text="{Binding Error}" Foreground="{StaticResource Bad}" FontFamily="{StaticResource BodyXB}" FontSize="12" Margin="0,8,0,0"
+                                   Visibility="{Binding Error, Converter={StaticResource NotEmptyVis}}"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

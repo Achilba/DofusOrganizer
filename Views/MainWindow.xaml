@@ -1,0 +1,104 @@
+<Window x:Class="DofusTeamOrganizer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:DofusTeamOrganizer.Views"
+        Title="DOFUS Team Organizer" Width="1056" Height="839" MinWidth="960" MinHeight="680"
+        Background="{StaticResource Bg}" Foreground="{StaticResource Text}"
+        FontFamily="{StaticResource Body}" FontSize="13" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Barre latérale -->
+        <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,1,0">
+            <DockPanel Margin="12,16">
+                <StackPanel DockPanel.Dock="Bottom" Margin="8,0,0,0">
+                    <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Listes intégrées à l'appli" Foreground="{StaticResource Dim}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <Border Style="{StaticResource KeyCap}" Padding="6,2">
+                                    <TextBlock Text="Ctrl+Alt+O" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
+                                </Border>
+                                <TextBlock Text="Masquer" Foreground="{StaticResource Muted}" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding VersionText}" Foreground="{StaticResource Muted}" FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding NavItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button x:Name="nav" Style="{StaticResource NavButton}" Margin="0,0,0,4"
+                                    Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                    CommandParameter="{Binding Key}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Style="{StaticResource Icon}" Data="{Binding Icon}" Width="18" Height="18" StrokeThickness="1.8"
+                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <TextBlock Text="{Binding Label}" Margin="12,0,0,0" FontFamily="{StaticResource BodyXB}" FontSize="14"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </Border>
+
+        <!-- Contenu -->
+        <Grid Grid.Column="1" Margin="24,24,24,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Bad}" BorderThickness="1" CornerRadius="10" Padding="14,12" Margin="0,0,0,14"
+                    Visibility="{Binding Status, Converter={StaticResource NotEmptyVis}}">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Réessayer" Command="{Binding RetrySaveCommand}" Margin="12,0,0,0" MinHeight="34"
+                            Visibility="{Binding SaveFailed, Converter={StaticResource BoolVis}}"/>
+                    <Path DockPanel.Dock="Left" Style="{StaticResource Icon}" Data="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"
+                          Stroke="{StaticResource Bad}" StrokeThickness="2.5" Width="16" Height="16" Margin="0,0,12,0"/>
+                    <TextBlock Text="{Binding Status}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                </DockPanel>
+            </Border>
+
+            <v:HomePage Grid.Row="1" Visibility="{Binding Page, Converter={StaticResource EqVis}, ConverterParameter=home}"/>
+            <v:DofusPage Grid.Row="1" Visibility="{Binding Page, Converter={StaticResource EqVis}, ConverterParameter=dofus}"/>
+            <v:NotesPage Grid.Row="1" Visibility="{Binding Page, Converter={StaticResource EqVis}, ConverterParameter=notes}"/>
+            <v:SettingsPage Grid.Row="1" Visibility="{Binding Page, Converter={StaticResource EqVis}, ConverterParameter=settings}"/>
+
+            <v:CharactersPage Grid.Row="1" DataContext="{Binding CharactersPage}"
+                              Visibility="{Binding DataContext.Page, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EqVis}, ConverterParameter=chars}"/>
+            <v:AlmanaxPage Grid.Row="1" DataContext="{Binding Almanax}"
+                           Visibility="{Binding DataContext.Page, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EqVis}, ConverterParameter=almanax}"/>
+            <v:DungeonsPage Grid.Row="1" DataContext="{Binding Dungeons}"
+                            Visibility="{Binding DataContext.Page, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EqVis}, ConverterParameter=dungeons}"/>
+            <v:SongesPage Grid.Row="1" DataContext="{Binding Songes}"
+                          Visibility="{Binding DataContext.Page, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EqVis}, ConverterParameter=dreams}"/>
+
+            <!-- Bulles : « Copié » (2,5 s) et « Annuler » (4 s) -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0" MinHeight="0">
+                <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="8" Padding="14,10"
+                        Margin="0,0,10,0" Visibility="{Binding Toast, Converter={StaticResource NotEmptyVis}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{StaticResource Accent}" StrokeThickness="2.5" Width="16" Height="16"/>
+                        <TextBlock Text="{Binding ToastTitle}" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="10,0,0,0" VerticalAlignment="Center"
+                                   Visibility="{Binding ToastTitle, Converter={StaticResource NotEmptyVis}}"/>
+                        <TextBlock Text="{Binding ToastDetail}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="10" Padding="12,6"
+                        Visibility="{Binding UndoText, Converter={StaticResource NotEmptyVis}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding UndoText}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <Button Content="Annuler" Command="{Binding UndoCommand}" MinHeight="32" Padding="12,0" Background="Transparent" Foreground="{StaticResource Accent}" BorderBrush="{StaticResource Accent}" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

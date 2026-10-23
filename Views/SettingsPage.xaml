@@ -1,0 +1,168 @@
+<UserControl x:Class="DofusTeamOrganizer.Views.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="Big" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="MinHeight" Value="44"/>
+            <Setter Property="Padding" Value="16,0"/>
+        </Style>
+        <Style x:Key="IncBtn" TargetType="ToggleButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="b" Height="40" Padding="14,0" CornerRadius="8" BorderThickness="1.5" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}">
+                            <TextBlock x:Name="t" Text="Sauté par *" Foreground="{StaticResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Accent}"/>
+                                <Setter TargetName="t" Property="Text" Value="Inclus dans *"/>
+                                <Setter TargetName="t" Property="Foreground" Value="{StaticResource Accent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,10,0">
+            <StackPanel Margin="0,0,0,16">
+                <TextBlock Text="Paramètres" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="Sauvegardes, barre Mini, raccourcis" Style="{StaticResource PageSub}"/>
+            </StackPanel>
+
+            <!-- Sauvegardes -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Sauvegardes" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Sauvegarde automatique chaque jour · les 7 dernières copies sont conservées" IsChecked="{Binding AutoBackup}" Margin="0,0,0,12"/>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,0,0,12">
+                        <Run Text="Dernière sauvegarde : "/><Run Text="{Binding LastBackup, Mode=OneWay}"/>
+                    </TextBlock>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{StaticResource GoodText}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"
+                              Visibility="{Binding DataIntact, Converter={StaticResource BoolVis}}"/>
+                        <TextBlock Text="{Binding DataIntactText}" Foreground="{StaticResource GoodText}" TextWrapping="Wrap"
+                                   Visibility="{Binding DataIntact, Converter={StaticResource BoolVis}}"/>
+                        <TextBlock Text="{Binding DataIntactText}" Foreground="{StaticResource WarnText}" TextWrapping="Wrap"
+                                   Visibility="{Binding DataIntact, Converter={StaticResource InvBoolVis}}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Exporter mes données" Command="{Binding ExportCommand}" Style="{StaticResource Big}" Background="{StaticResource Accent}"
+                                Foreground="{StaticResource AccentText}" BorderBrush="{StaticResource Accent}" Margin="0,0,8,0"/>
+                        <Button Content="Importer une sauvegarde" Command="{Binding ImportCommand}" Style="{StaticResource Big}" Margin="0,0,8,0"/>
+                        <Button Content="Ouvrir le dossier" Command="{Binding OpenFolderCommand}" Style="{StaticResource Big}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Mode Mini -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Mode Mini" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <TextBlock Text="Opacité" VerticalAlignment="Center" Margin="0,0,14,0"/>
+                        <Slider Width="260" Minimum="0.3" Maximum="1" Value="{Binding MiniOpacity}" IsMoveToPointEnabled="True" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding MiniOpacityText}" Foreground="{StaticResource Accent}" MinWidth="44" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <CheckBox Style="{StaticResource Switch}" Content="Retenir la position de la barre d'un lancement à l'autre" IsChecked="{Binding RememberMiniPosition}" Margin="0,0,0,12"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Toujours au premier plan : la barre Mini n'est jamais masquée par DOFUS" IsChecked="{Binding MiniAlwaysOnTop}" Margin="0,0,0,12"/>
+                    <TextBlock Text="À vérifier sur ton PC avec DOFUS en mode fenêtré." Foreground="{StaticResource Dim}" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Raccourcis -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Raccourcis" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Ctrl+Alt+O reste le seul raccourci global. Les autres ne fonctionnent que si DOFUS est au premier plan. Ils ne sont pas modifiables dans cette version."
+                               Style="{StaticResource MutedText}" Margin="0,0,0,12"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Touche * (et F6) actives dans DOFUS" IsChecked="{Binding SwapEnabled}" Margin="0,0,0,12"/>
+                    <Grid Margin="0,0,0,8"><TextBlock Text="Personnage suivant" Foreground="{StaticResource Muted}"/><Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="*" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
+                    <Grid Margin="0,0,0,8"><TextBlock Text="Personnage principal" Foreground="{StaticResource Muted}"/><Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F1" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
+                    <Grid Margin="0,0,0,8"><TextBlock Text="Personnage précédent" Foreground="{StaticResource Muted}"/><Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F6" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
+                    <Grid><TextBlock Text="Copier les invitations" Foreground="{StaticResource Muted}"/><Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F12" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Personnages et touche * -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Personnages et touche *" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Utilise les flèches pour changer l'ordre : la touche * suit cet ordre. Désactive « Inclus » pour qu'un personnage soit sauté."
+                               Style="{StaticResource MutedText}" Margin="0,0,0,12"/>
+                    <ItemsControl ItemsSource="{Binding Characters}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" Padding="12,6" Margin="0,0,0,8" MinHeight="52">
+                                    <DockPanel>
+                                        <ToggleButton DockPanel.Dock="Right" Style="{StaticResource IncBtn}" IsChecked="{Binding InSwap, Mode=TwoWay}" Margin="8,0,0,0"/>
+                                        <Button DockPanel.Dock="Right" Width="40" Padding="0" Margin="8,0,0,0" ToolTip="Descendre"
+                                                Command="{Binding DataContext.MoveDownCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
+                                            <TextBlock Text="↓" FontSize="16"/>
+                                        </Button>
+                                        <Button DockPanel.Dock="Right" Width="40" Padding="0" ToolTip="Monter"
+                                                Command="{Binding DataContext.MoveUpCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
+                                            <TextBlock Text="↑" FontSize="16"/>
+                                        </Button>
+                                        <Path DockPanel.Dock="Left" Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="10" Height="18" Margin="0,0,10,0"/>
+                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Number}" Foreground="{StaticResource Dim}" Width="22" VerticalAlignment="Center"/>
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run Text="{Binding Name, Mode=OneWay}" FontFamily="{StaticResource BodyXB}"/><Run Text=" · " Foreground="{StaticResource Muted}"/><Run Text="{Binding ClassName, Mode=OneWay}" Foreground="{StaticResource Muted}"/>
+                                        </TextBlock>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Diagnostic -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Diagnostic" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="{Binding MemoryText}" Style="{StaticResource MutedText}" Margin="0,0,0,12"/>
+                    <WrapPanel>
+                        <Button Content="Copier le journal d'erreurs" Command="{Binding CopyErrorLogCommand}" Margin="0,0,12,0"/>
+                        <TextBlock Text="Le journal reste sur ton PC et ne contient aucune donnée de jeu." Style="{StaticResource MutedText}" FontSize="12" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Mises à jour -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Mises à jour" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,0,0,12">
+                        <Run Text="{Binding VersionText, Mode=OneWay}"/><Run Text=" (installée)"/>
+                    </TextBlock>
+                    <WrapPanel>
+                        <Button Content="Rechercher une mise à jour" Command="{Binding CheckUpdateCommand}" Margin="0,0,10,0"/>
+                        <Button Content="{Binding InstallUpdateLabel}" Command="{Binding InstallUpdateCommand}" Background="{StaticResource Accent}"
+                                Foreground="{StaticResource AccentText}" BorderBrush="{StaticResource Accent}"
+                                Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
+                    </WrapPanel>
+                    <TextBlock Text="{Binding UpdateText}" Style="{StaticResource MutedText}" Margin="0,10,0,0"
+                               Visibility="{Binding UpdateText, Converter={StaticResource NotEmptyVis}}"/>
+                    <TextBlock Text="L'appli vérifie au lancement s'il existe une nouvelle version. Tes données ne sont jamais touchées." Foreground="{StaticResource Dim}" FontSize="12" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Listes de données -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Listes de données" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Zaaps, donjons, modificateurs 2026, Dofus et légendes sont intégrés à l'appli." Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                    <TextBlock Text="La vérification en ligne au lancement n'existe pas encore dans cette version." Foreground="{StaticResource Dim}" FontSize="12" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding VersionText}" VerticalAlignment="Center" Margin="0,0,14,0"/>
+                        <Button Content="Notes de version" Command="{Binding PatchNotesCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

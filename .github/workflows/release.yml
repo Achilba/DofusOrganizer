@@ -1,0 +1,41 @@
+name: Publier une version
+
+# Se déclenche quand tu envoies une étiquette de version, par exemple v0.4.1
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Compiler
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart('v')
+          dotnet publish DofusTeamOrganizer.csproj -c Release -r win-x64 --self-contained true `
+            -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:Version=$version -o publish
+          if (-not (Test-Path publish/DofusTeamOrganizer.exe)) { throw "exe introuvable" }
+
+      - name: Publier la release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --title "Version $($tag.TrimStart('v'))" --generate-notes
+          }
+          gh release upload $tag publish/DofusTeamOrganizer.exe --clobber

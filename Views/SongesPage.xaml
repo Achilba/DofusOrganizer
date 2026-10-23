@@ -1,0 +1,70 @@
+<UserControl x:Class="DofusTeamOrganizer.Views.SongesPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <DataTemplate x:Key="LegendRow">
+            <Border BorderBrush="{StaticResource Field}" BorderThickness="0,0,0,1" MinHeight="48" Padding="14,5">
+                <DockPanel VerticalAlignment="Center">
+                    <Border DockPanel.Dock="Right" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="38" ClipToBounds="True">
+                        <StackPanel Orientation="Horizontal">
+                            <RepeatButton Style="{StaticResource StepBtn}" Content="−" Tag="{Binding}" Click="Dec_Click" IsEnabled="{Binding CanDec}"/>
+                            <TextBox Style="{StaticResource StepBox}" Text="{Binding Qty, UpdateSourceTrigger=PropertyChanged}"/>
+                            <RepeatButton Style="{StaticResource StepBtn}" Content="+" Tag="{Binding}" Click="Inc_Click"/>
+                        </StackPanel>
+                    </Border>
+                    <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="14" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,12,0"/>
+                </DockPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="0,0,0,12">
+            <TextBlock Text="Songes" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="Bouclier, coffrets achetés et légendes" Style="{StaticResource PageSub}"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" HorizontalAlignment="Left" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="18" Padding="14,8" Margin="0,0,0,12">
+            <TextBlock FontFamily="{StaticResource BodyXB}">
+                <Run Text="Légendes droppées : "/><Run Text="{Binding Total, Mode=OneWay}" Foreground="{StaticResource Accent}"/>
+            </TextBlock>
+        </Border>
+
+        <Border Grid.Row="2" Background="{StaticResource Side}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True" Margin="0,0,0,12">
+            <ItemsControl ItemsSource="{Binding Top}" ItemTemplate="{StaticResource LegendRow}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="2"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Border>
+
+        <StackPanel Grid.Row="3" Margin="0,0,0,8">
+            <TextBlock Text="Légendes animales" FontFamily="{StaticResource BodyXB}" FontSize="15"/>
+            <TextBlock Text="4 légendes · compteur de chacune" Foreground="{StaticResource Muted}" FontSize="12"/>
+        </StackPanel>
+        <Border Grid.Row="4" Background="{StaticResource Side}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True" Margin="0,0,0,12">
+            <ItemsControl ItemsSource="{Binding Animal}" ItemTemplate="{StaticResource LegendRow}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="2"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Border>
+
+        <StackPanel Grid.Row="5" Margin="0,0,0,8">
+            <TextBlock Text="Légendes classiques" FontFamily="{StaticResource BodyXB}" FontSize="15"/>
+            <TextBlock Text="26 légendes · compteur de chacune · fais défiler la liste" Foreground="{StaticResource Muted}" FontSize="12"/>
+        </StackPanel>
+        <Border Grid.Row="6" Background="{StaticResource Side}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True">
+            <ScrollViewer VerticalScrollBarVisibility="Visible">
+                <ItemsControl ItemsSource="{Binding Classic}" ItemTemplate="{StaticResource LegendRow}"/>
+            </ScrollViewer>
+        </Border>
+        <TextBlock Grid.Row="7" Margin="0,10,0,0" Foreground="{StaticResource Dim}" FontSize="12" TextWrapping="Wrap"
+                   Text="Noms relevés sur krosmolab.fr (Ressources des Songes, niveau 200), à recouper avec le jeu."/>
+    </Grid>
+</UserControl>
