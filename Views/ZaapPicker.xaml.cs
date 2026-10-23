@@ -15,6 +15,18 @@ public partial class ZaapPicker : UserControl
         InitializeComponent();
     }
 
+    /// <summary>Hauteur du champ (44 par défaut ; 32 dans la mini-barre fine).</summary>
+    public double BoxHeight
+    {
+        get => Box.Height;
+        set
+        {
+            Box.MinHeight = 0;
+            Box.Height = value;
+            if (value < 40) { Box.FontSize = 13; Hint.FontSize = 13; Hint.Margin = new Thickness(12, 0, 0, 0); }
+        }
+    }
+
     private static string Norm(string s)
     {
         var d = (s ?? "").ToLowerInvariant().Normalize(NormalizationForm.FormD);

@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.4.14";
+    public const string Current = "0.4.15";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.4.15", "23/10/2026", new[]
+        {
+            "AMÉLIORÉ — Mini-barre plus fine : 44 px de haut au lieu de 68, boutons de 32 px.",
+            "CORRIGÉ — Majuscules aux noms propres : « Zaap : Cania, Sufokia… » dans le champ de recherche. Relecture de tous les textes de l'appli.",
+        }),
         new("0.4.14", "23/10/2026", new[]
         {
             "NOUVEAU — Mini-barre : pastille orange sur le bouton de gauche quand une mise à jour est disponible.",

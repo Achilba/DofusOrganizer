@@ -2,14 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:DofusTeamOrganizer.Views"
-        Title="DOFUS Team Organizer (mini)" Height="76" Width="980" ResizeMode="NoResize" WindowStyle="None"
+        Title="DOFUS Team Organizer (mini)" Height="52" Width="980" ResizeMode="NoResize" WindowStyle="None"
         AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False" Topmost="True"
         Foreground="{StaticResource Text}" FontFamily="{StaticResource Body}" WindowStartupLocation="Manual"
         Opacity="{Binding MiniOpacity}">
-    <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="14" Height="68" Margin="4"
+    <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="12" Height="44" Margin="4"
             MouseLeftButtonDown="Drag_MouseLeftButtonDown">
         <Border.Effect><DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.5" Color="Black"/></Border.Effect>
-        <Grid Margin="12,0">
+        <Grid Margin="8,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -24,12 +24,12 @@
             </Grid.ColumnDefinitions>
 
             <!-- poignée -->
-            <Path Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="10" Height="18" Margin="7,0,10,0" ToolTip="Glisser pour déplacer"/>
+            <Path Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="8" Height="14" Margin="4,0,8,0" ToolTip="Glisser pour déplacer"/>
 
                         <!-- Compacte / complète -->
-            <Button Grid.Column="1" Command="{Binding ToggleCompactCommand}" Width="44" Height="44" Padding="0" Margin="0,0,10,0" ToolTip="Barre compacte / complète">
+            <Button Grid.Column="1" Command="{Binding ToggleCompactCommand}" Width="32" Height="32" MinHeight="0" Padding="0" Margin="0,0,8,0" ToolTip="Barre compacte / complète">
                 <Grid>
-                <Path Width="14" Height="14" Stretch="Uniform" Fill="{StaticResource Text}" Stroke="{StaticResource Text}" StrokeThickness="2" StrokeLineJoin="Round">
+                <Path Width="11" Height="11" Stretch="Uniform" Fill="{StaticResource Text}" Stroke="{StaticResource Text}" StrokeThickness="2" StrokeLineJoin="Round">
                     <Path.Style>
                         <Style TargetType="Path">
                             <Setter Property="Data" Value="M16 4L6 12L16 20Z"/>
@@ -41,22 +41,22 @@
                         </Style>
                     </Path.Style>
                 </Path>
-                    <Ellipse Width="12" Height="12" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-17,-17,0"
+                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-13,-13,0"
                              ToolTip="Mise à jour disponible (Paramètres)"
                              Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
                 </Grid>
             </Button>
 
             <!-- Touche * -->
-            <ToggleButton Grid.Column="2" IsChecked="{Binding SwapEnabled, Mode=TwoWay}" Height="44" Cursor="Hand" Margin="0,0,10,0"
+            <ToggleButton Grid.Column="2" IsChecked="{Binding SwapEnabled, Mode=TwoWay}" Height="32" Cursor="Hand" Margin="0,0,8,0"
                           ToolTip="Touche étoile : passer au personnage suivant">
                 <ToggleButton.Template>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="b" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="8" Padding="12,0">
+                        <Border x:Name="b" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="8" Padding="10,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock x:Name="lbl" Text="OFF" Foreground="{StaticResource Muted}" FontFamily="{StaticResource BodyXB}" MinWidth="26" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                <Border x:Name="track" Width="42" Height="24" CornerRadius="12" Background="#3A4150">
-                                    <Ellipse x:Name="knob" Width="18" Height="18" Fill="{StaticResource Muted}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                                <TextBlock x:Name="lbl" Text="OFF" Foreground="{StaticResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="12.5" MinWidth="22" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <Border x:Name="track" Width="32" Height="18" CornerRadius="9" Background="#3A4150">
+                                    <Ellipse x:Name="knob" Width="12" Height="12" Fill="{StaticResource Muted}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
                                 </Border>
                             </StackPanel>
                         </Border>
@@ -75,10 +75,10 @@
                 </ToggleButton.Template>
             </ToggleButton>
 
-            <Border Grid.Column="3" Width="1" Height="32" Background="{StaticResource Line}" Margin="0,0,10,0"/>
+            <Border Grid.Column="3" Width="1" Height="20" Background="{StaticResource Line}" Margin="0,0,8,0"/>
 
             <!-- Invitations -->
-            <Button Grid.Column="4" Command="{Binding CopyInvitesCommand}" Height="44" Padding="14,0" Margin="0"
+            <Button Grid.Column="4" Command="{Binding CopyInvitesCommand}" Height="32" MinHeight="0" Padding="12,0" Margin="0" FontSize="13"
                     Background="{StaticResource Accent}" Foreground="{StaticResource AccentText}" BorderBrush="{StaticResource Accent}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Invitations"/>
@@ -86,38 +86,38 @@
             </Button>
 
             <!-- Zaap -->
-            <v:ZaapPicker Grid.Column="5" VerticalAlignment="Center" Margin="10,0,10,0"
+            <v:ZaapPicker Grid.Column="5" VerticalAlignment="Center" Margin="8,0,8,0" BoxHeight="32"
                           Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}"/>
 
             <!-- Copié -->
-            <Border Grid.Column="6" Height="44" Background="{StaticResource Side}" BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="10"
-                    Padding="12,0" Margin="0,0,10,0" Visibility="{Binding Toast, Converter={StaticResource NotEmptyVis}}">
+            <Border Grid.Column="6" Height="32" Background="{StaticResource Side}" BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="8"
+                    Padding="10,0" Margin="0,0,8,0" Visibility="{Binding Toast, Converter={StaticResource NotEmptyVis}}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{StaticResource Accent}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"/>
                     <TextBlock Text="COPIÉ" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="7" Width="1" Height="32" Background="{StaticResource Line}" Margin="0,0,10,0"
+            <Border Grid.Column="7" Width="1" Height="20" Background="{StaticResource Line}" Margin="0,0,8,0"
                     Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}"/>
 
             <!-- Almanax -->
-            <Button Grid.Column="8" Command="{Binding OpenAlmanaxFromMiniCommand}" Height="44" Padding="14,0" Margin="0,0,8,0" ToolTip="Almanax du jour à valider"
+            <Button Grid.Column="8" Command="{Binding OpenAlmanaxFromMiniCommand}" Height="32" MinHeight="0" Padding="12,0" Margin="0,0,8,0" FontSize="13" ToolTip="Almanax du jour à valider"
                     Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}">
                 <Grid>
                     <StackPanel Orientation="Horizontal">
-                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{StaticResource Text}" Width="16" Height="16" Margin="0,0,8,0"/>
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{StaticResource Text}" Width="14" Height="14" Margin="0,0,7,0"/>
                         <TextBlock Text="Almanax"/>
                     </StackPanel>
-                    <Ellipse Width="12" Height="12" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-12,-20,0"
+                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-11,-18,0"
                              Visibility="{Binding Almanax.NeedsReminder, Converter={StaticResource BoolVis}}"/>
                 </Grid>
             </Button>
 
             <!-- Retour à la fenêtre complète -->
-            <Button Grid.Column="9" Command="{Binding ShowMainCommand}" Width="44" Height="44" Padding="0" Margin="0" BorderBrush="{StaticResource Text}"
+            <Button Grid.Column="9" Command="{Binding ShowMainCommand}" Width="32" Height="32" MinHeight="0" Padding="0" Margin="0" BorderBrush="{StaticResource Text}"
                     ToolTip="Revenir à l'interface complète" Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}">
-                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCompress}" Stroke="{StaticResource Text}" Width="18" Height="18"/>
+                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCompress}" Stroke="{StaticResource Text}" Width="14" Height="14"/>
             </Button>
 
         </Grid>
