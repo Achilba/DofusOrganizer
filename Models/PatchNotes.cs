@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.5.0";
+    public const string Current = "0.5.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.5.1", "24/10/2026", new[]
+        {
+            "CORRIGÉ — Almanax : le rappel de l'accueil (et le point orange de la mini-barre) reste affiché tant que l'Almanax du jour n'est pas réalisé, même s'il est déjà préparé.",
+        }),
         new("0.5.0", "23/10/2026", new[]
         {
             "NOUVEAU — Raccourcis modifiables (Paramètres > Raccourcis) : clique sur une touche puis appuie sur la nouvelle. Chaque raccourci est contrôlé (pas de doublon, pas de lettre seule qui gênerait le chat de DOFUS) et un bouton rétablit les valeurs par défaut.",

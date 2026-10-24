@@ -107,13 +107,13 @@ public class AlmanaxViewModel : ObservableObject
     public double YearPct { get; private set; }
     public string[] WeekdayHeaders { get; } = { "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim" };
 
-    /// <summary>Point orange sur le bouton Almanax de la mini-barre : l'offrande du jour n'est ni préparée ni validée.</summary>
+    /// <summary>Rappel (carte de l'accueil et point orange de la mini-barre) : tant que l'Almanax du jour n'est pas réalisé, même s'il est déjà préparé.</summary>
     public bool NeedsReminder
     {
         get
         {
             var k = Key(DateTime.Today);
-            return !_main.Data.AlmanaxDone.Contains(k) && !_main.Data.AlmanaxPrepared.Contains(k);
+            return !_main.Data.AlmanaxDone.Contains(k);
         }
     }
 
