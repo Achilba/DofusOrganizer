@@ -120,17 +120,16 @@
                     <ColumnDefinition Width="94"/>
                     <ColumnDefinition Width="94"/>
                     <ColumnDefinition Width="94"/>
-                    <ColumnDefinition Width="94"/>
+
                     <ColumnDefinition Width="170"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Boss"/>
                     <TextBlock Grid.Column="1" Text="Niveau"/>
                     <TextBlock Grid.Column="2" Text="Chall 1" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="3" Text="Chall 2" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="4" Text="Chall 3" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="5" Text="Duo / Trio" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="6" Text="Spécial" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="7" Text="Manque aussi chez"/>
+                    <TextBlock Grid.Column="4" Text="Duo / Trio" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Text="Spécial" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="6" Text="Manque aussi chez"/>
                 </Grid>
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding AchView}">
@@ -145,7 +144,7 @@
                                             <ColumnDefinition Width="94"/>
                                             <ColumnDefinition Width="94"/>
                                             <ColumnDefinition Width="94"/>
-                                            <ColumnDefinition Width="94"/>
+
                                             <ColumnDefinition Width="170"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding Name}" FontSize="14" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Text}" VerticalAlignment="Center"/>
@@ -158,19 +157,15 @@
                                             <TextBlock Text="{Binding T2}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C2, Mode=TwoWay}"/>
                                         </StackPanel>
-                                        <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H3, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding T3}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
-                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C3, Mode=TwoWay}"/>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HG, Converter={StaticResource BoolVis}}">
+                                        <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HG, Converter={StaticResource BoolVis}}">
                                             <TextBlock Text="{Binding TG}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding G, Mode=TwoWay}"/>
                                         </StackPanel>
-                                        <StackPanel Grid.Column="6" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HS, Converter={StaticResource BoolVis}}">
+                                        <StackPanel Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HS, Converter={StaticResource BoolVis}}">
                                             <TextBlock Text="{Binding TS}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding S, Mode=TwoWay}"/>
                                         </StackPanel>
-                                        <TextBlock Grid.Column="7" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

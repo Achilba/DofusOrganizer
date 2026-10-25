@@ -22,13 +22,13 @@ public class AchRow : ObservableObject
     public int Order { get; }
     public string Key => _b.Boss;
     public string Name => _b.Boss;
-    public string Bracket => _b.Bracket.Contains(" à ") ? "Niv. " + _b.Bracket : _b.Bracket;
-    public int LevelNum => _b.LevelNum;
+    public string Bracket => _b.Level.ToString();
+    public int LevelNum => _b.Level;
 
     // Disponibilité et libellés des 5 cases
     public bool H1 => _b.Challenges.Length > 0;
     public bool H2 => _b.Challenges.Length > 1;
-    public bool H3 => _b.Challenges.Length > 2;
+    public bool H3 => false; // 3e challenge non affiché
     public bool HG => _b.GroupLabel != null;
     public bool HS => _b.Special;
     public string T1 => H1 ? _b.Challenges[0] : "";
@@ -182,7 +182,7 @@ public partial class DungeonsViewModel
             if (CharMissing(c.Name, boss)) miss.Add(c.Name);
         }
         if (miss.Count == 0) return "";
-        if (others > 1 && miss.Count == others) return "Tous les autres";
+        if (others > 1 && miss.Count == others) return "Tous";
         return string.Join(", ", miss);
     }
 
@@ -190,7 +190,7 @@ public partial class DungeonsViewModel
     {
         var q = _query.Trim().ToLowerInvariant();
         IEnumerable<AchRow> items = _achAll.Where(d =>
-            (d.LevelNum > 0 ? InLevelRange(d.LevelNum) : _levelFilter == "tous") &&
+            InLevelRange(d.LevelNum) &&
             (!_onlyMissing || d.AnyMissing) &&
             (q.Length == 0 || (d.Name + " " + d.Bracket + " " + d.T1 + " " + d.T2 + " " + d.T3).ToLowerInvariant().Contains(q)));
 
@@ -198,7 +198,7 @@ public partial class DungeonsViewModel
         {
             "niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.Order),
             "nom (A → Z)" => items.OrderBy(d => d.Name, StringComparer.CurrentCulture),
-            _ => items.OrderBy(d => d.LevelNum == 0 ? 9999 : d.LevelNum).ThenBy(d => d.Order)
+            _ => items.OrderBy(d => d.LevelNum).ThenBy(d => d.Order)
         };
 
         AchView.Clear();
