@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.10";
+    public const string Current = "0.9.11";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.11", "25/10/2026", new[]
+        {
+            "CORRIGÉ — Personnages : la saisie manuelle du niveau d'alignement fonctionne (elle était effacée en quittant le champ). Valide en quittant le champ ou avec Entrée ; la valeur est limitée entre 1 et 100.",
+        }),
         new("0.9.10", "25/10/2026", new[]
         {
             "CHANGÉ — Accueil : pour un personnage au-delà du niveau 200, la case Niveau affiche le chiffre Oméga en gros (260 donne « 60 ») et le mot « Oméga » en petit, doré, à côté de « Niveau ».",

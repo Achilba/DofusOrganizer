@@ -103,7 +103,7 @@
                             <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="40" ClipToBounds="True" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <RepeatButton Style="{StaticResource StepBtn}" Content="−" Click="Align_Dec"/>
-                                    <TextBox Style="{StaticResource StepBox}" Text="{Binding Selected.AlignLevel, Mode=TwoWay}" LostFocus="Align_LostFocus"/>
+                                    <TextBox Style="{StaticResource StepBox}" Text="{Binding Selected.AlignLevel, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" LostFocus="Align_LostFocus" KeyDown="Align_KeyDown"/>
                                     <RepeatButton Style="{StaticResource StepBtn}" Content="+" Click="Align_Inc"/>
                                 </StackPanel>
                             </Border>

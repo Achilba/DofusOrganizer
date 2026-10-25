@@ -22,10 +22,24 @@ public partial class CharactersPage : UserControl
         if ((DataContext as CharactersViewModel)?.Selected is { } c) c.AlignLevel--;
     }
 
-    private void Align_LostFocus(object sender, RoutedEventArgs e)
+    private void Align_LostFocus(object sender, RoutedEventArgs e) => CommitAlign((TextBox)sender);
+
+    private void Align_KeyDown(object sender, KeyEventArgs e)
     {
-        // Réaffiche la valeur réellement retenue (limitée entre 1 et 100)
-        ((TextBox)sender).GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+        if (e.Key != Key.Enter) return;
+        CommitAlign((TextBox)sender);
+        e.Handled = true;
+    }
+
+    /// <summary>
+    /// Valide la saisie, puis réaffiche la valeur réellement retenue (limitée entre 1 et 100).
+    /// Il faut d'abord envoyer le texte tapé à la source : sinon le réaffichage efface la saisie.
+    /// </summary>
+    private static void CommitAlign(TextBox box)
+    {
+        var be = box.GetBindingExpression(TextBox.TextProperty);
+        be?.UpdateSource();
+        be?.UpdateTarget();
     }
 
     private void Job_Inc(object sender, RoutedEventArgs e)
