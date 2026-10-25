@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.8.6";
+    public const string Current = "0.8.7";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.8.7", "25/10/2026", new[]
+        {
+            "CORRIGÉ — Donjons, vue Succès : la colonne « Manque » réagit maintenant à chaque case cochée. Elle affiche « Tous » tant qu'aucun personnage n'a rien fait sur le boss, puis une ligne par personnage avec le nombre de succès qui lui restent (par exemple « Achilpoi (3) ») ; le nom disparaît quand tout est coché. Avant, elle ne changeait qu'une fois les 4 cases cochées.",
+        }),
         new("0.8.6", "25/10/2026", new[]
         {
             "CORRIGÉ — Donjons, vue Succès : les en-têtes et le contenu des colonnes Niveau à Manque sont alignés au centre ; la colonne « Manque » se met à jour dès qu'on coche une case (elle liste tous les personnages à qui il manque encore un succès sur ce boss, y compris celui qui est sélectionné).",

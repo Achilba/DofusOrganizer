@@ -179,14 +179,38 @@ public partial class DungeonsViewModel
 
     internal bool AnyMissing(string boss) => AchChars().Any(c => CharMissing(c.Name, boss));
 
-    /// <summary>Personnages (hors Forgelance et Sacrieur) à qui il manque encore au moins un succès de ce boss.</summary>
+    /// <summary>Nombre de succès encore à faire sur ce boss pour un personnage.</summary>
+    private int MissingCount(string name, string boss)
+    {
+        if (!_achByKey.TryGetValue(boss, out var row)) return 0;
+        _main.Data.BossAch.TryGetValue(name, out var l);
+        var a = row.Available;
+        int n = 0;
+        for (int k = 0; k < 5; k++)
+            if (a[k] && (l == null || !l.Contains(Key(boss, k)))) n++;
+        return n;
+    }
+
+    /// <summary>
+    /// Colonne « Manque » : « Tous » si aucun personnage n'a rien fait sur ce boss ; sinon une ligne par
+    /// personnage à qui il reste des succès, avec le nombre restant (Forgelance et Sacrieur exclus).
+    /// </summary>
     internal string OthersMissing(string boss)
     {
+        if (!_achByKey.TryGetValue(boss, out var row)) return "";
         var all = AchChars().ToList();
-        var miss = all.Where(c => CharMissing(c.Name, boss)).Select(c => c.Name).ToList();
-        if (miss.Count == 0) return "";
-        if (all.Count > 1 && miss.Count == all.Count) return "Tous";
-        return string.Join(", ", miss);
+        var lines = new List<string>();
+        int untouched = 0;
+        foreach (var c in all)
+        {
+            int n = MissingCount(c.Name, boss);
+            if (n == 0) continue;
+            if (n == row.Total) untouched++;
+            lines.Add(c.Name + " (" + n + ")");
+        }
+        if (lines.Count == 0) return "";
+        if (all.Count > 1 && untouched == all.Count) return "Tous";
+        return string.Join("\n", lines);
     }
 
     private void RefreshAch()
