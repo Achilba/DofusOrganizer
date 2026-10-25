@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.16";
+    public const string Current = "0.9.17";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.17", "25/10/2026", new[]
+        {
+            "CHANGÉ — Le bouton Paramètres du menu de gauche a un contour et un fond pour mieux se voir ; le contour passe à la couleur d'accent au survol et quand la page est ouverte.",
+        }),
         new("0.9.16", "25/10/2026", new[]
         {
             "CORRIGÉ — Accueil : les cartes des personnages sont de nouveau alignées sur trois colonnes de même taille (elles se plaçaient en désordre).",
