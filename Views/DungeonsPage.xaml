@@ -144,7 +144,7 @@
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="*" MinWidth="230"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Boss"/>
                     <TextBlock Grid.Column="1" Text="Niveau" HorizontalAlignment="Center"/>
@@ -169,7 +169,7 @@
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="*" MinWidth="230"/>
                                         </Grid.ColumnDefinitions>
                                         <DockPanel VerticalAlignment="Center" Margin="0,0,8,0">
                                             <Button DockPanel.Dock="Right" Style="{StaticResource InfoBtn}" Margin="6,0,0,0" Command="{Binding OpenCommand}"

@@ -232,7 +232,10 @@ public partial class DungeonsViewModel
         }
         if (lines.Count == 0) return "";
         if (all.Count > 1 && untouched == all.Count) return "Tous";
-        return string.Join("\n", lines);
+        var rows = new List<string>();
+        for (int i = 0; i < lines.Count; i += 2)
+            rows.Add(i + 1 < lines.Count ? lines[i] + " · " + lines[i + 1] : lines[i]);
+        return string.Join("\n", rows);
     }
 
     private void RefreshAch()

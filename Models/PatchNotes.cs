@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.17";
+    public const string Current = "0.9.18";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.18", "25/10/2026", new[]
+        {
+            "CHANGÉ — Donjons, vue Succès : dans la colonne « Manque », les personnages sont affichés deux par deux sur chaque ligne, et la colonne est plus large.",
+        }),
         new("0.9.17", "25/10/2026", new[]
         {
             "CHANGÉ — Le bouton Paramètres du menu de gauche a un contour et un fond pour mieux se voir ; le contour passe à la couleur d'accent au survol et quand la page est ouverte.",
