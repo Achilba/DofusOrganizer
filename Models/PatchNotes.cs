@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.5";
+    public const string Current = "0.9.6";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.6", "25/10/2026", new[]
+        {
+            "CORRIGÉ — Accueil : les noms et les avatars ne sont plus écrasés ni coupés. Le statut revient en bas de la carte, et les cartes s'agrandissent toutes seules quand on ajoute des métiers ou d'autres infos. La page défile si elle ne tient plus dans la fenêtre.",
+        }),
         new("0.9.5", "25/10/2026", new[]
         {
             "NOUVEAU — Accueil : chaque carte de personnage affiche maintenant son niveau, sa faction et son ordre, et ses métiers de niveau 200, sur un fond gris. Le statut passe à droite du nom et aucun texte n'est coupé.",
