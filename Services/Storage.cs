@@ -94,7 +94,7 @@ public class Storage
                 File.Copy(FilePath, today, false);
                 data.LastBackup = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
             }
-            foreach (var old in Directory.GetFiles(BackupDir, "data-*.json").OrderByDescending(f => f).Skip(7))
+            foreach (var old in Directory.GetFiles(BackupDir, "data-*.json").OrderByDescending(f => f).Skip(14))
                 File.Delete(old);
         }
         catch { /* une sauvegarde ratée ne doit jamais empêcher de lancer l'appli */ }

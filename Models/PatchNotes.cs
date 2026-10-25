@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.19";
+    public const string Current = "0.9.20";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.20", "25/10/2026", new[]
+        {
+            "NOUVEAU — Donjons : une croix dans le champ de recherche pour le vider en un clic.",
+            "CHANGÉ — Les textes secondaires (gris) sont plus clairs sur tous les thèmes, pour être plus lisibles.",
+            "CHANGÉ — Sauvegardes automatiques : une copie par jour est conservée pendant 14 jours (7 avant).",
+        }),
         new("0.9.19", "25/10/2026", new[]
         {
             "CHANGÉ — Accueil : le bouton rouge « Mise à jour disponible » télécharge et installe directement la nouvelle version, puis redémarre l'appli (plus besoin de passer par les Paramètres).",

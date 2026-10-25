@@ -69,6 +69,7 @@ public partial class DungeonsViewModel : ObservableObject
     }
 
     public string Query { get => _query; set { if (Set(ref _query, value ?? "")) Refresh(); } }
+    public RelayCommand ClearQueryCommand => new(() => Query = "");
     public string Sort { get => _sort; set { if (value != null && Set(ref _sort, value)) Refresh(); } }
     public bool HideDone { get => _hideDone; set { if (Set(ref _hideDone, value)) Refresh(); } }
     public string Counter => _all.Count(d => d.Done) + " / " + _all.Count;

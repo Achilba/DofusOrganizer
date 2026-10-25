@@ -28,7 +28,7 @@ public static class ThemeCatalog
                 ["Bg"] = C("#0E1014"), ["Header"] = C("#0A0C0F"), ["Side"] = C("#12151B"), ["Panel"] = C("#161A21"),
                 ["Field"] = C("#1E232C"), ["Line"] = C("#2B313C"), ["Line2"] = C("#3A4150"), ["KeyBg"] = C("#2A2F3A"),
                 ["Accent"] = C("#F2B544"), ["AccentText"] = C("#1B1406"), ["Text"] = C("#F3F0E8"),
-                ["Muted"] = C("#B4BAC6"), ["Dim"] = C("#8B93A3"),
+                ["Muted"] = C("#CBD0DA"), ["Dim"] = C("#A6AEBD"),
                 ["Hover"] = C("#1A1F28"), ["Active"] = C("#232936"), ["AccentSoft"] = C("#2A2416"), ["Track"] = C("#3A4150"),
                 ["Hot"] = C("#FF7A2F"), ["HotText"] = C("#1A0E04"),
             }
@@ -85,8 +85,8 @@ public static class ThemeCatalog
                 ["Hot"] = C(hotHex), ["HotText"] = C("#1A0E04"),
                 ["AccentSoft"] = Mix(panel, accent, 0.14),
                 ["Text"] = C("#F3F0E8"),
-                ["Muted"] = Hsl(hue, Math.Min(sat, 0.14), 0.75),
-                ["Dim"] = Hsl(hue, Math.Min(sat, 0.10), 0.60),
+                ["Muted"] = Hsl(hue, Math.Min(sat, 0.14), 0.80),
+                ["Dim"] = Hsl(hue, Math.Min(sat, 0.10), 0.69),
             }
         };
     }

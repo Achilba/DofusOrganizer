@@ -21,8 +21,8 @@
         <SolidColorBrush x:Key="Accent" Color="#F2B544"/>
         <SolidColorBrush x:Key="AccentText" Color="#1B1406"/>
         <SolidColorBrush x:Key="Text" Color="#F3F0E8"/>
-        <SolidColorBrush x:Key="Muted" Color="#B4BAC6"/>
-        <SolidColorBrush x:Key="Dim" Color="#8B93A3"/>
+        <SolidColorBrush x:Key="Muted" Color="#CBD0DA"/>
+        <SolidColorBrush x:Key="Dim" Color="#A6AEBD"/>
         <SolidColorBrush x:Key="Good" Color="#3DD68C"/>
         <SolidColorBrush x:Key="GoodText" Color="#7BE8B0"/>
         <SolidColorBrush x:Key="GoodDark" Color="#08301C"/>

@@ -104,7 +104,22 @@
             <TextBlock Text="Succès de donjon par boss et par personnage · recherche, tri et filtre par niveau" Style="{StaticResource PageSub}"/>
         </StackPanel>
         <WrapPanel Grid.Row="1" Margin="0,0,0,6">
-            <TextBox Width="230" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom, niveau ou coordonnées" Margin="0,0,10,8"/>
+            <Grid Width="230" Margin="0,0,10,8">
+                <TextBox x:Name="SearchBox" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom, niveau ou coordonnées" Padding="10,0,34,0"/>
+                <Button Content="✕" Command="{Binding ClearQueryCommand}" ToolTip="Vider la recherche" Width="26" Height="26" Padding="0" MinHeight="0"
+                        HorizontalAlignment="Right" Margin="0,0,7,0" Cursor="Hand" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource Muted}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=SearchBox}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
             <ComboBox Width="200" ItemsSource="{Binding SortChoices}" ItemStringFormat="Tri : {0}" SelectedItem="{Binding Sort, Mode=TwoWay}" Margin="0,0,10,8"/>
             <ComboBox Width="170" ItemsSource="{Binding LevelFilterChoices}" ItemStringFormat="Niveau : {0}" SelectedItem="{Binding LevelFilter, Mode=TwoWay}" Margin="0,0,10,8"/>
             <ComboBox Width="170" ItemsSource="{Binding CharNames}" SelectedItem="{Binding AchChar, Mode=TwoWay}" ItemStringFormat="Perso : {0}" Margin="0,0,10,8"
