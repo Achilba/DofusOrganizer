@@ -79,6 +79,8 @@ public class AlmanaxViewModel : ObservableObject
     public RelayCommand AllTodoCommand { get; }
     public RelayCommand AllPrepCommand { get; }
     public RelayCommand AllDoneCommand { get; }
+    /// <summary>« Fait » de la carte de l'accueil : marque l'Almanax d'aujourd'hui comme réalisé.</summary>
+    public RelayCommand TodayDoneCommand { get; }
     public RelayCommand ZaapCommand => _main.CopyAlmanaxZaapCommand;
 
     public AlmanaxViewModel(MainViewModel main)
@@ -96,6 +98,7 @@ public class AlmanaxViewModel : ObservableObject
         AllTodoCommand = new RelayCommand(() => ApplyWeek(d => true, "todo"));
         AllPrepCommand = new RelayCommand(() => ApplyWeek(d => d >= DateTime.Today && Kind(d) != "done", "prep"));
         AllDoneCommand = new RelayCommand(() => ApplyWeek(d => d <= DateTime.Today, "done"));
+        TodayDoneCommand = new RelayCommand(() => { SetDay(DateTime.Today, "done"); _main.RequestSave(); Refresh(); });
         Refresh();
     }
 

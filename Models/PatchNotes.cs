@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.3";
+    public const string Current = "0.9.4";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.4", "25/10/2026", new[]
+        {
+            "NOUVEAU — Accueil : le rappel de l'Almanax affiche maintenant l'offrande du jour, avec un bouton « Fait » pour la valider directement et un bouton « Ouvrir » vers la page Almanax. Le rappel disparaît une fois l'offrande faite.",
+        }),
         new("0.9.3", "25/10/2026", new[]
         {
             "NOUVEAU — Donjons, vue Succès : une colonne « Chall 3 » pour les boss qui ont trois challenges (23 boss). Elle est comptée dans « Manque » et dans le compteur de succès.",

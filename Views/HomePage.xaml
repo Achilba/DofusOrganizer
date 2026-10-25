@@ -50,19 +50,23 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Rappel Almanax -->
-            <Button Grid.Row="1" HorizontalAlignment="Left" Command="{Binding NavigateCommand}" CommandParameter="almanax" Margin="0,0,0,16" MinHeight="44" Padding="14,6"
-                    Background="#1FF2963C" BorderBrush="{DynamicResource Warn}" BorderThickness="1" Foreground="{DynamicResource WarnText}"
+            <!-- Rappel Almanax : offrande du jour et bouton Fait -->
+            <Border Grid.Row="1" HorizontalAlignment="Left" Margin="0,0,0,16" Padding="14,6" CornerRadius="8" MinHeight="44"
+                    Background="#1FF2963C" BorderBrush="{DynamicResource Warn}" BorderThickness="1"
                     Visibility="{Binding Almanax.NeedsReminder, Converter={StaticResource BoolVis}}">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Path Style="{StaticResource Icon}" Data="{StaticResource IcoBell}" Stroke="{DynamicResource WarnText}" Width="15" Height="15" Margin="0,0,8,0"/>
-                    <TextBlock Text="Almanax du jour"/>
-                    <Border Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="10,3" Margin="16,0,0,0"
+                    <TextBlock Text="Almanax du jour :" Foreground="{DynamicResource WarnText}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Almanax.TodaySummary}" FontFamily="{StaticResource BodyXB}" Foreground="{DynamicResource Text}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    <Border Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="10,3" Margin="12,0,0,0" VerticalAlignment="Center"
                             Visibility="{Binding Almanax.IsSunday, Converter={StaticResource BoolVis}}">
                         <TextBlock Text="Almanax · Préparer la semaine" Foreground="{DynamicResource Text}"/>
                     </Border>
+                    <Button Content="Ouvrir" Command="{Binding NavigateCommand}" CommandParameter="almanax" Margin="16,0,0,0" MinHeight="32" Padding="14,0"/>
+                    <Button Content="Fait" Command="{Binding Almanax.TodayDoneCommand}" Margin="8,0,0,0" MinHeight="32" Padding="16,0"
+                            Background="{DynamicResource Hot}" Foreground="{DynamicResource HotText}" BorderThickness="0" FontFamily="{StaticResource BodyXB}"/>
                 </StackPanel>
-            </Button>
+            </Border>
 
             <!-- Personnages -->
             <ItemsControl Grid.Row="2" ItemsSource="{Binding Characters}" Margin="0,0,-12,0">
