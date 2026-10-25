@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.6.0";
+    public const string Current = "0.6.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.6.1", "25/10/2026", new[]
+        {
+            "NOUVEAU — Almanax : le type de l'offrande est affiché à côté de la quantité (« Ressource · Os », « Équipement · Anneau », « Consommable · Pain »…), en couleur pour les équipements et les consommables. Source : DofusDB, vérifié sur les 366 offrandes (trois noms approchants sont à confirmer en jeu : Botte trouée, Incisive de Verglisseur, Œil de Fédorme).",
+        }),
         new("0.6.0", "25/10/2026", new[]
         {
             "NOUVEAU — Recherche globale : Ctrl+K (ou « Rechercher » en haut de la barre latérale). Tape un nom pour trouver un personnage, un Dofus, un donjon, une légende, un Zaap (un clic le copie), une note ou une page ; ↑ ↓ pour choisir, Entrée pour ouvrir, Échap pour fermer. Les accents sont ignorés (« ebene » trouve « Ébène »).",

@@ -12,6 +12,11 @@ public class AlmanaxDay
     public string DateText { get; set; }
     public string Resource { get; set; }
     public string QtyText { get; set; }
+    /// <summary>Type de l'offrande, par exemple « Équipement · Anneau » ou « Consommable · Pain ».</summary>
+    public string TypeText { get; set; }
+    /// <summary>« Ressource », « Équipement » ou « Consommable » (sert à colorer la pastille).</summary>
+    public string TypeCategory { get; set; }
+    public bool HasType => !string.IsNullOrEmpty(TypeText);
     public bool HasQuest { get; set; }
     public string QuestText { get; set; }
     public string Bonus { get; set; }
@@ -231,6 +236,8 @@ public class AlmanaxViewModel : ObservableObject
                 DateText = d.Day + " " + Months[d.Month - 1],
                 Resource = o.Resource,
                 QtyText = o.Qty > 0 ? "×" + o.Qty : "",
+                TypeText = AlmanaxTypes.For(o.Resource),
+                TypeCategory = AlmanaxTypes.CategoryOf(AlmanaxTypes.For(o.Resource)),
                 HasQuest = !string.IsNullOrEmpty(o.Quest),
                 QuestText = "Quête : " + o.Quest + " ↗",
                 Bonus = bonus,
