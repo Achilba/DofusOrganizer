@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
         <Style x:Key="Accent40" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Background" Value="{StaticResource Accent}"/>
-            <Setter Property="Foreground" Value="{StaticResource AccentText}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+            <Setter Property="Background" Value="{DynamicResource Accent}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Accent}"/>
         </Style>
         <Style x:Key="Lbl" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="{StaticResource Body}"/>
@@ -28,8 +28,8 @@
 
         <!-- Choix du personnage -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,14">
-            <TextBlock Text="Personnage" Style="{StaticResource Lbl}" FontFamily="{StaticResource BodyXB}" Foreground="{StaticResource Muted}" Margin="0,0,10,0"/>
-            <ComboBox Width="260" Height="44" FontSize="15" BorderBrush="{StaticResource Accent}" ItemsSource="{Binding Characters}"
+            <TextBlock Text="Personnage" Style="{StaticResource Lbl}" FontFamily="{StaticResource BodyXB}" Foreground="{DynamicResource Muted}" Margin="0,0,10,0"/>
+            <ComboBox Width="260" Height="44" FontSize="15" BorderBrush="{DynamicResource Accent}" ItemsSource="{Binding Characters}"
                       SelectedItem="{Binding Selected, Mode=TwoWay}" Margin="0,0,12,0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -64,11 +64,11 @@
                             </ComboBox>
                             <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
                             <TextBox Width="88" TextAlignment="Right" Text="{Binding Selected.CharLevel, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,16,0"/>
-                            <Border BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="16" Padding="14,7" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Selected.LevelText}" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}"/>
+                            <Border BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="16" Padding="14,7" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Selected.LevelText}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}"/>
                             </Border>
                         </WrapPanel>
-                        <TextBlock Text="Au-delà de 200, le niveau s'affiche en Oméga : 260 devient « Oméga 60 »." Foreground="{StaticResource Dim}" FontSize="12" Margin="0,12,0,0"/>
+                        <TextBlock Text="Au-delà de 200, le niveau s'affiche en Oméga : 260 devient « Oméga 60 »." Foreground="{DynamicResource Dim}" FontSize="12" Margin="0,12,0,0"/>
                     </StackPanel>
                 </Border>
 
@@ -82,7 +82,7 @@
                             <TextBlock Text="Ordre" Style="{StaticResource Lbl}"/>
                             <ComboBox Width="162" ItemsSource="{Binding Selected.Orders}" SelectedItem="{Binding Selected.Order, Mode=TwoWay}" Margin="0,0,16,0"/>
                             <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
-                            <Border Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="40" ClipToBounds="True" VerticalAlignment="Center">
+                            <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="40" ClipToBounds="True" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <RepeatButton Style="{StaticResource StepBtn}" Content="−" Click="Align_Dec"/>
                                     <TextBox Style="{StaticResource StepBox}" Text="{Binding Selected.AlignLevel, Mode=TwoWay}" LostFocus="Align_LostFocus"/>
@@ -97,7 +97,7 @@
                 <Border Style="{StaticResource Card}">
                     <StackPanel>
                         <TextBlock Text="Métiers" Style="{StaticResource H2}" Margin="0,0,0,12"/>
-                        <TextBlock Text="Aucun métier enregistré" Foreground="{StaticResource Dim}" Margin="0,0,0,12"
+                        <TextBlock Text="Aucun métier enregistré" Foreground="{DynamicResource Dim}" Margin="0,0,0,12"
                                    Visibility="{Binding NoJobs, Converter={StaticResource BoolVis}}"/>
                         <ItemsControl ItemsSource="{Binding Selected.Jobs}">
                             <ItemsControl.ItemTemplate>
@@ -106,7 +106,7 @@
                                         <Button DockPanel.Dock="Right" Content="Supprimer" Margin="10,0,0,0"
                                                 Command="{Binding DataContext.RemoveJobCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"/>
-                                        <Border DockPanel.Dock="Right" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="38" ClipToBounds="True">
+                                        <Border DockPanel.Dock="Right" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="38" ClipToBounds="True">
                                             <StackPanel Orientation="Horizontal">
                                                 <RepeatButton Style="{StaticResource StepBtn}" Content="−" Tag="{Binding}" Click="Job_Dec" IsEnabled="{Binding CanDec}"/>
                                                 <TextBox Style="{StaticResource StepBox}" Text="{Binding Level, UpdateSourceTrigger=PropertyChanged}"/>
@@ -118,7 +118,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,8,0,0">
+                        <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,8,0,0">
                             <WrapPanel>
                                 <ComboBox Width="146" ItemsSource="{Binding AvailableJobs}" SelectedItem="{Binding NewJob, Mode=TwoWay}" Margin="0,0,10,0"/>
                                 <Button Content="Ajouter ce métier" Style="{StaticResource Accent40}" Command="{Binding AddJobCommand}"/>
@@ -132,21 +132,21 @@
                     <StackPanel>
                         <TextBlock Text="Stuffs" Style="{StaticResource H2}" Margin="0,0,0,12"/>
                         <TextBlock Text="Colle le lien de ton stuff (site de ton choix). L'appli ne garde que le lien : aucune base d'objets."
-                                   Foreground="{StaticResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                                   Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,12"/>
                         <DockPanel Margin="0,0,0,12">
                             <ComboBox DockPanel.Dock="Right" MinHeight="34" Height="34" Width="90" FontSize="12" ItemsSource="{Binding VersionFilters}" SelectedItem="{Binding VerFilter, Mode=TwoWay}"/>
                             <ListBox ItemsSource="{Binding TagFilters}" SelectedItem="{Binding TagFilter, Mode=TwoWay}" ItemContainerStyle="{StaticResource Pill}"
-                                     Background="Transparent" BorderThickness="0" Foreground="{StaticResource Text}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                     Background="Transparent" BorderThickness="0" Foreground="{DynamicResource Text}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                 <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
                             </ListBox>
                         </DockPanel>
 
-                        <TextBlock Text="Aucun lien enregistré" Foreground="{StaticResource Dim}" Margin="0,0,0,10"
+                        <TextBlock Text="Aucun lien enregistré" Foreground="{DynamicResource Dim}" Margin="0,0,0,10"
                                    Visibility="{Binding NoStuff, Converter={StaticResource BoolVis}}"/>
                         <ItemsControl ItemsSource="{Binding VisibleStuffs}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8" Padding="12,4" Margin="0,0,0,8" MinHeight="48">
+                                    <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="8" Padding="12,4" Margin="0,0,0,8" MinHeight="48">
                                         <DockPanel>
                                             <Button DockPanel.Dock="Right" Content="Supprimer" Margin="10,0,0,0"
                                                     Command="{Binding DataContext.RemoveStuffCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -157,15 +157,15 @@
                                             <StackPanel VerticalAlignment="Center">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
-                                                    <Border BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="6" Padding="8,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding Tag}" FontSize="11" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}"/>
+                                                    <Border BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="6" Padding="8,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Tag}" FontSize="11" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}"/>
                                                     </Border>
-                                                    <Border Background="{StaticResource KeyBg}" CornerRadius="6" Padding="8,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                    <Border Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="8,1" Margin="8,0,0,0" VerticalAlignment="Center">
                                                         <TextBlock Text="{Binding Version, StringFormat=v{0}}" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
                                                     </Border>
                                                 </StackPanel>
                                                 <TextBlock TextTrimming="CharacterEllipsis" FontSize="12">
-                                                    <Hyperlink NavigateUri="{Binding Url}" RequestNavigate="Link_Navigate" Foreground="{StaticResource Accent}">
+                                                    <Hyperlink NavigateUri="{Binding Url}" RequestNavigate="Link_Navigate" Foreground="{DynamicResource Accent}">
                                                         <Run Text="{Binding Url, Mode=OneWay}"/>
                                                     </Hyperlink>
                                                 </TextBlock>
@@ -176,14 +176,14 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,4,0,0">
+                        <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Padding="0,10,0,0" Margin="0,4,0,0">
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" Content="Ajouter" Style="{StaticResource Accent40}" Command="{Binding AddStuffCommand}" Margin="10,0,0,0"/>
                                 <ComboBox DockPanel.Dock="Left" Width="80" ItemsSource="{Binding VersionChoices}" ItemStringFormat="v{0}" SelectedItem="{Binding NewVersion, Mode=TwoWay}" Margin="0,0,10,0"/>
                                 <ComboBox DockPanel.Dock="Left" Width="100" ItemsSource="{Binding TagChoices}" SelectedItem="{Binding NewTag, Mode=TwoWay}" Margin="0,0,10,0"/>
                                 <Grid DockPanel.Dock="Left" Width="200" Margin="0,0,10,0">
                                     <TextBox x:Name="NameBox" Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom du stuff"/>
-                                    <TextBlock Text="Nom du stuff (ex. Stuff PvM)" Foreground="{StaticResource Dim}" IsHitTestVisible="False" Margin="12,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
+                                    <TextBlock Text="Nom du stuff (ex. Stuff PvM)" Foreground="{DynamicResource Dim}" IsHitTestVisible="False" Margin="12,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -198,7 +198,7 @@
                                 </Grid>
                                 <Grid>
                                     <TextBox x:Name="UrlBox" Text="{Binding NewUrl, UpdateSourceTrigger=PropertyChanged}" KeyDown="Url_KeyDown" ToolTip="Lien du stuff"/>
-                                    <TextBlock Text="Colle ton lien ici (https://…)" Foreground="{StaticResource Dim}" IsHitTestVisible="False" Margin="12,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
+                                    <TextBlock Text="Colle ton lien ici (https://…)" Foreground="{DynamicResource Dim}" IsHitTestVisible="False" Margin="12,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -213,7 +213,7 @@
                                 </Grid>
                             </DockPanel>
                         </Border>
-                        <TextBlock Text="{Binding Error}" Foreground="{StaticResource Bad}" FontFamily="{StaticResource BodyXB}" FontSize="12" Margin="0,8,0,0"
+                        <TextBlock Text="{Binding Error}" Foreground="{DynamicResource Bad}" FontFamily="{StaticResource BodyXB}" FontSize="12" Margin="0,8,0,0"
                                    Visibility="{Binding Error, Converter={StaticResource NotEmptyVis}}"/>
                     </StackPanel>
                 </Border>

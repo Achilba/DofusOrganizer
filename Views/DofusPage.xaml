@@ -6,15 +6,15 @@
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Height" Value="116"/>
             <Setter Property="IsThreeState" Value="True"/>
-            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="Foreground" Value="{DynamicResource Text}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="b" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1.5" CornerRadius="12" Padding="6,8">
+                        <Border x:Name="b" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1.5" CornerRadius="12" Padding="6,8">
                             <Grid>
-                                <Border x:Name="badge" Width="20" Height="20" CornerRadius="10" Background="{StaticResource Good}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,2,0"
+                                <Border x:Name="badge" Width="20" Height="20" CornerRadius="10" Background="{DynamicResource Good}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,2,0"
                                         Visibility="Collapsed">
-                                    <Path Data="{StaticResource IcoCheck}" Stroke="{StaticResource GoodDark}" StrokeThickness="3.2" Stretch="Uniform" Width="11" Height="9"
+                                    <Path Data="{StaticResource IcoCheck}" Stroke="{DynamicResource GoodDark}" StrokeThickness="3.2" Stretch="Uniform" Width="11" Height="9"
                                           StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
                                 </Border>
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -48,25 +48,25 @@
                                         </Canvas>
                                     </Viewbox>
                                     <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="14" TextAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/>
-                                    <TextBlock Text="{Binding Subtitle}" Foreground="{StaticResource Muted}" FontSize="11.5" TextAlignment="Center"/>
-                                    <TextBlock x:Name="st" Text="{Binding StatusText}" Foreground="{StaticResource Dim}" FontFamily="{StaticResource BodyXB}" FontSize="11.5" TextAlignment="Center"/>
+                                    <TextBlock Text="{Binding Subtitle}" Foreground="{DynamicResource Muted}" FontSize="11.5" TextAlignment="Center"/>
+                                    <TextBlock x:Name="st" Text="{Binding StatusText}" Foreground="{DynamicResource Dim}" FontFamily="{StaticResource BodyXB}" FontSize="11.5" TextAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="b" Property="Background" Value="#26F2963C"/>
-                                <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Warn}"/>
-                                <Setter TargetName="st" Property="Foreground" Value="{StaticResource WarnText}"/>
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Warn}"/>
+                                <Setter TargetName="st" Property="Foreground" Value="{DynamicResource WarnText}"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="{x:Null}">
                                 <Setter TargetName="b" Property="Background" Value="#243DD68C"/>
-                                <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Good}"/>
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Good}"/>
                                 <Setter TargetName="badge" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="st" Property="Foreground" Value="{StaticResource GoodText}"/>
+                                <Setter TargetName="st" Property="Foreground" Value="{DynamicResource GoodText}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Accent}"/>
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -84,22 +84,22 @@
                     <TextBlock Text="Dofus" Style="{StaticResource PageTitle}"/>
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
-                    <Border Width="150" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,10,0">
+                    <Border Width="150" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,10,0">
                         <StackPanel>
                             <DockPanel>
                                 <TextBlock DockPanel.Dock="Right" Text="{Binding MainCounter}" FontFamily="{StaticResource BodyXB}"/>
-                                <TextBlock Text="Principaux" Foreground="{StaticResource Muted}" FontSize="12"/>
+                                <TextBlock Text="Principaux" Foreground="{DynamicResource Muted}" FontSize="12"/>
                             </DockPanel>
                             <ProgressBar Style="{StaticResource Meter}" Value="{Binding MainPct, Mode=OneWay}" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Border>
-                    <Border Width="150" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8">
+                    <Border Width="150" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8">
                         <StackPanel>
                             <DockPanel>
                                 <TextBlock DockPanel.Dock="Right" Text="{Binding SpecialCounter}" FontFamily="{StaticResource BodyXB}"/>
-                                <TextBlock Text="Particuliers" Foreground="{StaticResource Muted}" FontSize="12"/>
+                                <TextBlock Text="Particuliers" Foreground="{DynamicResource Muted}" FontSize="12"/>
                             </DockPanel>
-                            <ProgressBar Style="{StaticResource Meter}" Foreground="{StaticResource Accent}" Value="{Binding SpecialPct, Mode=OneWay}" Margin="0,6,0,0"/>
+                            <ProgressBar Style="{StaticResource Meter}" Foreground="{DynamicResource Accent}" Value="{Binding SpecialPct, Mode=OneWay}" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -110,16 +110,16 @@
             </ItemsControl>
 
             <!-- Dofus particuliers (repliable) -->
-            <Button Command="{Binding ToggleSpecialCommand}" HorizontalContentAlignment="Stretch" Height="44" Margin="0,0,0,12" Padding="14,0" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line2}" BorderThickness="1" FontSize="14">
+            <Button Command="{Binding ToggleSpecialCommand}" HorizontalContentAlignment="Stretch" Height="44" Margin="0,0,0,12" Padding="14,0" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" FontSize="14">
                 <DockPanel LastChildFill="False">
-                    <Path DockPanel.Dock="Left" Style="{StaticResource Icon}" Data="{StaticResource IcoChevronRight}" Stroke="{StaticResource Text}" StrokeThickness="3" Width="14" Height="14" Margin="0,0,10,0"
+                    <Path DockPanel.Dock="Left" Style="{StaticResource Icon}" Data="{StaticResource IcoChevronRight}" Stroke="{DynamicResource Text}" StrokeThickness="3" Width="14" Height="14" Margin="0,0,10,0"
                           RenderTransformOrigin="0.5,0.5">
                         <Path.RenderTransform>
                             <RotateTransform Angle="{Binding SpecOpen, Converter={StaticResource OpenAngle}}"/>
                         </Path.RenderTransform>
                     </Path>
                     <TextBlock DockPanel.Dock="Left" Text="Dofus particuliers" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{Binding SpecialCounterSpaced}" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding SpecialCounterSpaced}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
                 </DockPanel>
             </Button>
             <ItemsControl ItemsSource="{Binding SpecialDofus}" ItemTemplate="{StaticResource EggTile}" Margin="0,0,-12,0"

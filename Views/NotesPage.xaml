@@ -19,7 +19,7 @@
 
         <!-- Onglets -->
         <ListBox Grid.Row="1" ItemsSource="{Binding NoteKeys}" SelectedItem="{Binding SelectedNote, Mode=TwoWay}"
-                 ItemContainerStyle="{StaticResource Chip}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource Text}"
+                 ItemContainerStyle="{StaticResource Chip}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource Text}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,6">
             <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
         </ListBox>
@@ -28,11 +28,11 @@
         <TextBox Grid.Row="2" Text="{Binding NoteSearch, UpdateSourceTrigger=PropertyChanged}" ToolTip="Rechercher dans toutes les notes" Margin="0,0,0,14"/>
 
         <!-- Résultats -->
-        <Border Grid.Row="3" Background="{StaticResource Side}" BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,14"
+        <Border Grid.Row="3" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,14"
                 MaxHeight="150" Visibility="{Binding SearchActive, Converter={StaticResource BoolVis}}">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <TextBlock Text="Aucune note ne contient ce mot." Foreground="{StaticResource Dim}" Margin="14,10"
+                    <TextBlock Text="Aucune note ne contient ce mot." Foreground="{DynamicResource Dim}" Margin="14,10"
                                Visibility="{Binding HasNoteHits, Converter={StaticResource InvBoolVis}}"/>
                     <ItemsControl ItemsSource="{Binding NoteHits}">
                         <ItemsControl.ItemTemplate>
@@ -40,7 +40,7 @@
                                 <Button Style="{StaticResource BtnFlat}" HorizontalContentAlignment="Stretch" Padding="14,8"
                                         Command="{Binding DataContext.OpenNoteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}" MinWidth="90"/>
+                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Key}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" MinWidth="90"/>
                                         <TextBlock Text="{Binding Snippet}" TextTrimming="CharacterEllipsis"/>
                                     </DockPanel>
                                 </Button>
@@ -52,18 +52,18 @@
         </Border>
 
         <!-- Bloc-notes -->
-        <TextBox Grid.Row="4" Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" Background="{StaticResource Side}"
+        <TextBox Grid.Row="4" Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" Background="{DynamicResource Side}"
                  VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" Padding="16" FontSize="15" Margin="0,0,0,12" MinHeight="120"
                  ToolTip="Une ligne « - [ ] tâche » devient une case à cocher"/>
 
         <!-- Tâches -->
-        <Border Grid.Row="5" Background="{StaticResource Side}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" Padding="12,10" Margin="0,0,0,10">
+        <Border Grid.Row="5" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="12,10" Margin="0,0,0,10">
             <StackPanel>
                 <DockPanel Margin="0,0,0,4">
                     <Button DockPanel.Dock="Right" Content="+ Ajouter une case" Command="{Binding AddTaskCommand}" MinHeight="32" Padding="12,0" FontSize="12"/>
                     <TextBlock Text="{Binding TasksTitle}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
                 </DockPanel>
-                <TextBlock Text="Aucune case dans cette note." Foreground="{StaticResource Dim}" FontSize="12"
+                <TextBlock Text="Aucune case dans cette note." Foreground="{DynamicResource Dim}" FontSize="12"
                            Visibility="{Binding HasTasks, Converter={StaticResource InvBoolVis}}"/>
                 <ScrollViewer MaxHeight="110" VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding Tasks}">
@@ -80,8 +80,8 @@
         </Border>
 
         <StackPanel Grid.Row="6" Orientation="Horizontal">
-            <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{StaticResource GoodText}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"/>
-            <TextBlock Text="Enregistré automatiquement à chaque frappe" Foreground="{StaticResource GoodText}" FontSize="12"/>
+            <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{DynamicResource GoodText}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"/>
+            <TextBlock Text="Enregistré automatiquement à chaque frappe" Foreground="{DynamicResource GoodText}" FontSize="12"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -5,15 +5,15 @@
         <TextBox x:Name="Box" Height="44" VerticalContentAlignment="Center"
                  TextChanged="Box_TextChanged" GotKeyboardFocus="Box_GotFocus" LostKeyboardFocus="Box_LostFocus"
                  PreviewKeyDown="Box_KeyDown"/>
-        <TextBlock x:Name="Hint" Text="Zaap : Cania, Sufokia, -5,-23…  (copié dès le clic)" Foreground="{StaticResource Dim}"
+        <TextBlock x:Name="Hint" Text="Zaap : Cania, Sufokia, -5,-23…  (copié dès le clic)" Foreground="{DynamicResource Dim}"
                    IsHitTestVisible="False" VerticalAlignment="Center" Margin="12,0,0,0" FontSize="14"/>
         <Popup x:Name="Pop" PlacementTarget="{Binding ElementName=Box}" Placement="Bottom" StaysOpen="True"
                AllowsTransparency="True" Focusable="False">
-            <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5"
-                    TextElement.Foreground="{StaticResource Text}" CornerRadius="8" Margin="0,4,0,0" Width="{Binding ActualWidth, ElementName=Box}" MaxHeight="280">
+            <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5"
+                    TextElement.Foreground="{DynamicResource Text}" CornerRadius="8" Margin="0,4,0,0" Width="{Binding ActualWidth, ElementName=Box}" MaxHeight="280">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock x:Name="NoMatch" Text="Aucun Zaap ne correspond." Foreground="{StaticResource Dim}" Margin="12,10" Visibility="Collapsed"/>
+                        <TextBlock x:Name="NoMatch" Text="Aucun Zaap ne correspond." Foreground="{DynamicResource Dim}" Margin="12,10" Visibility="Collapsed"/>
                         <ItemsControl x:Name="ZList">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -28,12 +28,12 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis"/>
-                                                        <TextBlock Grid.Column="1" Text="{Binding Coord}" Foreground="{StaticResource Dim}" Margin="12,0,0,0"/>
+                                                        <TextBlock Grid.Column="1" Text="{Binding Coord}" Foreground="{DynamicResource Dim}" Margin="12,0,0,0"/>
                                                     </Grid>
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="r" Property="Background" Value="#232936"/>
+                                                        <Setter TargetName="r" Property="Background" Value="{DynamicResource Active}"/>
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>

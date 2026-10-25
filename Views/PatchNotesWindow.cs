@@ -8,7 +8,8 @@ namespace DofusTeamOrganizer.Views;
 /// <summary>Fenêtre « Notes de version » construite en code (pas de XAML).</summary>
 public class PatchNotesWindow : Window
 {
-    private static Brush B(string hex) => new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
+    /// <summary>Brosse du thème courant (la fenêtre est recréée à chaque ouverture, elle suit donc le thème choisi).</summary>
+    private static Brush B(string key) => (Brush)Application.Current.FindResource(key);
 
     public PatchNotesWindow()
     {
@@ -16,8 +17,8 @@ public class PatchNotesWindow : Window
         Width = 640;
         Height = 560;
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
-        Background = B("#0E1014");
-        Foreground = B("#F3F0E8");
+        Background = B("Bg");
+        Foreground = B("Text");
         FontFamily = (FontFamily)Application.Current.FindResource("Body");
         SourceInitialized += (_, _) => DofusTeamOrganizer.Services.WindowStyler.UseDarkTitleBar(new System.Windows.Interop.WindowInteropHelper(this).Handle);
 
@@ -38,7 +39,7 @@ public class PatchNotesWindow : Window
                 Text = "Version " + note.Version + "  ·  " + note.Date,
                 FontSize = 16,
                 FontFamily = (FontFamily)Application.Current.FindResource("BodyXB"),
-                Foreground = B("#F2B544"),
+                Foreground = B("Accent"),
                 Margin = new Thickness(0, 10, 0, 6)
             });
             foreach (var line in note.Lines)
@@ -48,7 +49,7 @@ public class PatchNotesWindow : Window
                     Text = "•  " + line,
                     TextWrapping = TextWrapping.Wrap,
                     Margin = new Thickness(0, 0, 0, 5),
-                    Foreground = B("#D8D5CC")
+                    Foreground = B("Muted")
                 });
             }
         }

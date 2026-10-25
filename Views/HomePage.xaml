@@ -16,10 +16,10 @@
                     <TextBlock Text="Accueil" Style="{StaticResource PageTitle}"/>
                     <TextBlock Text="Gestion multicompte" Style="{StaticResource PageSub}"/>
                 </StackPanel>
-                <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}"
+                <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}"
                         BorderThickness="1" CornerRadius="20" Padding="16,9">
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="9" Height="9" Fill="{StaticResource Good}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <Ellipse Width="9" Height="9" Fill="{DynamicResource Good}" Margin="0,0,10,0" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding ConnectedText}" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
                     </StackPanel>
                 </Border>
@@ -27,14 +27,14 @@
 
             <!-- Rappel Almanax -->
             <Button HorizontalAlignment="Left" Command="{Binding NavigateCommand}" CommandParameter="almanax" Margin="0,0,0,16" MinHeight="44" Padding="14,6"
-                    Background="#1FF2963C" BorderBrush="{StaticResource Warn}" BorderThickness="1" Foreground="{StaticResource WarnText}"
+                    Background="#1FF2963C" BorderBrush="{DynamicResource Warn}" BorderThickness="1" Foreground="{DynamicResource WarnText}"
                     Visibility="{Binding Almanax.NeedsReminder, Converter={StaticResource BoolVis}}">
                 <StackPanel Orientation="Horizontal">
-                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoBell}" Stroke="{StaticResource WarnText}" Width="15" Height="15" Margin="0,0,8,0"/>
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoBell}" Stroke="{DynamicResource WarnText}" Width="15" Height="15" Margin="0,0,8,0"/>
                     <TextBlock Text="Almanax du jour"/>
-                    <Border Background="{StaticResource KeyBg}" CornerRadius="6" Padding="10,3" Margin="16,0,0,0"
+                    <Border Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="10,3" Margin="16,0,0,0"
                             Visibility="{Binding Almanax.IsSunday, Converter={StaticResource BoolVis}}">
-                        <TextBlock Text="Almanax · Préparer la semaine" Foreground="{StaticResource Text}"/>
+                        <TextBlock Text="Almanax · Préparer la semaine" Foreground="{DynamicResource Text}"/>
                     </Border>
                 </StackPanel>
             </Button>
@@ -46,7 +46,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{StaticResource Panel}" BorderThickness="1" CornerRadius="12" Padding="14" Margin="0,0,12,12"
+                        <Border Background="{DynamicResource Panel}" BorderThickness="1" CornerRadius="12" Padding="14" Margin="0,0,12,12"
                                 BorderBrush="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=border}">
                             <StackPanel>
                                 <Grid Margin="0,0,0,12">
@@ -61,9 +61,9 @@
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="16" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Text="{Binding ClassName}" Foreground="{StaticResource Muted}" FontSize="12.5"/>
+                                        <TextBlock Text="{Binding ClassName}" Foreground="{DynamicResource Muted}" FontSize="12.5"/>
                                     </StackPanel>
-                                    <Border Grid.Column="2" Background="{StaticResource KeyBg}" CornerRadius="6" Padding="8,3" VerticalAlignment="Center" Margin="8,0,0,0"
+                                    <Border Grid.Column="2" Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="8,3" VerticalAlignment="Center" Margin="8,0,0,0"
                                             Visibility="{Binding IsMain, Converter={StaticResource BoolVis}}">
                                         <TextBlock Text="Principal" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
                                     </Border>
@@ -90,42 +90,42 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Raccourcis -->
-                <Border Style="{StaticResource Card}" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" CornerRadius="12" Margin="0,0,12,0" VerticalAlignment="Stretch">
+                <Border Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0,0,12,0" VerticalAlignment="Stretch">
                     <StackPanel>
                         <TextBlock Text="Raccourcis" Style="{StaticResource H2}" FontSize="14" Margin="0,0,0,10"/>
-                        <Grid Margin="0,0,0,10"><TextBlock Text="{Binding MainCharLabel}" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/>
+                        <Grid Margin="0,0,0,10"><TextBlock Text="{Binding MainCharLabel}" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F1" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
-                        <Grid Margin="0,0,0,10"><TextBlock Text="Personnage précédent" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/>
+                        <Grid Margin="0,0,0,10"><TextBlock Text="Personnage précédent" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F6" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
-                        <Grid Margin="0,0,0,10"><TextBlock Text="Copier les invitations" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/>
+                        <Grid Margin="0,0,0,10"><TextBlock Text="Copier les invitations" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F12" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
-                        <Grid Margin="0,0,0,10"><TextBlock Text="Afficher / masquer" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/>
+                        <Grid Margin="0,0,0,10"><TextBlock Text="Afficher / masquer" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="Ctrl+Alt+O" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
                         <!-- Touche * : interrupteur -->
                         <ToggleButton x:Name="StarToggle" IsChecked="{Binding SwapEnabled, Mode=TwoWay}" Height="44" Cursor="Hand" Margin="0,0,0,10"
                                       ToolTip="Touche étoile : passer au personnage suivant">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
-                                    <Border x:Name="b" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1.5" CornerRadius="8" Padding="12,0">
+                                    <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="8" Padding="12,0">
                                         <DockPanel VerticalAlignment="Center">
                                             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                                                <TextBlock x:Name="lbl" Text="OFF" Foreground="{StaticResource Muted}" FontFamily="{StaticResource BodyXB}" MinWidth="26" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                                <Border x:Name="track" Width="42" Height="24" CornerRadius="12" Background="#3A4150">
-                                                    <Ellipse x:Name="knob" Width="18" Height="18" Fill="{StaticResource Muted}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                                                <TextBlock x:Name="lbl" Text="OFF" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" MinWidth="26" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                                <Border x:Name="track" Width="42" Height="24" CornerRadius="12" Background="{DynamicResource Track}">
+                                                    <Ellipse x:Name="knob" Width="18" Height="18" Fill="{DynamicResource Muted}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
                                                 </Border>
                                             </StackPanel>
-                                            <Border Background="{StaticResource KeyBg}" CornerRadius="5" Padding="7,1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                                <TextBlock Text="*" FontFamily="{StaticResource BodyXB}" FontSize="12" Foreground="{StaticResource Text}"/>
+                                            <Border Background="{DynamicResource KeyBg}" CornerRadius="5" Padding="7,1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                <TextBlock Text="*" FontFamily="{StaticResource BodyXB}" FontSize="12" Foreground="{DynamicResource Text}"/>
                                             </Border>
                                         </DockPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsChecked" Value="True">
-                                            <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Accent}"/>
+                                            <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
                                             <Setter TargetName="lbl" Property="Text" Value="ON"/>
-                                            <Setter TargetName="lbl" Property="Foreground" Value="{StaticResource Accent}"/>
-                                            <Setter TargetName="track" Property="Background" Value="{StaticResource Accent}"/>
-                                            <Setter TargetName="knob" Property="Fill" Value="{StaticResource AccentText}"/>
+                                            <Setter TargetName="lbl" Property="Foreground" Value="{DynamicResource Accent}"/>
+                                            <Setter TargetName="track" Property="Background" Value="{DynamicResource Accent}"/>
+                                            <Setter TargetName="knob" Property="Fill" Value="{DynamicResource AccentText}"/>
                                             <Setter TargetName="knob" Property="HorizontalAlignment" Value="Right"/>
                                             <Setter TargetName="knob" Property="Margin" Value="0,0,3,0"/>
                                         </Trigger>
@@ -134,20 +134,20 @@
                             </ToggleButton.Template>
                         </ToggleButton>
                         <TextBlock Text="La touche * ne réagit que lorsque DOFUS est la fenêtre active. L'interrupteur l'active ou la désactive."
-                                   Foreground="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap"/>
+                                   Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Invitations & Zaaps -->
-                <Border Grid.Column="1" Style="{StaticResource Card}" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" CornerRadius="12" Margin="0" VerticalAlignment="Stretch">
+                <Border Grid.Column="1" Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0" VerticalAlignment="Stretch">
                     <StackPanel>
                         <DockPanel Margin="0,0,0,12">
-                            <Button DockPanel.Dock="Right" Style="{StaticResource Big}" Background="{StaticResource Accent}" Foreground="{StaticResource AccentText}"
+                            <Button DockPanel.Dock="Right" Style="{StaticResource Big}" Background="{DynamicResource Accent}" Foreground="{DynamicResource AccentText}"
                                     BorderThickness="0" Command="{Binding CopyInvitesCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="Copier les invitations"/>
-                                    <Border Background="{StaticResource AccentText}" CornerRadius="5" Padding="6,1" Margin="10,0,0,0" VerticalAlignment="Center">
-                                        <TextBlock Text="F12" FontSize="11" Foreground="{StaticResource Accent}"/>
+                                    <Border Background="{DynamicResource AccentText}" CornerRadius="5" Padding="6,1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="F12" FontSize="11" Foreground="{DynamicResource Accent}"/>
                                     </Border>
                                 </StackPanel>
                             </Button>
@@ -163,15 +163,15 @@
                                             CommandParameter="{Binding}">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border x:Name="b" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="20" Padding="12,0">
+                                                <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="20" Padding="12,0">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoStar}" Fill="{StaticResource Accent}" Stroke="{StaticResource Accent}" StrokeThickness="0" Width="12" Height="12" Margin="0,0,6,0"/>
-                                                        <TextBlock Text="{Binding ShortName}" Foreground="{StaticResource Text}"/>
+                                                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoStar}" Fill="{DynamicResource Accent}" Stroke="{DynamicResource Accent}" StrokeThickness="0" Width="12" Height="12" Margin="0,0,6,0"/>
+                                                        <TextBlock Text="{Binding ShortName}" Foreground="{DynamicResource Text}"/>
                                                     </StackPanel>
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Accent}"/>
+                                                        <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
@@ -183,13 +183,13 @@
                         <UniformGrid Columns="2">
                             <Button Command="{Binding NavigateCommand}" CommandParameter="almanax" Style="{StaticResource Big}" Margin="0,0,4,0">
                                 <StackPanel Orientation="Horizontal">
-                                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{StaticResource Text}" Margin="0,0,8,0"/>
+                                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{DynamicResource Text}" Margin="0,0,8,0"/>
                                     <TextBlock Text="Almanax"/>
                                 </StackPanel>
                             </Button>
                             <Button Command="{Binding ShowMiniCommand}" Style="{StaticResource Big}" Margin="4,0,0,0">
                                 <StackPanel Orientation="Horizontal">
-                                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoExpand}" Stroke="{StaticResource Text}" Margin="0,0,8,0"/>
+                                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoExpand}" Stroke="{DynamicResource Text}" Margin="0,0,8,0"/>
                                     <TextBlock Text="Passer en mode Mini"/>
                                 </StackPanel>
                             </Button>

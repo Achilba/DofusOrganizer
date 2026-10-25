@@ -47,6 +47,8 @@ public class DungeonsViewModel : ObservableObject
     private string _levelFilter = "tous";
 
     public ObservableCollection<DungeonItem> View { get; } = new();
+    /// <summary>Tous les donjons (sans filtre), pour la recherche globale.</summary>
+    public IReadOnlyList<DungeonItem> All => _all;
     public string[] LevelFilterChoices { get; } = { "tous", "1 à 50", "51 à 100", "101 à 150", "151 et plus" };
     public string LevelFilter { get => _levelFilter; set { if (value != null && Set(ref _levelFilter, value)) Refresh(); } }
     public string[] SortChoices { get; } = { "niveau croissant", "niveau décroissant", "nom (A → Z)" };

@@ -115,6 +115,8 @@ public class AppData
     /// <summary>Dernier dossier choisi pour « Copier ailleurs ».</summary>
     public string ExternalBackupDir { get; set; } = "";
     public string LastSeenVersion { get; set; } = "";
+    /// <summary>Thème de couleurs (clé de ThemeCatalog).</summary>
+    public string Theme { get; set; } = "classique";
 
     public List<string> FavoriteZaaps { get; set; } = new(ZaapData.DefaultFavorites);
     public List<string> DofusDone { get; set; } = new();

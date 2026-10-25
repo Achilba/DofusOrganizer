@@ -4,9 +4,9 @@
         xmlns:v="clr-namespace:DofusTeamOrganizer.Views"
         Title="DOFUS Team Organizer (mini)" Height="44" Width="980" ResizeMode="NoResize" WindowStyle="None"
         AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False" Topmost="True"
-        Foreground="{StaticResource Text}" FontFamily="{StaticResource Body}" WindowStartupLocation="Manual"
+        Foreground="{DynamicResource Text}" FontFamily="{StaticResource Body}" WindowStartupLocation="Manual"
         Opacity="{Binding MiniOpacity}">
-    <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="12" Height="44" Margin="0"
+    <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Height="44" Margin="0"
             MouseLeftButtonDown="Drag_MouseLeftButtonDown">
         <Grid Margin="8,0">
             <Grid.ColumnDefinitions>
@@ -28,7 +28,7 @@
                         <!-- Compacte / complète -->
             <Button Grid.Column="1" Command="{Binding ToggleCompactCommand}" Width="32" Height="32" MinHeight="0" Padding="0" Margin="0,0,8,0" ToolTip="Barre compacte / complète">
                 <Grid>
-                <Path Width="11" Height="11" Stretch="Uniform" Fill="{StaticResource Text}" Stroke="{StaticResource Text}" StrokeThickness="2" StrokeLineJoin="Round">
+                <Path Width="11" Height="11" Stretch="Uniform" Fill="{DynamicResource Text}" Stroke="{DynamicResource Text}" StrokeThickness="2" StrokeLineJoin="Round">
                     <Path.Style>
                         <Style TargetType="Path">
                             <Setter Property="Data" Value="M16 4L6 12L16 20Z"/>
@@ -40,7 +40,7 @@
                         </Style>
                     </Path.Style>
                 </Path>
-                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-13,-13,0"
+                    <Ellipse Width="10" Height="10" Fill="{DynamicResource Warn}" Stroke="{DynamicResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-13,-13,0"
                              ToolTip="Mise à jour disponible (Paramètres)">
                         <Ellipse.Style>
                             <Style TargetType="Ellipse">
@@ -65,21 +65,21 @@
                           ToolTip="Touche étoile : passer au personnage suivant">
                 <ToggleButton.Template>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="b" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}" BorderThickness="1" CornerRadius="8" Padding="10,0">
+                        <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="8" Padding="10,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock x:Name="lbl" Text="OFF" Foreground="{StaticResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="12.5" MinWidth="22" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <Border x:Name="track" Width="32" Height="18" CornerRadius="9" Background="#3A4150">
-                                    <Ellipse x:Name="knob" Width="12" Height="12" Fill="{StaticResource Muted}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                                <TextBlock x:Name="lbl" Text="OFF" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="12.5" MinWidth="22" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <Border x:Name="track" Width="32" Height="18" CornerRadius="9" Background="{DynamicResource Track}">
+                                    <Ellipse x:Name="knob" Width="12" Height="12" Fill="{DynamicResource Muted}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
                                 </Border>
                             </StackPanel>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Accent}"/>
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
                                 <Setter TargetName="lbl" Property="Text" Value="ON"/>
-                                <Setter TargetName="lbl" Property="Foreground" Value="{StaticResource Accent}"/>
-                                <Setter TargetName="track" Property="Background" Value="{StaticResource Accent}"/>
-                                <Setter TargetName="knob" Property="Fill" Value="{StaticResource AccentText}"/>
+                                <Setter TargetName="lbl" Property="Foreground" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="track" Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="knob" Property="Fill" Value="{DynamicResource AccentText}"/>
                                 <Setter TargetName="knob" Property="HorizontalAlignment" Value="Right"/>
                                 <Setter TargetName="knob" Property="Margin" Value="0,0,3,0"/>
                             </Trigger>
@@ -88,11 +88,11 @@
                 </ToggleButton.Template>
             </ToggleButton>
 
-            <Border Grid.Column="3" Width="1" Height="20" Background="{StaticResource Line}" Margin="0,0,8,0"/>
+            <Border Grid.Column="3" Width="1" Height="20" Background="{DynamicResource Line}" Margin="0,0,8,0"/>
 
             <!-- Invitations -->
             <Button Grid.Column="4" Command="{Binding CopyInvitesCommand}" Height="32" MinHeight="0" Padding="12,0" Margin="0" FontSize="13"
-                    Background="{StaticResource Accent}" Foreground="{StaticResource AccentText}" BorderBrush="{StaticResource Accent}">
+                    Background="{DynamicResource Accent}" Foreground="{DynamicResource AccentText}" BorderBrush="{DynamicResource Accent}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Invitations"/>
                 </StackPanel>
@@ -103,15 +103,15 @@
                           Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}"/>
 
             <!-- Copié -->
-            <Border Grid.Column="6" Height="32" Background="{StaticResource Side}" BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="8"
+            <Border Grid.Column="6" Height="32" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="8"
                     Padding="10,0" Margin="0,0,8,0" Visibility="{Binding Toast, Converter={StaticResource NotEmptyVis}}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{StaticResource Accent}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"/>
-                    <TextBlock Text="COPIÉ" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{DynamicResource Accent}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"/>
+                    <TextBlock Text="COPIÉ" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="7" Width="1" Height="20" Background="{StaticResource Line}" Margin="0,0,8,0"
+            <Border Grid.Column="7" Width="1" Height="20" Background="{DynamicResource Line}" Margin="0,0,8,0"
                     Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}"/>
 
             <!-- Almanax -->
@@ -119,20 +119,20 @@
                     Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}">
                 <Grid>
                     <StackPanel Orientation="Horizontal">
-                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{StaticResource Text}" Width="14" Height="14" Margin="0,0,7,0"/>
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{DynamicResource Text}" Width="14" Height="14" Margin="0,0,7,0"/>
                         <TextBlock Text="Almanax"/>
                     </StackPanel>
-                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-11,-18,0"
+                    <Ellipse Width="10" Height="10" Fill="{DynamicResource Warn}" Stroke="{DynamicResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-11,-18,0"
                              Visibility="{Binding Almanax.NeedsReminder, Converter={StaticResource BoolVis}}"/>
                 </Grid>
             </Button>
 
             <!-- Retour à la fenêtre complète -->
-            <Button Grid.Column="9" Command="{Binding ShowMainCommand}" Width="32" Height="32" MinHeight="0" Padding="0" Margin="0" BorderBrush="{StaticResource Text}"
+            <Button Grid.Column="9" Command="{Binding ShowMainCommand}" Width="32" Height="32" MinHeight="0" Padding="0" Margin="0" BorderBrush="{DynamicResource Text}"
                     ToolTip="Revenir à l'interface complète" Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}">
                 <Grid>
-                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCompress}" Stroke="{StaticResource Text}" Width="14" Height="14"/>
-                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Stroke="{StaticResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-13,-13,0"
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCompress}" Stroke="{DynamicResource Text}" Width="14" Height="14"/>
+                    <Ellipse Width="10" Height="10" Fill="{DynamicResource Warn}" Stroke="{DynamicResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-13,-13,0"
                              ToolTip="Mise à jour disponible (Paramètres)"
                              Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
                 </Grid>

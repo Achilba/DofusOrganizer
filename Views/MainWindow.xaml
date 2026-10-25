@@ -3,8 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:DofusTeamOrganizer.Views"
         Title="DOFUS Team Organizer" Width="1056" Height="839" MinWidth="960" MinHeight="680"
-        Background="{StaticResource Bg}" Foreground="{StaticResource Text}"
+        Background="{DynamicResource Bg}" Foreground="{DynamicResource Text}"
         FontFamily="{StaticResource Body}" FontSize="13" WindowStartupLocation="CenterScreen">
+    <Window.InputBindings>
+        <KeyBinding Key="K" Modifiers="Control" Command="{Binding Search.ShowCommand}"/>
+    </Window.InputBindings>
     <Window.Resources>
         <DataTemplate x:Key="NavItemTemplate">
             <Button x:Name="nav" Style="{StaticResource NavButton}" Margin="0,0,0,4"
@@ -15,7 +18,7 @@
                           Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
                     <TextBlock Text="{Binding Label}" Margin="12,0,0,0" FontFamily="{StaticResource BodyXB}" FontSize="14"
                                Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
-                    <Ellipse Width="10" Height="10" Fill="{StaticResource Warn}" Margin="8,0,0,0" VerticalAlignment="Center"
+                    <Ellipse Width="10" Height="10" Fill="{DynamicResource Warn}" Margin="8,0,0,0" VerticalAlignment="Center"
                              ToolTip="Mise à jour disponible"
                              Visibility="{Binding Badge, Converter={StaticResource BoolVis}}"/>
                 </StackPanel>
@@ -29,8 +32,18 @@
         </Grid.ColumnDefinitions>
 
         <!-- Barre latérale -->
-        <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,1,0">
+        <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="0,0,1,0">
             <DockPanel Margin="12,16">
+                <Button DockPanel.Dock="Top" Command="{Binding Search.ShowCommand}" Margin="0,0,0,12" Height="40" Padding="12,0" HorizontalContentAlignment="Stretch"
+                        ToolTip="Rechercher un personnage, un Dofus, un donjon, un Zaap, une note…">
+                    <DockPanel LastChildFill="False">
+                        <Path DockPanel.Dock="Left" Style="{StaticResource Icon}" Data="{StaticResource IcoSearch}" Stroke="{DynamicResource Muted}" StrokeThickness="2" Width="15" Height="15" Margin="0,0,10,0"/>
+                        <TextBlock DockPanel.Dock="Left" Text="Rechercher" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="13"/>
+                        <Border DockPanel.Dock="Right" Style="{StaticResource KeyCap}" Padding="6,1">
+                            <TextBlock Text="Ctrl K" FontSize="11" Foreground="{DynamicResource Dim}"/>
+                        </Border>
+                    </DockPanel>
+                </Button>
                 <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding BottomNavItems}" ItemTemplate="{StaticResource NavItemTemplate}" Margin="0,8,0,0"/>
                 <ItemsControl ItemsSource="{Binding TopNavItems}" ItemTemplate="{StaticResource NavItemTemplate}"/>
             </DockPanel>
@@ -44,13 +57,13 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Bad}" BorderThickness="1" CornerRadius="10" Padding="14,12" Margin="0,0,0,14"
+            <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Bad}" BorderThickness="1" CornerRadius="10" Padding="14,12" Margin="0,0,0,14"
                     Visibility="{Binding Status, Converter={StaticResource NotEmptyVis}}">
                 <DockPanel>
                     <Button DockPanel.Dock="Right" Content="Réessayer" Command="{Binding RetrySaveCommand}" Margin="12,0,0,0" MinHeight="34"
                             Visibility="{Binding SaveFailed, Converter={StaticResource BoolVis}}"/>
                     <Path DockPanel.Dock="Left" Style="{StaticResource Icon}" Data="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"
-                          Stroke="{StaticResource Bad}" StrokeThickness="2.5" Width="16" Height="16" Margin="0,0,12,0"/>
+                          Stroke="{DynamicResource Bad}" StrokeThickness="2.5" Width="16" Height="16" Margin="0,0,12,0"/>
                     <TextBlock Text="{Binding Status}" TextWrapping="Wrap" VerticalAlignment="Center"/>
                 </DockPanel>
             </Border>
@@ -71,23 +84,84 @@
 
             <!-- Bulles : « Copié » (2,5 s) et « Annuler » (4 s) -->
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0" MinHeight="0">
-                <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="8" Padding="14,10"
+                <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="8" Padding="14,10"
                         Margin="0,0,10,0" Visibility="{Binding Toast, Converter={StaticResource NotEmptyVis}}">
                     <StackPanel Orientation="Horizontal">
-                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{StaticResource Accent}" StrokeThickness="2.5" Width="16" Height="16"/>
-                        <TextBlock Text="{Binding ToastTitle}" Foreground="{StaticResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="10,0,0,0" VerticalAlignment="Center"
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{DynamicResource Accent}" StrokeThickness="2.5" Width="16" Height="16"/>
+                        <TextBlock Text="{Binding ToastTitle}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="10,0,0,0" VerticalAlignment="Center"
                                    Visibility="{Binding ToastTitle, Converter={StaticResource NotEmptyVis}}"/>
                         <TextBlock Text="{Binding ToastDetail}" Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
-                <Border Background="{StaticResource Side}" BorderBrush="{StaticResource Accent}" BorderThickness="1" CornerRadius="10" Padding="12,6"
+                <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="10" Padding="12,6"
                         Visibility="{Binding UndoText, Converter={StaticResource NotEmptyVis}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding UndoText}" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                        <Button Content="Annuler" Command="{Binding UndoCommand}" MinHeight="32" Padding="12,0" Background="Transparent" Foreground="{StaticResource Accent}" BorderBrush="{StaticResource Accent}" FontSize="12"/>
+                        <Button Content="Annuler" Command="{Binding UndoCommand}" MinHeight="32" Padding="12,0" Background="Transparent" Foreground="{DynamicResource Accent}" BorderBrush="{DynamicResource Accent}" FontSize="12"/>
                     </StackPanel>
                 </Border>
             </StackPanel>
+        </Grid>
+
+        <!-- Recherche globale (Ctrl+K) -->
+        <Grid Grid.ColumnSpan="2" Panel.ZIndex="100" Visibility="{Binding Search.Open, Converter={StaticResource BoolVis}}">
+            <Border Background="#A6000000" MouseLeftButtonDown="Search_Backdrop"/>
+            <Border Width="620" VerticalAlignment="Top" Margin="0,80,0,0" Padding="14" CornerRadius="12" BorderThickness="1"
+                    Background="{DynamicResource Side}" BorderBrush="{DynamicResource Accent}">
+                <StackPanel>
+                    <TextBox x:Name="SearchBox" Text="{Binding Search.Query, UpdateSourceTrigger=PropertyChanged}" FontSize="15"
+                             PreviewKeyDown="Search_KeyDown" IsVisibleChanged="SearchBox_VisibleChanged"/>
+                    <TextBlock Text="Tape un nom : personnage, Dofus, donjon, légende, Zaap ou note. ↑ ↓ pour choisir, Entrée pour ouvrir, Échap pour fermer."
+                               Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="2,10,2,2"
+                               Visibility="{Binding Search.HasQuery, Converter={StaticResource InvBoolVis}}"/>
+                    <TextBlock Text="Aucun résultat." Foreground="{DynamicResource Muted}" Margin="2,10,2,2"
+                               Visibility="{Binding Search.NoResult, Converter={StaticResource BoolVis}}"/>
+                    <ListBox x:Name="SearchList" ItemsSource="{Binding Search.Hits}" SelectedIndex="{Binding Search.SelectedIndex, Mode=TwoWay}"
+                             Background="Transparent" BorderThickness="0" Margin="0,10,0,0" MaxHeight="440" Focusable="False"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="SearchList_SelectionChanged"
+                             Visibility="{Binding Search.HasQuery, Converter={StaticResource BoolVis}}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <EventSetter Event="PreviewMouseLeftButtonUp" Handler="SearchHit_Click"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="bd" Background="Transparent" CornerRadius="8" Padding="10,7" Margin="0,0,0,2" Cursor="Hand">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource Hover}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource Active}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="92"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="8,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Category}" FontSize="11" FontFamily="{StaticResource BodyXB}" Foreground="{DynamicResource Muted}"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="{Binding Title}" FontFamily="{StaticResource BodyXB}" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding Detail}" Foreground="{DynamicResource Muted}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
         </Grid>
     </Grid>
 </Window>

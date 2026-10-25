@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.5.1";
+    public const string Current = "0.6.0";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.6.0", "25/10/2026", new[]
+        {
+            "NOUVEAU — Recherche globale : Ctrl+K (ou « Rechercher » en haut de la barre latérale). Tape un nom pour trouver un personnage, un Dofus, un donjon, une légende, un Zaap (un clic le copie), une note ou une page ; ↑ ↓ pour choisir, Entrée pour ouvrir, Échap pour fermer. Les accents sont ignorés (« ebene » trouve « Ébène »).",
+            "NOUVEAU — Thèmes de couleurs inspirés de DOFUS (Paramètres > Apparence) : Classique, Bonta, Brâkmar, Cawotte, Émeraude, Pourpre, Turquoise et Ébène. Le changement est immédiat et retenu au prochain lancement.",
+            "NOUVEAU — Démarrage automatique : Paramètres > Démarrage, un interrupteur pour lancer l'appli avec Windows (elle s'ouvre comme à ta dernière fermeture).",
+        }),
         new("0.5.1", "24/10/2026", new[]
         {
             "CORRIGÉ — Almanax : le rappel de l'accueil (et le point orange de la mini-barre) reste affiché tant que l'Almanax du jour n'est pas réalisé, même s'il est déjà préparé.",

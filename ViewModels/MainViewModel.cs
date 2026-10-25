@@ -38,6 +38,32 @@ public class ShortcutRow : ObservableObject
     public string ButtonText => _capturing ? "Appuie sur une touche…" : _keyText;
 }
 
+/// <summary>Une pastille de thème dans Paramètres.</summary>
+public class ThemeRow : ObservableObject
+{
+    private bool _selected;
+    public ThemeRow(ThemeDef def)
+    {
+        Key = def.Key;
+        Name = def.Name;
+        AccentBrush = Freeze(def.Accent);
+        SurfaceBrush = Freeze(def.Surface);
+        BackgroundBrush = Freeze(def.Background);
+    }
+    private static System.Windows.Media.SolidColorBrush Freeze(System.Windows.Media.Color c)
+    {
+        var b = new System.Windows.Media.SolidColorBrush(c);
+        b.Freeze();
+        return b;
+    }
+    public string Key { get; }
+    public string Name { get; }
+    public System.Windows.Media.Brush AccentBrush { get; }
+    public System.Windows.Media.Brush SurfaceBrush { get; }
+    public System.Windows.Media.Brush BackgroundBrush { get; }
+    public bool Selected { get => _selected; set => Set(ref _selected, value); }
+}
+
 public class NoteHit
 {
     public string Key { get; set; }
@@ -150,6 +176,40 @@ public class MainViewModel : ObservableObject
         ShowToast("Raccourcis rétablis");
     }
 
+    // ── Thèmes de couleurs ──
+    public ObservableCollection<ThemeRow> ThemeRows { get; } = new();
+    public RelayCommand ThemeClickCommand { get; private set; }
+
+    private void BuildThemeRows()
+    {
+        ThemeRows.Clear();
+        foreach (var t in ThemeCatalog.All) ThemeRows.Add(new ThemeRow(t) { Selected = t.Key == ThemeCatalog.Get(Data.Theme).Key });
+    }
+
+    private void SetTheme(string key)
+    {
+        var def = ThemeCatalog.Get(key);
+        Data.Theme = def.Key;
+        ThemeCatalog.Apply(def.Key);
+        foreach (var r in ThemeRows) r.Selected = r.Key == def.Key;
+        RequestSave();
+    }
+
+    // ── Démarrage avec Windows ──
+    public bool StartWithWindows
+    {
+        get => AutoStart.IsEnabled();
+        set
+        {
+            if (AutoStart.IsEnabled() == value) return;
+            if (!AutoStart.Set(value)) ShowToast("Windows a refusé la modification du démarrage automatique");
+            else ShowToast(value ? "L'appli démarrera avec Windows" : "Démarrage automatique désactivé");
+            Raise();
+        }
+    }
+
+    public GlobalSearch Search { get; private set; }
+
     public CharactersViewModel CharactersPage { get; private set; }
     public DungeonsViewModel Dungeons { get; private set; }
     public SongesViewModel Songes { get; private set; }
@@ -252,6 +312,12 @@ public class MainViewModel : ObservableObject
         Status = warning;
         _loadWarning = warning;
 
+        // Thème de couleurs appliqué avant l'ouverture de toute fenêtre ; démarrage Windows : met le chemin à jour si l'appli a bougé
+        ThemeCatalog.Apply(Data.Theme);
+        ThemeClickCommand = new RelayCommand(p => SetTheme(p as string));
+        BuildThemeRows();
+        AutoStart.Refresh();
+
         foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"), ("almanax", "Almanax", "IcoCalendar"),
                                             ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"),
                                             ("notes", "Notes", "IcoNotes"), ("settings", "Paramètres", "IcoSettings") })
@@ -302,6 +368,7 @@ public class MainViewModel : ObservableObject
         Dungeons = new DungeonsViewModel(this);
         Songes = new SongesViewModel(this);
         Almanax = new AlmanaxViewModel(this);
+        Search = new GlobalSearch(this);
         RebuildTasks();
 
         _saveTimer.Tick += (_, _) => { _saveTimer.Stop(); SaveNow(); };
@@ -663,6 +730,8 @@ public class MainViewModel : ObservableObject
                                   nameof(LastBackup), nameof(NoteText), nameof(MainCounter), nameof(SpecialCounter), nameof(Characters),
                                   nameof(RememberMiniPosition), nameof(MiniCompact), nameof(MiniFull), nameof(MiniOpacityText) })
             Raise(p);
+        BuildThemeRows();
+        ThemeCatalog.Apply(Data.Theme);
         BuildLists();
         UpdateOrder();
         CharactersPage.Reload();

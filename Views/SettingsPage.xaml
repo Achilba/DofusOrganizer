@@ -12,14 +12,14 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="b" Height="40" Padding="14,0" CornerRadius="8" BorderThickness="1.5" Background="{StaticResource Field}" BorderBrush="{StaticResource Line2}">
-                            <TextBlock x:Name="t" Text="Sauté" Foreground="{StaticResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
+                        <Border x:Name="b" Height="40" Padding="14,0" CornerRadius="8" BorderThickness="1.5" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}">
+                            <TextBlock x:Name="t" Text="Sauté" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Accent}"/>
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
                                 <Setter TargetName="t" Property="Text" Value="Inclus dans *"/>
-                                <Setter TargetName="t" Property="Foreground" Value="{StaticResource Accent}"/>
+                                <Setter TargetName="t" Property="Foreground" Value="{DynamicResource Accent}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -43,16 +43,16 @@
                         <Run Text="Dernière sauvegarde : "/><Run Text="{Binding LastBackup, Mode=OneWay}"/>
                     </TextBlock>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{StaticResource GoodText}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{DynamicResource GoodText}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"
                               Visibility="{Binding DataIntact, Converter={StaticResource BoolVis}}"/>
-                        <TextBlock Text="{Binding DataIntactText}" Foreground="{StaticResource GoodText}" TextWrapping="Wrap"
+                        <TextBlock Text="{Binding DataIntactText}" Foreground="{DynamicResource GoodText}" TextWrapping="Wrap"
                                    Visibility="{Binding DataIntact, Converter={StaticResource BoolVis}}"/>
-                        <TextBlock Text="{Binding DataIntactText}" Foreground="{StaticResource WarnText}" TextWrapping="Wrap"
+                        <TextBlock Text="{Binding DataIntactText}" Foreground="{DynamicResource WarnText}" TextWrapping="Wrap"
                                    Visibility="{Binding DataIntact, Converter={StaticResource InvBoolVis}}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Exporter mes données" Command="{Binding ExportCommand}" Style="{StaticResource Big}" Background="{StaticResource Accent}"
-                                Foreground="{StaticResource AccentText}" BorderBrush="{StaticResource Accent}" Margin="0,0,8,0"/>
+                        <Button Content="Exporter mes données" Command="{Binding ExportCommand}" Style="{StaticResource Big}" Background="{DynamicResource Accent}"
+                                Foreground="{DynamicResource AccentText}" BorderBrush="{DynamicResource Accent}" Margin="0,0,8,0"/>
                         <Button Content="Importer une sauvegarde" Command="{Binding ImportCommand}" Style="{StaticResource Big}" Margin="0,0,8,0"/>
                         <Button Content="Copier ailleurs" Command="{Binding CopyBackupCommand}" Style="{StaticResource Big}" Margin="0,0,8,0" ToolTip="Copie tes données dans un autre dossier (autre disque, clé USB, cloud)"/>
                         <Button Content="Ouvrir le dossier" Command="{Binding OpenFolderCommand}" Style="{StaticResource Big}"/>
@@ -67,11 +67,59 @@
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                         <TextBlock Text="Opacité" VerticalAlignment="Center" Margin="0,0,14,0"/>
                         <Slider Width="260" Minimum="0.3" Maximum="1" Value="{Binding MiniOpacity}" IsMoveToPointEnabled="True" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding MiniOpacityText}" Foreground="{StaticResource Accent}" MinWidth="44" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding MiniOpacityText}" Foreground="{DynamicResource Accent}" MinWidth="44" Margin="14,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
                     <CheckBox Style="{StaticResource Switch}" Content="Retenir la position de la barre d'un lancement à l'autre" IsChecked="{Binding RememberMiniPosition}" Margin="0,0,0,12"/>
                     <CheckBox Style="{StaticResource Switch}" Content="Toujours au premier plan : la barre Mini n'est jamais masquée par DOFUS" IsChecked="{Binding MiniAlwaysOnTop}" Margin="0,0,0,12"/>
-                    <TextBlock Text="À vérifier sur ton PC avec DOFUS en mode fenêtré." Foreground="{StaticResource Dim}" FontSize="12"/>
+                    <TextBlock Text="À vérifier sur ton PC avec DOFUS en mode fenêtré." Foreground="{DynamicResource Dim}" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Démarrage -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Démarrage" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Lancer l'appli au démarrage de Windows" IsChecked="{Binding StartWithWindows, Mode=TwoWay}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Elle s'ouvre comme à ta dernière fermeture (fenêtre normale ou barre Mini)." Foreground="{DynamicResource Dim}" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Apparence -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Apparence" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Choisis les couleurs de l'appli, inspirées des univers de DOFUS. Le changement est immédiat." Style="{StaticResource MutedText}" Margin="0,0,0,12"/>
+                    <ItemsControl ItemsSource="{Binding ThemeRows}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Width="136" Height="64" Margin="0,0,10,10" Padding="12,0" HorizontalContentAlignment="Left"
+                                        Background="{Binding BackgroundBrush}"
+                                        Command="{Binding DataContext.ThemeClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding Key}">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                                    <Setter Property="BorderThickness" Value="2.5"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="14" Height="14" Fill="{Binding AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" Foreground="#F3F0E8"/>
+                                        </StackPanel>
+                                        <Border Height="8" CornerRadius="4" Background="{Binding SurfaceBrush}" Margin="0,9,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </Border>
 
@@ -89,9 +137,9 @@
                                     <DockPanel>
                                         <Button DockPanel.Dock="Right" MinWidth="176" Height="36" MinHeight="0" Padding="12,0" Content="{Binding ButtonText}"
                                                 Command="{Binding DataContext.ShortcutClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"/>
-                                        <TextBlock Text="{Binding Label}" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Label}" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                                     </DockPanel>
-                                    <TextBlock Text="{Binding Message}" Foreground="{StaticResource WarnText}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"
+                                    <TextBlock Text="{Binding Message}" Foreground="{DynamicResource WarnText}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"
                                                Visibility="{Binding Message, Converter={StaticResource NotEmptyVis}}"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -110,7 +158,7 @@
                     <ItemsControl ItemsSource="{Binding Characters}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" Padding="12,6" Margin="0,0,0,8" MinHeight="52">
+                                <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="12,6" Margin="0,0,0,8" MinHeight="52">
                                     <DockPanel>
                                         <ToggleButton DockPanel.Dock="Right" Style="{StaticResource IncBtn}" IsChecked="{Binding InSwap, Mode=TwoWay}" Margin="8,0,0,0"/>
                                         <Button DockPanel.Dock="Right" Width="40" Padding="0" Margin="8,0,0,0" ToolTip="Descendre"
@@ -122,9 +170,9 @@
                                             <TextBlock Text="↑" FontSize="16"/>
                                         </Button>
                                         <Path DockPanel.Dock="Left" Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="10" Height="18" Margin="0,0,10,0"/>
-                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Number}" Foreground="{StaticResource Dim}" Width="22" VerticalAlignment="Center"/>
+                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Number}" Foreground="{DynamicResource Dim}" Width="22" VerticalAlignment="Center"/>
                                         <TextBlock VerticalAlignment="Center">
-                                            <Run Text="{Binding Name, Mode=OneWay}" FontFamily="{StaticResource BodyXB}"/><Run Text=" · " Foreground="{StaticResource Muted}"/><Run Text="{Binding ClassName, Mode=OneWay}" Foreground="{StaticResource Muted}"/>
+                                            <Run Text="{Binding Name, Mode=OneWay}" FontFamily="{StaticResource BodyXB}"/><Run Text=" · " Foreground="{DynamicResource Muted}"/><Run Text="{Binding ClassName, Mode=OneWay}" Foreground="{DynamicResource Muted}"/>
                                         </TextBlock>
                                     </DockPanel>
                                 </Border>
@@ -155,13 +203,13 @@
                     </TextBlock>
                     <WrapPanel>
                         <Button Content="Rechercher une mise à jour" Command="{Binding CheckUpdateCommand}" Margin="0,0,10,0"/>
-                        <Button Content="{Binding InstallUpdateLabel}" Command="{Binding InstallUpdateCommand}" Background="{StaticResource Accent}"
-                                Foreground="{StaticResource AccentText}" BorderBrush="{StaticResource Accent}"
+                        <Button Content="{Binding InstallUpdateLabel}" Command="{Binding InstallUpdateCommand}" Background="{DynamicResource Accent}"
+                                Foreground="{DynamicResource AccentText}" BorderBrush="{DynamicResource Accent}"
                                 Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
                     </WrapPanel>
                     <TextBlock Text="{Binding UpdateText}" Style="{StaticResource MutedText}" Margin="0,10,0,0"
                                Visibility="{Binding UpdateText, Converter={StaticResource NotEmptyVis}}"/>
-                    <TextBlock Text="L'appli vérifie au lancement s'il existe une nouvelle version. Tes données ne sont jamais touchées." Foreground="{StaticResource Dim}" FontSize="12" Margin="0,10,0,0"/>
+                    <TextBlock Text="L'appli vérifie au lancement s'il existe une nouvelle version. Tes données ne sont jamais touchées." Foreground="{DynamicResource Dim}" FontSize="12" Margin="0,10,0,0"/>
                 </StackPanel>
             </Border>
 
@@ -170,7 +218,7 @@
                 <StackPanel>
                     <TextBlock Text="Listes de données" Style="{StaticResource H2}" Margin="0,0,0,10"/>
                     <TextBlock Text="Zaaps, donjons, modificateurs 2026, Dofus et légendes sont intégrés à l'appli." Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
-                    <TextBlock Text="La vérification en ligne au lancement n'existe pas encore dans cette version." Foreground="{StaticResource Dim}" FontSize="12" Margin="0,0,0,12"/>
+                    <TextBlock Text="La vérification en ligne au lancement n'existe pas encore dans cette version." Foreground="{DynamicResource Dim}" FontSize="12" Margin="0,0,0,12"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding VersionText}" VerticalAlignment="Center" Margin="0,0,14,0"/>
                         <Button Content="Notes de version" Command="{Binding PatchNotesCommand}"/>
