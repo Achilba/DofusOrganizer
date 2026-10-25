@@ -137,22 +137,23 @@
                 </Grid.RowDefinitions>
                 <Grid Margin="14,8,26,8" TextBlock.Foreground="{DynamicResource Muted}" TextBlock.FontFamily="{StaticResource BodyXB}" TextBlock.FontSize="12">
                     <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="210"/>
-                    <ColumnDefinition Width="56"/>
-                    <ColumnDefinition Width="84"/>
-                    <ColumnDefinition Width="84"/>
-                    <ColumnDefinition Width="84"/>
-                    <ColumnDefinition Width="84"/>
-
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="190"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="110"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Boss"/>
                     <TextBlock Grid.Column="1" Text="Niveau" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="2" Text="Chall 1" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="3" Text="Chall 2" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="4" Text="Duo / Trio" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="5" Text="Spécial" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="6" Text="Manque" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="4" Text="Chall 3" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Text="Duo / Trio" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="6" Text="Spécial" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="7" Text="Manque" HorizontalAlignment="Center"/>
                 </Grid>
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
                     <ItemsControl ItemsSource="{Binding AchView}">
@@ -161,14 +162,14 @@
                                 <Border BorderBrush="{DynamicResource Field}" BorderThickness="0,1,0,0" Padding="14,6" MinHeight="58">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="210"/>
-                                            <ColumnDefinition Width="56"/>
-                                            <ColumnDefinition Width="84"/>
-                                            <ColumnDefinition Width="84"/>
-                                            <ColumnDefinition Width="84"/>
-                                            <ColumnDefinition Width="84"/>
-
-                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="190"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="110"/>
                                         </Grid.ColumnDefinitions>
                                         <DockPanel VerticalAlignment="Center" Margin="0,0,8,0">
                                             <Button DockPanel.Dock="Right" Style="{StaticResource InfoBtn}" Margin="6,0,0,0" Command="{Binding OpenCommand}"
@@ -177,19 +178,23 @@
                                         </DockPanel>
                                         <TextBlock Grid.Column="1" Text="{Binding Bracket}" FontSize="13" FontFamily="{StaticResource BodyXB}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H1, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding T1}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding T1}" Width="76" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C1, Mode=TwoWay}"/>
                                         </StackPanel>
                                         <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H2, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding T2}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding T2}" Width="76" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C2, Mode=TwoWay}"/>
                                         </StackPanel>
-                                        <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HG, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding TG}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                        <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H3, Converter={StaticResource BoolVis}}">
+                                            <TextBlock Text="{Binding T3}" Width="76" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C3, Mode=TwoWay}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HG, Converter={StaticResource BoolVis}}">
+                                            <TextBlock Text="{Binding TG}" Width="76" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding G, Mode=TwoWay}"/>
                                         </StackPanel>
-                                        <StackPanel Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HS, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding TS}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                        <StackPanel Grid.Column="6" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HS, Converter={StaticResource BoolVis}}">
+                                            <TextBlock Text="{Binding TS}" Width="76" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <Grid>
                                                 <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding S, Mode=TwoWay}"/>
                                                 <Button Style="{StaticResource InfoBtn}" HorizontalAlignment="Right" Margin="0,0,3,0" Width="20" Height="20" Cursor="Help"
@@ -200,7 +205,7 @@
                                                 </Button>
                                             </Grid>
                                         </StackPanel>
-                                        <TextBlock Grid.Column="6" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="7" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

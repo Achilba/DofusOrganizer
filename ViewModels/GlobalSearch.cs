@@ -171,16 +171,27 @@ public class GlobalSearch : ObservableObject
     private void AddDungeons(List<SearchHit> found, string q)
     {
         var list = new List<SearchHit>();
-        foreach (var d in _main.Dungeons.All)
+        foreach (var b in DungeonAchData.All)
         {
-            int r = Rank(Norm(d.Name), q);
+            // Boss d'abord ; les noms de challenges et du Spécial passent après (rang décalé)
+            int r = Rank(Norm(b.Boss), q);
+            if (r < 0)
+            {
+                var names = b.Challenges.Concat(new[] { b.SpecialName ?? "" });
+                foreach (var n in names)
+                {
+                    int rn = Rank(Norm(n), q);
+                    if (rn >= 0) { r = rn + 10; break; }
+                }
+            }
             if (r < 0) continue;
-            var item = d;
+            var boss = b.Boss;
             list.Add(new SearchHit
             {
-                Category = "Donjon", Title = d.Name,
-                Detail = "Niv. " + d.LevelText + (d.Done ? " · terminé" : ""), Rank = r,
-                Run = () => { _main.Dungeons.Query = item.Name; _main.Page = "dungeons"; }
+                Category = "Donjon", Title = b.Boss,
+                Detail = "Niv. " + b.Level + " · " + string.Join(", ", b.Challenges.Take(2)) + (b.SpecialName != null ? " · Spécial : " + b.SpecialName : ""),
+                Rank = r,
+                Run = () => { _main.Dungeons.Query = boss; _main.Page = "dungeons"; }
             });
         }
         AddRanked(found, list);

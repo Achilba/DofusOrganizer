@@ -34,7 +34,7 @@ public class AchRow : ObservableObject
     // Disponibilité et libellés des 5 cases
     public bool H1 => _b.Challenges.Length > 0;
     public bool H2 => _b.Challenges.Length > 1;
-    public bool H3 => false; // 3e challenge non affiché
+    public bool H3 => _b.Challenges.Length > 2;
     public bool HG => _b.GroupLabel != null;
     public bool HS => _b.Special;
     public string T1 => H1 ? _b.Challenges[0] : "";
