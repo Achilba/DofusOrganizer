@@ -37,7 +37,7 @@ public class DungeonItem : ObservableObject
     public void SetSilently(bool v) { _silent = true; Done = v; _silent = false; }
 }
 
-public class DungeonsViewModel : ObservableObject
+public partial class DungeonsViewModel : ObservableObject
 {
     private readonly MainViewModel _main;
     private readonly List<DungeonItem> _all = new();
@@ -64,6 +64,7 @@ public class DungeonsViewModel : ObservableObject
         _all.Clear();
         foreach (var e in DungeonData.All)
             _all.Add(new DungeonItem(e, _main.Data.DungeonsDone.Contains(e.Name), OnDone));
+        ReloadAch();
         Refresh();
     }
 
@@ -111,6 +112,7 @@ public class DungeonsViewModel : ObservableObject
         foreach (var d in items) View.Add(d);
         Raise(nameof(Shown));
         Raise(nameof(Counter));
+        RefreshAch();
     }
 }
 

@@ -44,6 +44,57 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="Cell" TargetType="ToggleButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="box" Width="26" Height="26" CornerRadius="6" BorderThickness="2" BorderBrush="{DynamicResource Off}" Background="Transparent">
+                            <Path x:Name="tick" Data="{StaticResource IcoCheck}" Stroke="#0E1014" StrokeThickness="2.6" Stretch="Uniform" Width="12" Height="9"
+                                  Visibility="Collapsed" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="box" Property="Background" Value="{DynamicResource Good}"/>
+                                <Setter TargetName="box" Property="BorderBrush" Value="{DynamicResource Good}"/>
+                                <Setter TargetName="tick" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="box" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="NameBox" TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource Field}"/>
+            <Setter Property="Foreground" Value="{DynamicResource Text}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource Text}"/>
+            <Setter Property="FontFamily" Value="{StaticResource BodyXB}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Width" Value="116"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Padding" Value="4,0"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -57,10 +108,25 @@
             <TextBlock Text="Liste de contrôle · recherche, tri et filtre par niveau" Style="{StaticResource PageSub}"/>
         </StackPanel>
         <DockPanel Grid.Row="1" Margin="0,0,0,14" LastChildFill="False">
+            <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding AchMode, Mode=TwoWay}" Height="40" Cursor="Hand" Margin="0,0,10,0">
+                <ToggleButton.Template>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="8" Padding="12,0">
+                            <TextBlock x:Name="t" Text="Vue : Liste" Foreground="{DynamicResource Text}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="t" Property="Text" Value="Vue : Succès"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ToggleButton.Template>
+            </ToggleButton>
             <TextBox DockPanel.Dock="Left" Width="300" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom, niveau ou coordonnées" Margin="0,0,10,0"/>
             <ComboBox DockPanel.Dock="Left" Width="216" ItemsSource="{Binding SortChoices}" ItemStringFormat="Tri : {0}" SelectedItem="{Binding Sort, Mode=TwoWay}" Margin="0,0,10,0"/>
             <ComboBox DockPanel.Dock="Left" Width="196" ItemsSource="{Binding LevelFilterChoices}" ItemStringFormat="Niveau : {0}" SelectedItem="{Binding LevelFilter, Mode=TwoWay}" Margin="0,0,10,0"/>
-            <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding HideDone, Mode=TwoWay}" Height="40" Cursor="Hand">
+            <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding HideDone, Mode=TwoWay}" Height="40" Cursor="Hand" Visibility="{Binding ListMode, Converter={StaticResource BoolVis}}">
                 <ToggleButton.Template>
                     <ControlTemplate TargetType="ToggleButton">
                         <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="8" Padding="12,0">
@@ -75,11 +141,31 @@
                     </ControlTemplate>
                 </ToggleButton.Template>
             </ToggleButton>
-            <TextBlock DockPanel.Dock="Right" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center">
+            <ComboBox DockPanel.Dock="Left" Width="170" ItemsSource="{Binding CharNames}" SelectedItem="{Binding AchChar, Mode=TwoWay}" ItemStringFormat="Perso : {0}" Margin="0,0,10,0"
+                      Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}"/>
+            <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding OnlyMissing, Mode=TwoWay}" Height="40" Cursor="Hand" Margin="0,0,10,0" Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
+                <ToggleButton.Template>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="8" Padding="12,0">
+                            <TextBlock x:Name="t" Text="Manquants seulement : NON" Foreground="{DynamicResource Text}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="t" Property="Text" Value="Manquants seulement : OUI"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ToggleButton.Template>
+            </ToggleButton>
+            <TextBlock DockPanel.Dock="Right" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center" Visibility="{Binding ListMode, Converter={StaticResource BoolVis}}">
                 <Run Text="{Binding Counter, Mode=OneWay}"/><Run Text=" terminés · "/><Run Text="{Binding Shown, Mode=OneWay}"/>
             </TextBlock>
+            <TextBlock DockPanel.Dock="Right" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center" Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
+                <Run Text="{Binding AchCounter, Mode=OneWay}"/><Run Text=" · "/><Run Text="{Binding AchShown, Mode=OneWay}"/>
+            </TextBlock>
         </DockPanel>
-        <Border Grid.Row="2" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True">
+        <Border Grid.Row="2" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True" Visibility="{Binding ListMode, Converter={StaticResource BoolVis}}">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding View}">
                     <ItemsControl.ItemTemplate>
@@ -90,7 +176,73 @@
                 </ItemsControl>
             </ScrollViewer>
         </Border>
+        <Border Grid.Row="2" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True"
+                Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Margin="14,8" TextBlock.Foreground="{DynamicResource Muted}" TextBlock.FontFamily="{StaticResource BodyXB}" TextBlock.FontSize="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="190"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Donjon"/>
+                    <TextBlock Grid.Column="1" Text="Challenge 1" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" Text="Challenge 2" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" Text="Duo" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="4" Text="Spécial" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Text="Manque aussi chez"/>
+                </Grid>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding AchView}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource Field}" BorderThickness="0,1,0,0" Padding="14,6" MinHeight="66">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="130"/>
+                                            <ColumnDefinition Width="130"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="190"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontSize="14" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Text}"/>
+                                            <TextBlock FontSize="12" Foreground="{DynamicResource Muted}">
+                                                <Run Text="Niv. "/><Run Text="{Binding LevelText, Mode=OneWay}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBox Style="{StaticResource NameBox}" Text="{Binding N1, UpdateSourceTrigger=LostFocus}" ToolTip="Nom du challenge (à saisir une fois)"/>
+                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C1, Mode=TwoWay}" Margin="0,5,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBox Style="{StaticResource NameBox}" Text="{Binding N2, UpdateSourceTrigger=LostFocus}" ToolTip="Nom du challenge (à saisir une fois)"/>
+                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C2, Mode=TwoWay}" Margin="0,5,0,0"/>
+                                        </StackPanel>
+                                        <ToggleButton Grid.Column="3" Style="{StaticResource Cell}" IsChecked="{Binding Duo, Mode=TwoWay}" VerticalAlignment="Center" ToolTip="Succès Duo"/>
+                                        <ToggleButton Grid.Column="4" Style="{StaticResource Cell}" IsChecked="{Binding Special, Mode=TwoWay}" VerticalAlignment="Center" ToolTip="Succès Spécial"/>
+                                        <TextBlock Grid.Column="5" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
         <TextBlock Grid.Row="3" Margin="0,10,0,0" Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"
-                   Text="Liste relevée sur dofuspourlesnoobs.com (140 donjons, anomalies exclues), à recouper avec le jeu."/>
+                   Text="Liste relevée sur dofuspourlesnoobs.com (140 donjons, anomalies exclues), à recouper avec le jeu."
+                   Visibility="{Binding ListMode, Converter={StaticResource BoolVis}}"/>
+        <TextBlock Grid.Row="3" Margin="0,10,0,0" Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"
+                   Text="Les cases sont propres à chaque personnage (choisis-le en haut). Les noms des deux challenges se saisissent une fois et valent pour tous les personnages."
+                   Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}"/>
     </Grid>
 </UserControl>
