@@ -50,6 +50,24 @@
                 <Border Style="{StaticResource Card}">
                     <StackPanel>
                         <TextBlock Text="Détails" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                        <WrapPanel Margin="0,0,0,10">
+                            <TextBlock Text="Nom" Style="{StaticResource Lbl}"/>
+                            <TextBox Width="220" MaxLength="40" Text="{Binding EditName, UpdateSourceTrigger=LostFocus}" KeyDown="Name_KeyDown" Margin="0,0,16,0"
+                                     ToolTip="Le nom du personnage tel qu'il apparaît dans Dofus. Valide avec Entrée."/>
+                            <Button Content="Ajouter un personnage" Command="{Binding AddCharacterCommand}" Margin="0,0,8,0"/>
+                            <Button Content="Supprimer ce personnage" Command="{Binding RemoveCharacterCommand}" IsEnabled="{Binding CanRemove}"/>
+                        </WrapPanel>
+                        <TextBlock Text="{Binding NameError}" Foreground="{DynamicResource Bad}" FontSize="12.5" Margin="0,0,0,10">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value=""><Setter Property="Visibility" Value="Collapsed"/></Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <CheckBox Style="{StaticResource Switch}" Content="Suivi dans les succès de donjons" IsChecked="{Binding Selected.AchTracked}" Margin="0,0,0,12"
+                                  ToolTip="Décoche pour un personnage dont tu ne suis pas les succès : il n'apparaît plus dans la page Donjons."/>
                         <WrapPanel>
                             <TextBlock Text="Classe" Style="{StaticResource Lbl}"/>
                             <ComboBox Width="176" ItemsSource="{Binding ClassChoices}" SelectedItem="{Binding Selected.ClassName, Mode=TwoWay}" Margin="0,0,16,0">

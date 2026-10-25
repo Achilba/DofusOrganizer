@@ -44,6 +44,15 @@ public partial class CharactersPage : UserControl
         e.Handled = true;
     }
 
+    private void Name_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && sender is TextBox tb)
+        {
+            tb.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            e.Handled = true;
+        }
+    }
+
     private void Url_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && DataContext is CharactersViewModel vm)

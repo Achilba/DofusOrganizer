@@ -108,12 +108,9 @@ public partial class DungeonsViewModel
 
     public bool OnlyMissing { get => _onlyMissing; set { if (Set(ref _onlyMissing, value)) Refresh(); } }
 
-    /// <summary>Personnages suivis dans la vue Succès (Forgelance et Sacrieur exclus).</summary>
+    /// <summary>Personnages suivis dans la vue Succès (case « Suivi dans les succès » de la page Personnages).</summary>
     private IEnumerable<Character> AchChars()
-        => _main.Data.Characters.Where(c => !IsExcluded(c.ClassName));
-
-    private static bool IsExcluded(string cls)
-        => !string.IsNullOrEmpty(cls) && (cls.StartsWith("Forgelance", StringComparison.OrdinalIgnoreCase) || cls.StartsWith("Sacrieur", StringComparison.OrdinalIgnoreCase));
+        => _main.Data.Characters.Where(c => c.AchTracked);
 
     /// <summary>Choix « Tous » du sélecteur : une coche s'applique à tous les personnages suivis.</summary>
     public const string AllChars = "Tous";
@@ -218,7 +215,7 @@ public partial class DungeonsViewModel
 
     /// <summary>
     /// Colonne « Manque » : « Tous » si aucun personnage n'a rien fait sur ce boss ; sinon une ligne par
-    /// personnage à qui il reste des succès, avec le nombre restant (Forgelance et Sacrieur exclus).
+    /// personnage à qui il reste des succès, avec le nombre restant (seuls les personnages suivis comptent).
     /// </summary>
     internal string OthersMissing(string boss)
     {

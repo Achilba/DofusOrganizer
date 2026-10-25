@@ -31,6 +31,8 @@ public class CharactersViewModel : ObservableObject
     public RelayCommand RemoveStuffCommand { get; }
     public RelayCommand CopyStuffCommand { get; }
     public RelayCommand CopySummaryCommand { get; }
+    public RelayCommand AddCharacterCommand { get; }
+    public RelayCommand RemoveCharacterCommand { get; }
 
     public CharactersViewModel(MainViewModel main)
     {
@@ -41,10 +43,43 @@ public class CharactersViewModel : ObservableObject
         RemoveStuffCommand = new RelayCommand(p => RemoveStuff(p as StuffLink));
         CopyStuffCommand = new RelayCommand(p => { if (p is StuffLink s) _main.CopyWithToast(s.Url, "Lien copié"); });
         CopySummaryCommand = new RelayCommand(CopySummary);
+        AddCharacterCommand = new RelayCommand(() =>
+        {
+            Selected = _main.AddCharacter();
+            NameError = "";
+            RaiseCount();
+        });
+        RemoveCharacterCommand = new RelayCommand(() =>
+        {
+            if (_selected == null || Characters.Count <= 1) return;
+            int i = Characters.IndexOf(_selected);
+            if (_main.RemoveCharacter(_selected))
+            {
+                Selected = Characters[Math.Min(i, Characters.Count - 1)];
+                NameError = "";
+                RaiseCount();
+            }
+        });
         Reload();
     }
 
     public ObservableCollection<Character> Characters => _main.Characters;
+
+    private string _nameError = "";
+    public string NameError { get => _nameError; set => Set(ref _nameError, value); }
+    public bool CanRemove => Characters.Count > 1;
+    private void RaiseCount() => Raise(nameof(CanRemove));
+
+    /// <summary>Nom du personnage choisi, modifiable : le changement est appliqué en quittant le champ ou avec Entrée.</summary>
+    public string EditName
+    {
+        get => _selected?.Name ?? "";
+        set
+        {
+            NameError = _main.RenameCharacter(_selected, value);
+            Raise(nameof(EditName));
+        }
+    }
 
     public Character Selected
     {
@@ -55,6 +90,8 @@ public class CharactersViewModel : ObservableObject
             _main.Data.SelectedCharacter = Math.Max(0, Characters.IndexOf(value));
             _main.RequestSave();
             Error = "";
+            NameError = "";
+            Raise(nameof(EditName));
             RefreshJobs();
             RefreshStuffs();
         }
@@ -66,6 +103,8 @@ public class CharactersViewModel : ObservableObject
         var i = Math.Min(Math.Max(0, _main.Data.SelectedCharacter), Math.Max(0, Characters.Count - 1));
         _selected = Characters.Count > 0 ? Characters[i] : null;
         Raise(nameof(Selected));
+        Raise(nameof(EditName));
+        Raise(nameof(CanRemove));
         Raise(nameof(Characters));
         RefreshJobs();
         RefreshStuffs();

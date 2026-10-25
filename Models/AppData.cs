@@ -45,10 +45,13 @@ public class Character : TrackedObject
     private string _faction = "Neutre";
     private string _order = "Aucun";
     private int _alignLevel = 1;
+    private bool _achTracked = true;
 
     public string Name { get => _name; set => Set(ref _name, value); }
     public string ClassName { get => _className; set { if (value != null) Set(ref _className, value); } }
     public bool InSwap { get => _inSwap; set => Set(ref _inSwap, value); }
+    /// <summary>Personnage suivi dans la vue Succès de la page Donjons (et dans la colonne « Manque »).</summary>
+    public bool AchTracked { get => _achTracked; set => Set(ref _achTracked, value); }
     public string Color { get; set; } = "#F2B544";
 
     public int CharLevel
@@ -85,16 +88,12 @@ public class Character : TrackedObject
 
 public class AppData
 {
-    public int DataVersion { get; set; } = 1;
+    /// <summary>1 = avant la case « Suivi dans les succès » ; 2 = actuel. Les anciens fichiers sont migrés au chargement (Storage).</summary>
+    public int DataVersion { get; set; } = 2;
 
     public ObservableCollection<Character> Characters { get; set; } = new()
     {
-        new Character { Name = "Achilpoi",  ClassName = "Crâ",        Color = "#F2B544", InSwap = true },
-        new Character { Name = "Ablihpa",   ClassName = "Pandawa",    Color = "#7FD1B9", InSwap = true },
-        new Character { Name = "Achilenu",  ClassName = "Enutrof",    Color = "#E8A07A", InSwap = true },
-        new Character { Name = "Achilba",   ClassName = "Féca",       Color = "#9DB7F5", InSwap = true },
-        new Character { Name = "Achicri",   ClassName = "Sacrieur",   Color = "#E57C7C", InSwap = false },
-        new Character { Name = "Achilance", ClassName = "Forgelance", Color = "#B5C46B", InSwap = false },
+        new Character { Name = "Personnage 1", ClassName = "Iop", Color = "#F2B544", InSwap = true },
     };
 
     public int SelectedCharacter { get; set; } = 0;

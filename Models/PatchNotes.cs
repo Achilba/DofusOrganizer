@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.1";
+    public const string Current = "0.9.2";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.2", "25/10/2026", new[]
+        {
+            "NOUVEAU — Personnages : tu peux maintenant renommer un personnage (champ « Nom », valider avec Entrée), en ajouter et en supprimer (avec « Annuler »). Renommer garde ses cases de succès et ses notes.",
+            "NOUVEAU — Personnages : la case « Suivi dans les succès de donjons » remplace l'exclusion fixe de Forgelance et Sacrieur. Tes personnages de ces classes sont décochés automatiquement, tu peux les recocher.",
+            "CHANGÉ — Une installation neuve démarre avec un seul personnage nommé « Personnage 1 » au lieu de ceux de l'auteur. Tes données existantes ne changent pas.",
+        }),
         new("0.9.1", "25/10/2026", new[]
         {
             "NOUVEAU — Accueil refait pour occuper toute la fenêtre : cartes des personnages plus grandes, Raccourcis et Invitations & Zaaps agrandis.",

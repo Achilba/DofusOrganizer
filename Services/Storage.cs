@@ -53,9 +53,25 @@ public class Storage
         try
         {
             var d = JsonSerializer.Deserialize<AppData>(File.ReadAllText(path), Options);
+            Migrate(d);
             return d;
         }
         catch { return null; }
+    }
+
+    /// <summary>
+    /// Version 1 → 2 : avant, les personnages Forgelance et Sacrieur étaient exclus des succès de donjon
+    /// de façon fixe ; c'est maintenant une case par personnage, qu'on décoche pour eux.
+    /// </summary>
+    private static void Migrate(AppData d)
+    {
+        if (d == null || d.DataVersion >= 2) return;
+        if (d.Characters != null)
+            foreach (var c in d.Characters)
+                if (!string.IsNullOrEmpty(c.ClassName) &&
+                    (c.ClassName.StartsWith("Forgelance", StringComparison.OrdinalIgnoreCase) || c.ClassName.StartsWith("Sacrieur", StringComparison.OrdinalIgnoreCase)))
+                    c.AchTracked = false;
+        d.DataVersion = 2;
     }
 
     public void Save(AppData data)

@@ -409,7 +409,13 @@ public class MainViewModel : ObservableObject
     public string Page
     {
         get => _page;
-        set { if (Set(ref _page, value)) UpdateNav(); }
+        set
+        {
+            if (!Set(ref _page, value)) return;
+            UpdateNav();
+            // La liste des personnages suivis peut avoir changé depuis la page Personnages.
+            if (value == "dungeons") Dungeons?.Reload();
+        }
     }
 
     private void UpdateNav()
@@ -552,6 +558,81 @@ public class MainViewModel : ObservableObject
         else Data.DofusStarted.Remove(item.Name);
         Raise(nameof(MainCounter)); Raise(nameof(MainPct)); Raise(nameof(SpecialCounter)); Raise(nameof(SpecialPct)); Raise(nameof(SpecialCounterSpaced));
         RequestSave();
+    }
+
+    // ───────── Gestion des personnages (renommer, ajouter, supprimer) ─────────
+
+    private static readonly string[] NewCharColors = { "#F2B544", "#7FD1B9", "#E8A07A", "#9DB7F5", "#E57C7C", "#B5C46B", "#C79BF2", "#6FC3DF" };
+
+    /// <summary>À appeler après toute modification de la liste des personnages.</summary>
+    private void CharactersChanged()
+    {
+        UpdateOrder();
+        BuildNoteKeys();
+        Raise(nameof(SelectedNote));
+        Raise(nameof(NoteText));
+        Dungeons?.Reload();
+        RequestSave();
+    }
+
+    /// <summary>Renomme un personnage sans perdre ses cases de succès ni ses notes. Renvoie un message d'erreur, ou "" si tout va bien.</summary>
+    public string RenameCharacter(Character c, string newName)
+    {
+        newName = (newName ?? "").Trim();
+        if (c == null) return "";
+        if (newName.Length == 0) return "Le nom ne peut pas être vide.";
+        if (newName.Length > 40) return "Le nom est trop long (40 caractères au maximum).";
+        if (string.Equals(newName, "Commun", StringComparison.OrdinalIgnoreCase)) return "Le nom « Commun » est réservé aux notes communes.";
+        var old = c.Name;
+        if (newName == old) return "";
+        if (Characters.Any(x => x != c && string.Equals(x.Name, newName, StringComparison.OrdinalIgnoreCase)))
+            return "Un autre personnage porte déjà ce nom.";
+
+        if (Data.BossAch.Remove(old, out var ach)) Data.BossAch[newName] = ach;
+        if (Data.Notes.Remove(old, out var note)) Data.Notes[newName] = note;
+        bool noteSelected = _selectedNote == old;
+        c.Name = newName;
+        BuildNoteKeys();
+        if (noteSelected) _selectedNote = newName;
+        Raise(nameof(SelectedNote));
+        Raise(nameof(NoteText));
+        Raise(nameof(MainCharLabel));
+        Dungeons?.Reload();
+        RequestSave();
+        return "";
+    }
+
+    /// <summary>Ajoute un personnage avec un nom libre (« Personnage 2 », etc.) que l'utilisateur renomme ensuite.</summary>
+    public Character AddCharacter()
+    {
+        int n = Characters.Count + 1;
+        string name;
+        do { name = "Personnage " + n++; } while (Characters.Any(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase)));
+        var c = new Character { Name = name, ClassName = "Iop", Color = NewCharColors[Characters.Count % NewCharColors.Length], InSwap = true };
+        Characters.Add(c);
+        CharactersChanged();
+        return c;
+    }
+
+    /// <summary>Supprime un personnage (au moins un doit rester), avec « Annuler » : ses succès et ses notes sont restaurés.</summary>
+    public bool RemoveCharacter(Character c)
+    {
+        if (c == null || Characters.Count <= 1) return false;
+        int idx = Characters.IndexOf(c);
+        var name = c.Name;
+        Data.BossAch.Remove(name, out var ach);
+        Data.Notes.Remove(name, out var note);
+        Characters.Remove(c);
+        CharactersChanged();
+        ShowUndo("Personnage supprimé : " + name, () =>
+        {
+            Characters.Insert(Math.Min(idx, Characters.Count), c);
+            if (ach != null) Data.BossAch[name] = ach;
+            if (note != null) Data.Notes[name] = note;
+            CharactersChanged();
+            CharactersPage.Reload();
+        });
+        return true;
     }
 
     // ───────── Notes ─────────
