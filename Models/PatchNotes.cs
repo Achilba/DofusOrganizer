@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.8.0";
+    public const string Current = "0.8.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.8.1", "25/10/2026", new[]
+        {
+            "CHANGÉ — Donjons : la vue Liste est retirée, la page affiche directement les succès par boss et par personnage. Tes coches « Fait » de l'ancienne liste restent enregistrées mais ne sont plus affichées.",
+        }),
         new("0.8.0", "25/10/2026", new[]
         {
             "NOUVEAU — Donjons, vue Succès : la liste des 144 boss est maintenant remplie, avec le nom des challenges de chaque boss affiché au-dessus de sa case (jusqu'à 3 challenges), le succès Duo (ou Trio / Quatuor selon le boss) et le succès Spécial. Relevé sur DofusDB : 122 succès Duo et 130 succès Spécial, conformes au total annoncé par la base.",

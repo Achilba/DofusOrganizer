@@ -74,7 +74,7 @@ public partial class DungeonsViewModel
 {
     private readonly List<AchRow> _achAll = new();
     private readonly Dictionary<string, AchRow> _achByKey = new();
-    private bool _achMode;
+    private bool _achMode = true;
     private bool _onlyMissing;
     private string _achChar;
 
