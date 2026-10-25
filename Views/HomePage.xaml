@@ -110,7 +110,13 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,4,0">
                                         <StackPanel>
-                                            <TextBlock Text="Niveau" Foreground="{DynamicResource Muted}" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Niveau" Foreground="{DynamicResource Muted}" FontSize="11" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
+                                                <Border Background="#33F2B544" CornerRadius="4" Padding="5,0" Margin="6,0,0,0" VerticalAlignment="Center"
+                                                        Visibility="{Binding IsOmega, Converter={StaticResource BoolVis}}">
+                                                    <TextBlock Text="Oméga" Foreground="#F2B544" FontSize="10.5" FontFamily="{StaticResource BodyXB}"/>
+                                                </Border>
+                                            </StackPanel>
                                             <TextBlock Text="{Binding LevelValue}" FontSize="21" FontFamily="{StaticResource BodyXB}" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Border>

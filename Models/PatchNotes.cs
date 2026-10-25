@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.9";
+    public const string Current = "0.9.10";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.10", "25/10/2026", new[]
+        {
+            "CHANGÉ — Accueil : pour un personnage au-delà du niveau 200, la case Niveau affiche le chiffre Oméga en gros (260 donne « 60 ») et le mot « Oméga » en petit, doré, à côté de « Niveau ».",
+        }),
         new("0.9.9", "25/10/2026", new[]
         {
             "CHANGÉ — Le bouton « Mode Mini » du menu de gauche est aussi sur l'Accueil (il n'est masqué que dans Paramètres) ; celui de l'en-tête de l'Accueil est retiré.",

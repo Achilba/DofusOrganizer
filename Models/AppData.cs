@@ -13,7 +13,7 @@ public class TrackedObject : ObservableObject
     protected override void Raise([CallerMemberName] string name = null)
     {
         base.Raise(name);
-        if (name != "Detected" && name != "IsMain" && name != "Number" && name != "LevelValue" && name != "FactionColor" && name != "OrderText" && name != "JobChips" && name != "HasJobs") Changed?.Invoke();
+        if (name != "Detected" && name != "IsMain" && name != "Number" && name != "LevelValue" && name != "IsOmega" && name != "FactionColor" && name != "OrderText" && name != "JobChips" && name != "HasJobs") Changed?.Invoke();
     }
 }
 
@@ -87,8 +87,9 @@ public class Character : TrackedObject
     [JsonIgnore] public bool IsMain { get => _isMain; set => Set(ref _isMain, value); }
     [JsonIgnore] public int Number { get => _number; set => Set(ref _number, value); }
     // ───── Infos de la carte de l'accueil (calculées, jamais enregistrées) ─────
-    /// <summary>Niveau affiché dans la carte : « 150 », ou « Oméga 60 » au-delà de 200.</summary>
-    [JsonIgnore] public string LevelValue => _charLevel >= 200 ? LevelText : _charLevel.ToString();
+    /// <summary>Niveau affiché dans la carte : « 150 » ; au-delà de 200, seulement le chiffre Oméga (260 donne « 60 »), le mot Oméga étant écrit à part en petit.</summary>
+    [JsonIgnore] public string LevelValue => _charLevel > 200 ? (_charLevel - 200).ToString() : _charLevel.ToString();
+    [JsonIgnore] public bool IsOmega => _charLevel > 200;
     /// <summary>Couleur du nom de la cité : bleu clair pour Bonta, rouge pour Brâkmar.</summary>
     [JsonIgnore] public string FactionColor => _faction == "Bonta" ? "#7CC4FF" : _faction == "Brâkmar" ? "#FF6B5F" : "#F3F0E8";
     /// <summary>Sous-titre de l'alignement : ordre et niveau d'alignement.</summary>
@@ -100,7 +101,7 @@ public class Character : TrackedObject
     /// <summary>À appeler quand on affiche l'accueil : le niveau, l'alignement ou les métiers ont pu changer.</summary>
     public void RefreshCardInfo()
     {
-        Raise(nameof(LevelValue)); Raise(nameof(FactionColor)); Raise(nameof(OrderText)); Raise(nameof(JobChips)); Raise(nameof(HasJobs));
+        Raise(nameof(LevelValue)); Raise(nameof(IsOmega)); Raise(nameof(FactionColor)); Raise(nameof(OrderText)); Raise(nameof(JobChips)); Raise(nameof(HasJobs));
     }
     [JsonIgnore] public string Initial => string.IsNullOrEmpty(_name) ? "?" : _name.Substring(0, 1).ToUpperInvariant();
 }
