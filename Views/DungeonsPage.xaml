@@ -80,13 +80,13 @@
             <TextBlock Text="Donjons" Style="{StaticResource PageTitle}"/>
             <TextBlock Text="Succès de donjon par boss et par personnage · recherche, tri et filtre par niveau" Style="{StaticResource PageSub}"/>
         </StackPanel>
-        <DockPanel Grid.Row="1" Margin="0,0,0,14" LastChildFill="False">
-            <TextBox DockPanel.Dock="Left" Width="300" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom, niveau ou coordonnées" Margin="0,0,10,0"/>
-            <ComboBox DockPanel.Dock="Left" Width="216" ItemsSource="{Binding SortChoices}" ItemStringFormat="Tri : {0}" SelectedItem="{Binding Sort, Mode=TwoWay}" Margin="0,0,10,0"/>
-            <ComboBox DockPanel.Dock="Left" Width="196" ItemsSource="{Binding LevelFilterChoices}" ItemStringFormat="Niveau : {0}" SelectedItem="{Binding LevelFilter, Mode=TwoWay}" Margin="0,0,10,0"/>
-            <ComboBox DockPanel.Dock="Left" Width="170" ItemsSource="{Binding CharNames}" SelectedItem="{Binding AchChar, Mode=TwoWay}" ItemStringFormat="Perso : {0}" Margin="0,0,10,0"
+        <WrapPanel Grid.Row="1" Margin="0,0,0,6">
+            <TextBox Width="230" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom, niveau ou coordonnées" Margin="0,0,10,8"/>
+            <ComboBox Width="200" ItemsSource="{Binding SortChoices}" ItemStringFormat="Tri : {0}" SelectedItem="{Binding Sort, Mode=TwoWay}" Margin="0,0,10,8"/>
+            <ComboBox Width="170" ItemsSource="{Binding LevelFilterChoices}" ItemStringFormat="Niveau : {0}" SelectedItem="{Binding LevelFilter, Mode=TwoWay}" Margin="0,0,10,8"/>
+            <ComboBox Width="170" ItemsSource="{Binding CharNames}" SelectedItem="{Binding AchChar, Mode=TwoWay}" ItemStringFormat="Perso : {0}" Margin="0,0,10,8"
                       Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}"/>
-            <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding OnlyMissing, Mode=TwoWay}" Height="40" Cursor="Hand" Margin="0,0,10,0" Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
+            <ToggleButton IsChecked="{Binding OnlyMissing, Mode=TwoWay}" Height="40" Cursor="Hand" Margin="0,0,10,8" Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
                 <ToggleButton.Template>
                     <ControlTemplate TargetType="ToggleButton">
                         <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="8" Padding="12,0">
@@ -101,10 +101,10 @@
                     </ControlTemplate>
                 </ToggleButton.Template>
             </ToggleButton>
-            <TextBlock DockPanel.Dock="Right" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center" Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
+            <TextBlock Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Height="40" Margin="0,0,0,8" VerticalAlignment="Center" Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
                 <Run Text="{Binding AchCounter, Mode=OneWay}"/><Run Text=" · "/><Run Text="{Binding AchShown, Mode=OneWay}"/>
             </TextBlock>
-        </DockPanel>
+        </WrapPanel>
         <Border Grid.Row="2" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True"
                 Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
             <Grid>
@@ -114,17 +114,17 @@
                 </Grid.RowDefinitions>
                 <Grid Margin="14,8" TextBlock.Foreground="{DynamicResource Muted}" TextBlock.FontFamily="{StaticResource BodyXB}" TextBlock.FontSize="12">
                     <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="96"/>
-                    <ColumnDefinition Width="94"/>
-                    <ColumnDefinition Width="94"/>
-                    <ColumnDefinition Width="94"/>
-                    <ColumnDefinition Width="94"/>
+                    <ColumnDefinition Width="*" MinWidth="200"/>
+                    <ColumnDefinition Width="56"/>
+                    <ColumnDefinition Width="84"/>
+                    <ColumnDefinition Width="84"/>
+                    <ColumnDefinition Width="84"/>
+                    <ColumnDefinition Width="84"/>
 
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="110"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Boss"/>
-                    <TextBlock Grid.Column="1" Text="Niveau"/>
+                    <TextBlock Grid.Column="1" Text="Niveau" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="2" Text="Chall 1" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="3" Text="Chall 2" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="4" Text="Duo / Trio" HorizontalAlignment="Center"/>
@@ -138,31 +138,31 @@
                                 <Border BorderBrush="{DynamicResource Field}" BorderThickness="0,1,0,0" Padding="14,6" MinHeight="58">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="96"/>
-                                            <ColumnDefinition Width="94"/>
-                                            <ColumnDefinition Width="94"/>
-                                            <ColumnDefinition Width="94"/>
-                                            <ColumnDefinition Width="94"/>
+                                            <ColumnDefinition Width="*" MinWidth="200"/>
+                                            <ColumnDefinition Width="56"/>
+                                            <ColumnDefinition Width="84"/>
+                                            <ColumnDefinition Width="84"/>
+                                            <ColumnDefinition Width="84"/>
+                                            <ColumnDefinition Width="84"/>
 
-                                            <ColumnDefinition Width="170"/>
+                                            <ColumnDefinition Width="110"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Name}" FontSize="14" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Text}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding Bracket}" FontSize="12" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Name}" FontSize="14" TextWrapping="Wrap" Foreground="{DynamicResource Text}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Bracket}" FontSize="13" FontFamily="{StaticResource BodyXB}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H1, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding T1}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding T1}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C1, Mode=TwoWay}"/>
                                         </StackPanel>
                                         <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H2, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding T2}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding T2}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C2, Mode=TwoWay}"/>
                                         </StackPanel>
                                         <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HG, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding TG}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding TG}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding G, Mode=TwoWay}"/>
                                         </StackPanel>
                                         <StackPanel Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HS, Converter={StaticResource BoolVis}}">
-                                            <TextBlock Text="{Binding TS}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding TS}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding S, Mode=TwoWay}"/>
                                         </StackPanel>
                                         <TextBlock Grid.Column="6" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center"/>

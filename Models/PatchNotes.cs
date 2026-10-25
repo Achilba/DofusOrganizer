@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.8.2";
+    public const string Current = "0.8.3";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.8.3", "25/10/2026", new[]
+        {
+            "CORRIGÉ — Donjons : les noms de boss s'affichent en entier (retour à la ligne si besoin), la colonne Niveau est centrée et plus étroite, et la barre d'outils passe à la ligne au lieu d'être coupée quand la fenêtre est étroite.",
+        }),
         new("0.8.2", "25/10/2026", new[]
         {
             "CHANGÉ — Donjons : la colonne « Chall 3 » est retirée (seuls les deux premiers challenges de chaque boss sont affichés) la colonne « Manque aussi chez » indique « Tous » quand il manque encore quelque chose à tous les autres personnages, et la colonne Niveau affiche seulement le niveau du donjon (relevé sur DofusDB pour les 144 boss).",
