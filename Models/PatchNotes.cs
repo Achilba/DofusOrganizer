@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.8.3";
+    public const string Current = "0.8.4";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.8.4", "25/10/2026", new[]
+        {
+            "CHANGÉ — Fenêtre plus large (1120 px au lieu de 1056, minimum 1010 px au lieu de 960) pour que le tableau des succès de donjon tienne en entier, sans défilement horizontal. Elle ne se redimensionne pas toute seule : si ta fenêtre était déjà ouverte à l'ancienne taille, elle prend la nouvelle au prochain lancement.",
+        }),
         new("0.8.3", "25/10/2026", new[]
         {
             "CORRIGÉ — Donjons : les noms de boss s'affichent en entier (retour à la ligne si besoin), la colonne Niveau est centrée et plus étroite, et la barre d'outils passe à la ligne au lieu d'être coupée quand la fenêtre est étroite.",
