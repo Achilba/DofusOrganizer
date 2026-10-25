@@ -12,9 +12,15 @@ public class AchRow : ObservableObject
 {
     private readonly DungeonsViewModel _vm;
 
-    public AchRow(DungeonEntry e, DungeonsViewModel vm)
+    public AchRow(DungeonEntry e, string key, string label, int index, DungeonsViewModel vm)
     {
         _vm = vm;
+        Key = key;
+        ParentName = e.Name;
+        Index = index;
+        _boss = label;
+        AddCommand = new RelayCommand(() => _vm.AddExtra(ParentName));
+        RemoveCommand = new RelayCommand(() => _vm.RemoveExtra(Key));
         Name = e.Name;
         LevelText = e.Level.Replace("/", " / ");
         var m = Regex.Match(e.Level, @"\d+");
@@ -22,21 +28,34 @@ public class AchRow : ObservableObject
         Pos = e.Pos;
     }
 
+    private string _boss;
+    /// <summary>Clé de stockage : le nom du donjon pour la ligne principale, « Donjon#n » pour un boss ajouté.</summary>
+    public string Key { get; }
+    public string ParentName { get; }
+    public int Index { get; }
+    public bool IsExtra => Index > 0;
+    public RelayCommand AddCommand { get; }
+    public RelayCommand RemoveCommand { get; }
+    public string BossName
+    {
+        get => _boss;
+        set { _boss = (value ?? "").Trim(); _vm.SetBoss(Key, _boss); Raise(nameof(BossName)); }
+    }
     public string Name { get; }
     public string LevelText { get; }
     public int LevelNum { get; }
     public string Pos { get; }
 
-    public bool C1 { get => _vm.GetAch(Name, 0); set { _vm.SetAch(Name, 0, value); Raise(nameof(C1)); } }
-    public bool C2 { get => _vm.GetAch(Name, 1); set { _vm.SetAch(Name, 1, value); Raise(nameof(C2)); } }
-    public bool Duo { get => _vm.GetAch(Name, 2); set { _vm.SetAch(Name, 2, value); Raise(nameof(Duo)); } }
-    public bool Special { get => _vm.GetAch(Name, 3); set { _vm.SetAch(Name, 3, value); Raise(nameof(Special)); } }
+    public bool C1 { get => _vm.GetAch(Key, 0); set { _vm.SetAch(Key, 0, value); Raise(nameof(C1)); } }
+    public bool C2 { get => _vm.GetAch(Key, 1); set { _vm.SetAch(Key, 1, value); Raise(nameof(C2)); } }
+    public bool Duo { get => _vm.GetAch(Key, 2); set { _vm.SetAch(Key, 2, value); Raise(nameof(Duo)); } }
+    public bool Special { get => _vm.GetAch(Key, 3); set { _vm.SetAch(Key, 3, value); Raise(nameof(Special)); } }
 
-    public string N1 { get => _vm.GetChallenge(Name, 0); set { _vm.SetChallenge(Name, 0, value); Raise(nameof(N1)); } }
-    public string N2 { get => _vm.GetChallenge(Name, 1); set { _vm.SetChallenge(Name, 1, value); Raise(nameof(N2)); } }
+    public string N1 { get => _vm.GetChallenge(Key, 0); set { _vm.SetChallenge(Key, 0, value); Raise(nameof(N1)); } }
+    public string N2 { get => _vm.GetChallenge(Key, 1); set { _vm.SetChallenge(Key, 1, value); Raise(nameof(N2)); } }
 
-    public string Others => _vm.OthersMissing(Name);
-    public bool AnyMissing => _vm.AnyMissing(Name);
+    public string Others => _vm.OthersMissing(Key);
+    public bool AnyMissing => _vm.AnyMissing(Key);
     public int Count => (C1 ? 1 : 0) + (C2 ? 1 : 0) + (Duo ? 1 : 0) + (Special ? 1 : 0);
 
     public void RaiseOthers() => Raise(nameof(Others));
@@ -104,11 +123,62 @@ public partial class DungeonsViewModel
 
     private void ReloadAch()
     {
-        _achAll.Clear();
-        foreach (var e in DungeonData.All) _achAll.Add(new AchRow(e, this));
+        RebuildAchRows();
         EnsureChar();
         Raise(nameof(CharNames));
         Raise(nameof(AchChar));
+    }
+
+    private void RebuildAchRows()
+    {
+        _achAll.Clear();
+        var extras = _main.Data.DungeonExtra;
+        foreach (var e in DungeonData.All)
+        {
+            _achAll.Add(new AchRow(e, e.Name, e.Name, 0, this));
+            foreach (var kv in extras.Where(x => ParentOf(x.Key) == e.Name))
+            {
+                var n = int.TryParse(kv.Key.Substring(kv.Key.LastIndexOf('#') + 1), out var v) ? v : 2;
+                _achAll.Add(new AchRow(e, kv.Key, kv.Value, n, this));
+            }
+        }
+    }
+
+    private static string ParentOf(string key)
+    {
+        var i = key.LastIndexOf('#');
+        return i < 0 ? key : key.Substring(0, i);
+    }
+
+    internal void AddExtra(string parent)
+    {
+        var extras = _main.Data.DungeonExtra;
+        int n = 2;
+        while (extras.ContainsKey(parent + "#" + n)) n++;
+        extras[parent + "#" + n] = "Nouveau boss";
+        _main.RequestSave();
+        RebuildAchRows();
+        Refresh();
+    }
+
+    internal void RemoveExtra(string key)
+    {
+        var data = _main.Data;
+        data.DungeonExtra.Remove(key);
+        foreach (var l in data.DungeonAch.Values)
+            for (int k = 0; k < 4; k++) l.Remove(Key(key, k));
+        data.DungeonChallenge.Remove(Key(key, 0));
+        data.DungeonChallenge.Remove(Key(key, 1));
+        _main.RequestSave();
+        RebuildAchRows();
+        Refresh();
+    }
+
+    internal void SetBoss(string key, string label)
+    {
+        if (!_main.Data.DungeonExtra.ContainsKey(key)) return;
+        _main.Data.DungeonExtra[key] = label.Length == 0 ? "Boss" : label;
+        _main.RequestSave();
     }
 
     private static string Key(string dj, int k) => dj + "|" + k;
@@ -127,7 +197,7 @@ public partial class DungeonsViewModel
         _main.RequestSave();
         Raise(nameof(AchCounter));
         foreach (var r in _achAll)
-            if (r.Name == dj) r.RaiseOthers();
+            if (r.Key == dj) r.RaiseOthers();
     }
 
     internal string GetChallenge(string dj, int k)
@@ -172,13 +242,13 @@ public partial class DungeonsViewModel
         IEnumerable<AchRow> items = _achAll.Where(d =>
             InLevelRange(d.LevelNum) &&
             (!_onlyMissing || d.AnyMissing) &&
-            (q.Length == 0 || (d.Name + " " + d.LevelText + " " + d.Pos).ToLowerInvariant().Contains(q)));
+            (q.Length == 0 || (d.ParentName + " " + d.BossName + " " + d.LevelText + " " + d.Pos).ToLowerInvariant().Contains(q)));
 
         items = _sort switch
         {
-            "niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.Name, StringComparer.CurrentCulture),
-            "nom (A → Z)" => items.OrderBy(d => d.Name, StringComparer.CurrentCulture),
-            _ => items.OrderBy(d => d.LevelNum).ThenBy(d => d.Name, StringComparer.CurrentCulture)
+            "niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.ParentName, StringComparer.CurrentCulture).ThenBy(d => d.Index),
+            "nom (A → Z)" => items.OrderBy(d => d.ParentName, StringComparer.CurrentCulture).ThenBy(d => d.Index),
+            _ => items.OrderBy(d => d.LevelNum).ThenBy(d => d.ParentName, StringComparer.CurrentCulture).ThenBy(d => d.Index)
         };
 
         AchView.Clear();

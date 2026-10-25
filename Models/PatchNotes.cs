@@ -5,15 +5,19 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.7.0";
+    public const string Current = "0.7.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.7.1", "25/10/2026", new[]
+        {
+            "NOUVEAU — Donjons, vue Succès : une ligne par boss. Le bouton « + » à droite d'un donjon ajoute une ligne pour un autre boss (nom modifiable, avec ses 4 cases propres à chaque personnage) ; « × » la supprime avec ses coches.",
+        }),
         new("0.7.0", "25/10/2026", new[]
         {
             "NOUVEAU — Donjons : une vue « Succès » (bouton « Vue : Liste / Succès » en haut de la page). Chaque donjon a 4 cases : Challenge 1, Challenge 2, Duo et Spécial. Les cases sont propres à chaque personnage (choix du personnage en haut) et une colonne indique chez quels autres personnages il manque encore quelque chose. Filtre « Manquants seulement ».",
-            "Les noms des deux challenges (qui changent d'un donjon à l'autre) se saisissent une fois, au-dessus de la case, et valent pour tous les personnages. La vue Liste existante est inchangée. Une ligne par boss n'est pas encore gérée.",
+            "Les noms des deux challenges (qui changent d'un donjon à l'autre) se saisissent une fois, au-dessus de la case, et valent pour tous les personnages. La vue Liste existante est inchangée.",
         }),
         new("0.6.1", "25/10/2026", new[]
         {

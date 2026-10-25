@@ -127,6 +127,8 @@ public class AppData
     public Dictionary<string, List<string>> DungeonAch { get; set; } = new();
     /// <summary>Noms des deux challenges saisis par donjon : « Donjon|0 » et « Donjon|1 ».</summary>
     public Dictionary<string, string> DungeonChallenge { get; set; } = new();
+    /// <summary>Lignes de boss ajoutées sous un donjon : « Donjon#2 » → nom du boss.</summary>
+    public Dictionary<string, string> DungeonExtra { get; set; } = new();
     public List<string> AlmanaxDone { get; set; } = new();
     public List<string> AlmanaxPrepared { get; set; } = new();
     public Dictionary<string, int> Legends { get; set; } = new();
