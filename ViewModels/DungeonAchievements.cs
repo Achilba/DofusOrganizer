@@ -108,7 +108,10 @@ public partial class DungeonsViewModel
     private static bool IsExcluded(string cls)
         => !string.IsNullOrEmpty(cls) && (cls.StartsWith("Forgelance", StringComparison.OrdinalIgnoreCase) || cls.StartsWith("Sacrieur", StringComparison.OrdinalIgnoreCase));
 
-    public List<string> CharNames => AchChars().Select(c => c.Name).ToList();
+    /// <summary>Choix « Tous » du sélecteur : une coche s'applique à tous les personnages suivis.</summary>
+    public const string AllChars = "Tous";
+
+    public List<string> CharNames => new[] { AllChars }.Concat(AchChars().Select(c => c.Name)).ToList();
 
     public string AchChar
     {
@@ -127,7 +130,7 @@ public partial class DungeonsViewModel
     private void EnsureChar()
     {
         var names = AchChars().Select(c => c.Name).ToList();
-        if (_achChar != null && names.Contains(_achChar)) return;
+        if (_achChar != null && (_achChar == AllChars || names.Contains(_achChar))) return;
         var sel = _main.Data.SelectedCharacter;
         var selName = sel >= 0 && sel < _main.Data.Characters.Count ? _main.Data.Characters[sel].Name : null;
         _achChar = selName != null && names.Contains(selName) ? selName : names.FirstOrDefault();
@@ -151,17 +154,32 @@ public partial class DungeonsViewModel
 
     private static string Key(string boss, int k) => boss + "|" + k;
 
+    private bool Has(string name, string boss, int k)
+        => _main.Data.BossAch.TryGetValue(name, out var l) && l.Contains(Key(boss, k));
+
     internal bool GetAch(string boss, int k)
-        => _achChar != null && _main.Data.BossAch.TryGetValue(_achChar, out var l) && l.Contains(Key(boss, k));
+    {
+        if (_achChar == null) return false;
+        if (_achChar == AllChars)
+        {
+            var all = AchChars().ToList();
+            return all.Count > 0 && all.All(c => Has(c.Name, boss, k));
+        }
+        return Has(_achChar, boss, k);
+    }
 
     internal void SetAch(string boss, int k, bool v)
     {
         if (_achChar == null) return;
         var d = _main.Data.BossAch;
-        if (!d.TryGetValue(_achChar, out var l)) { l = new List<string>(); d[_achChar] = l; }
         var key = Key(boss, k);
-        if (v) { if (!l.Contains(key)) l.Add(key); }
-        else l.Remove(key);
+        var targets = _achChar == AllChars ? AchChars().Select(c => c.Name).ToList() : new List<string> { _achChar };
+        foreach (var name in targets)
+        {
+            if (!d.TryGetValue(name, out var l)) { l = new List<string>(); d[name] = l; }
+            if (v) { if (!l.Contains(key)) l.Add(key); }
+            else l.Remove(key);
+        }
         _main.RequestSave();
         Raise(nameof(AchCounter));
         if (_achByKey.TryGetValue(boss, out var row)) row.RaiseOthers();

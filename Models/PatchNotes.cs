@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.8.7";
+    public const string Current = "0.8.8";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.8.8", "25/10/2026", new[]
+        {
+            "NOUVEAU — Donjons, vue Succès : « Tous » en tête de la liste des personnages. Quand il est choisi, cocher ou décocher une case l'applique d'un coup à tous les personnages suivis (Forgelance et Sacrieur exclus) ; une case apparaît cochée seulement si tous les personnages l'ont.",
+        }),
         new("0.8.7", "25/10/2026", new[]
         {
             "CORRIGÉ — Donjons, vue Succès : la colonne « Manque » réagit maintenant à chaque case cochée. Elle affiche « Tous » tant qu'aucun personnage n'a rien fait sur le boss, puis une ligne par personnage avec le nombre de succès qui lui restent (par exemple « Achilpoi (3) ») ; le nom disparaît quand tout est coché. Avant, elle ne changeait qu'une fois les 4 cases cochées.",
