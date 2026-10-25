@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.21";
+    public const string Current = "0.9.22";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.22", "25/10/2026", new[]
+        {
+            "CHANGÉ — Accueil : le glisser-déposer des cartes est retiré ; les cartes suivent l'ordre choisi dans les Paramètres.",
+        }),
         new("0.9.21", "25/10/2026", new[]
         {
             "NOUVEAU — Accueil : glisse une carte de personnage sur une autre pour changer leur ordre ; le premier reste le personnage principal et l'ordre est enregistré.",

@@ -84,8 +84,6 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Background="{DynamicResource Active}" BorderThickness="1" CornerRadius="14" Padding="14,10" Margin="0,0,12,10"
-                                AllowDrop="True" PreviewMouseLeftButtonDown="Card_Down" PreviewMouseMove="Card_Move" DragOver="Card_DragOver" Drop="Card_Drop"
-                                ToolTip="Glisse la carte pour changer l'ordre des personnages"
                                 BorderBrush="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=border}">
                             <StackPanel>
                                 <!-- En-tête : avatar, nom, classe et statut -->
