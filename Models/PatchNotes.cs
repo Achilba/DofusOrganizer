@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.7";
+    public const string Current = "0.9.8";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.8", "25/10/2026", new[]
+        {
+            "NOUVEAU — Un bouton « Mode Mini » en bas du menu de gauche, sur toutes les pages sauf Accueil (qui a le sien en haut) et Paramètres.",
+        }),
         new("0.9.7", "25/10/2026", new[]
         {
             "CHANGÉ — Accueil : cartes de personnages réorganisées. En-tête (avatar, nom, classe et statut), puis deux cases Niveau et Alignement (cité, ordre et niveau d'alignement), puis tous les métiers en deux colonnes, du plus haut niveau au plus bas ; les métiers à 200 sont à la couleur d'accent. La carte grandit avec le nombre de métiers.",

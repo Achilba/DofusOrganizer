@@ -45,6 +45,15 @@
                     </DockPanel>
                 </Button>
                 <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding BottomNavItems}" ItemTemplate="{StaticResource NavItemTemplate}" Margin="0,8,0,0"/>
+                <!-- Mode Mini : accessible depuis toutes les pages sauf Accueil (il a son propre bouton) et Paramètres -->
+                <Button DockPanel.Dock="Bottom" Command="{Binding ShowMiniCommand}" Height="40" Margin="0,8,0,0" Padding="12,0" HorizontalContentAlignment="Left"
+                        Background="{DynamicResource Hot}" Foreground="{DynamicResource HotText}" BorderThickness="0" FontFamily="{StaticResource BodyXB}"
+                        ToolTip="Passer en mode Mini" Visibility="{Binding ShowMiniShortcut, Converter={StaticResource BoolVis}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoExpand}" Stroke="{DynamicResource HotText}" Width="16" Height="16" Margin="0,0,10,0"/>
+                        <TextBlock Text="Mode Mini"/>
+                    </StackPanel>
+                </Button>
                 <ItemsControl ItemsSource="{Binding TopNavItems}" ItemTemplate="{StaticResource NavItemTemplate}"/>
             </DockPanel>
         </Border>

@@ -413,11 +413,15 @@ public class MainViewModel : ObservableObject
         {
             if (!Set(ref _page, value)) return;
             UpdateNav();
+            Raise(nameof(ShowMiniShortcut));
             // La liste des personnages suivis peut avoir changé depuis la page Personnages.
             if (value == "dungeons") Dungeons?.Reload();
             if (value == "home") foreach (var c in Characters) c.RefreshCardInfo();
         }
     }
+
+    /// <summary>Bouton « Mode Mini » du menu : toutes les pages sauf Accueil (bouton dans son en-tête) et Paramètres.</summary>
+    public bool ShowMiniShortcut => _page != "settings" && _page != "home";
 
     private void UpdateNav()
     {
