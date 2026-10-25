@@ -35,13 +35,6 @@
                             <TextBlock Text="Almanax"/>
                         </StackPanel>
                     </Button>
-                    <Button Command="{Binding ShowMiniCommand}" Style="{StaticResource Big}" Margin="0,0,10,0"
-                            Background="{DynamicResource Hot}" Foreground="{DynamicResource HotText}" BorderThickness="0" FontFamily="{StaticResource BodyXB}">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Style="{StaticResource Icon}" Data="{StaticResource IcoExpand}" Stroke="{DynamicResource HotText}" Margin="0,0,8,0"/>
-                            <TextBlock Text="Passer en mode Mini"/>
-                        </StackPanel>
-                    </Button>
                     <Border Height="44" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="22" Padding="18,0">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Ellipse Width="9" Height="9" Fill="{DynamicResource Good}" Margin="0,0,10,0" VerticalAlignment="Center"/>

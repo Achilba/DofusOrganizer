@@ -420,8 +420,8 @@ public class MainViewModel : ObservableObject
         }
     }
 
-    /// <summary>Bouton « Mode Mini » du menu : toutes les pages sauf Accueil (bouton dans son en-tête) et Paramètres.</summary>
-    public bool ShowMiniShortcut => _page != "settings" && _page != "home";
+    /// <summary>Bouton « Mode Mini » du menu : toutes les pages sauf Paramètres.</summary>
+    public bool ShowMiniShortcut => _page != "settings";
 
     private void UpdateNav()
     {

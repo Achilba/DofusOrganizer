@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.8";
+    public const string Current = "0.9.9";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.9", "25/10/2026", new[]
+        {
+            "CHANGÉ — Le bouton « Mode Mini » du menu de gauche est aussi sur l'Accueil (il n'est masqué que dans Paramètres) ; celui de l'en-tête de l'Accueil est retiré.",
+        }),
         new("0.9.8", "25/10/2026", new[]
         {
             "NOUVEAU — Un bouton « Mode Mini » en bas du menu de gauche, sur toutes les pages sauf Accueil (qui a le sien en haut) et Paramètres.",
