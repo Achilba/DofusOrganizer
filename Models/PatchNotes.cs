@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.12";
+    public const string Current = "0.9.13";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.13", "25/10/2026", new[]
+        {
+            "CORRIGÉ — Personnages : en cliquant dans le niveau d'alignement, le niveau du personnage ou le niveau d'un métier, tout le chiffre est sélectionné ; ce que tu tapes le remplace au lieu de s'ajouter à l'ancien (avant, 100 + 50 donnait 10050, ramené à 100, et rien ne changeait). La valeur est prise en compte à chaque frappe.",
+        }),
         new("0.9.12", "25/10/2026", new[]
         {
             "CHANGÉ — Accueil : la case Niveau n'affiche plus le mot « Oméga » ; le chiffre passe simplement en doré pour un niveau Oméga (survole-le pour voir « Oméga 60 »). Les métiers sont plus compacts : trois colonnes, texte plus petit, niveau 200 en doré.",

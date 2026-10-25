@@ -1,5 +1,7 @@
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using DofusTeamOrganizer.Services;
 using DofusTeamOrganizer.ViewModels;
 using DofusTeamOrganizer.Views;
@@ -18,6 +20,16 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // Champs numériques (Tag = "SelectAll") : tout le texte est sélectionné quand on clique ou qu'on arrive dessus,
+        // pour que la saisie remplace la valeur au lieu de s'ajouter à elle (100 + 50 = 10050).
+        EventManager.RegisterClassHandler(typeof(TextBox), UIElement.GotKeyboardFocusEvent,
+            new KeyboardFocusChangedEventHandler((s, a) => { if (s is TextBox t && t.Tag as string == "SelectAll") t.SelectAll(); }));
+        EventManager.RegisterClassHandler(typeof(TextBox), UIElement.PreviewMouseLeftButtonDownEvent,
+            new MouseButtonEventHandler((s, a) =>
+            {
+                if (s is TextBox t && t.Tag as string == "SelectAll" && !t.IsKeyboardFocusWithin) { t.Focus(); a.Handled = true; }
+            }));
 
         _mutex = new Mutex(true, "DofusTeamOrganizer.SingleInstance", out bool first);
         if (!first)

@@ -81,7 +81,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                             <TextBlock Text="Niveau" Style="{StaticResource Lbl}"/>
-                            <TextBox Width="88" TextAlignment="Right" Text="{Binding Selected.CharLevel, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,16,0"/>
+                            <TextBox Width="88" TextAlignment="Right" Tag="SelectAll" Text="{Binding Selected.CharLevel, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,16,0"/>
                             <Border BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="16" Padding="14,7" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Selected.LevelText}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}"/>
                             </Border>
@@ -103,7 +103,7 @@
                             <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="40" ClipToBounds="True" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <RepeatButton Style="{StaticResource StepBtn}" Content="−" Click="Align_Dec"/>
-                                    <TextBox Style="{StaticResource StepBox}" Text="{Binding Selected.AlignLevel, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" LostFocus="Align_LostFocus" KeyDown="Align_KeyDown"/>
+                                    <TextBox Style="{StaticResource StepBox}" Text="{Binding Selected.AlignLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" LostFocus="Align_LostFocus" KeyDown="Align_KeyDown"/>
                                     <RepeatButton Style="{StaticResource StepBtn}" Content="+" Click="Align_Inc"/>
                                 </StackPanel>
                             </Border>
