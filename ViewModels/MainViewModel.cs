@@ -211,6 +211,7 @@ public class MainViewModel : ObservableObject
     public GlobalSearch Search { get; private set; }
 
     public CharactersViewModel CharactersPage { get; private set; }
+    public RoutineViewModel Routines { get; private set; }
     public DungeonsViewModel Dungeons { get; private set; }
     public SongesViewModel Songes { get; private set; }
     public AlmanaxViewModel Almanax { get; private set; }
@@ -322,7 +323,7 @@ public class MainViewModel : ObservableObject
         AutoStart.Refresh();
 
         foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"), ("almanax", "Almanax", "IcoCalendar"),
-                                            ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"),
+                                            ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"), ("routines", "Tâches", "IcoRoutines"),
                                             ("notes", "Notes", "IcoNotes"), ("settings", "Paramètres", "IcoSettings") })
             NavItems.Add(new NavItem(k, l, Application.Current.TryFindResource(ico) as Geometry));
         foreach (var n in NavItems) (n.Key == "settings" ? BottomNavItems : TopNavItems).Add(n);
@@ -371,6 +372,7 @@ public class MainViewModel : ObservableObject
         Dungeons = new DungeonsViewModel(this);
         Songes = new SongesViewModel(this);
         Almanax = new AlmanaxViewModel(this);
+        Routines = new RoutineViewModel(this);
         Search = new GlobalSearch(this);
         RebuildTasks();
 
@@ -428,6 +430,7 @@ public class MainViewModel : ObservableObject
             // La liste des personnages suivis peut avoir changé depuis la page Personnages.
             if (value == "dungeons") Dungeons?.Reload();
             if (value == "home") foreach (var c in Characters) c.RefreshCardInfo();
+            if (value == "routines") Routines?.CheckResets();
         }
     }
 
@@ -614,6 +617,8 @@ public class MainViewModel : ObservableObject
         Raise(nameof(NoteText));
         Raise(nameof(MainCharLabel));
         Dungeons?.Reload();
+        Routines?.RenameChar(old, newName);
+        Routines?.Refresh();
         RequestSave();
         return "";
     }
@@ -835,6 +840,7 @@ public class MainViewModel : ObservableObject
         Dungeons.Reload();
         Songes.Reload();
         Almanax.Reload();
+        Routines.Reload();
         MiniSettingsChanged?.Invoke();
         ShowToast("Données importées");
     }

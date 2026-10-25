@@ -13,7 +13,7 @@ public class TrackedObject : ObservableObject
     protected override void Raise([CallerMemberName] string name = null)
     {
         base.Raise(name);
-        if (name != "Detected" && name != "IsMain" && name != "Number" && name != "LevelValue" && name != "IsOmega" && name != "FactionColor" && name != "OrderText" && name != "JobChips" && name != "HasJobs") Changed?.Invoke();
+        if (name != "Detected" && name != "IsMain" && name != "Number" && name != "LevelValue" && name != "IsOmega" && name != "FactionColor" && name != "OrderText" && name != "JobChips" && name != "HasJobs" && name != "RoutinesText" && name != "HasRoutines") Changed?.Invoke();
     }
 }
 
@@ -98,6 +98,10 @@ public class Character : TrackedObject
     /// <summary>Métiers du personnage, du plus haut niveau au plus bas.</summary>
     [JsonIgnore] public JobChip[] JobChips => Jobs.OrderByDescending(j => j.Level).ThenBy(j => j.Name).Select(j => new JobChip(j.Name, j.Level, j.Level >= 200)).ToArray();
     [JsonIgnore] public bool HasJobs => Jobs.Count > 0;
+    private int _routinesLeft;
+    [JsonIgnore] public bool HasRoutines => _routinesLeft > 0;
+    [JsonIgnore] public string RoutinesText => _routinesLeft + (_routinesLeft > 1 ? " tâches à faire" : " tâche à faire");
+    public void SetRoutinesLeft(int n) { if (n == _routinesLeft) return; _routinesLeft = n; Raise(nameof(RoutinesText)); Raise(nameof(HasRoutines)); }
     /// <summary>À appeler quand on affiche l'accueil : le niveau, l'alignement ou les métiers ont pu changer.</summary>
     public void RefreshCardInfo()
     {
@@ -106,8 +110,30 @@ public class Character : TrackedObject
     [JsonIgnore] public string Initial => string.IsNullOrEmpty(_name) ? "?" : _name.Substring(0, 1).ToUpperInvariant();
 }
 
+/// <summary>Une tâche récurrente (par personnage) : tous les jours à minuit, ou un jour fixe de la semaine à 3 h.</summary>
+public class RoutineDef
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public string Name { get; set; } = "";
+    public bool Weekly { get; set; }
+    /// <summary>Jour de la remise à zéro hebdomadaire (0 = dimanche … 6 = samedi) ; 2 = mardi.</summary>
+    public int Weekday { get; set; } = 2;
+    /// <summary>Affiche une notification quand la tâche est remise à zéro.</summary>
+    public bool Notify { get; set; }
+}
+
 public class AppData
 {
+    public List<RoutineDef> Routines { get; set; } = new()
+    {
+        new RoutineDef { Id = "guildaton", Name = "Guildaton", Weekly = true, Weekday = 2 },
+        new RoutineDef { Id = "trousseau", Name = "Trousseau de clés", Weekly = true, Weekday = 2, Notify = true },
+    };
+    /// <summary>Cases cochées, sous la forme « identifiant de tâche|nom du personnage ».</summary>
+    public List<string> RoutineDone { get; set; } = new();
+    /// <summary>Dernière période vue de chaque tâche (sert à savoir quand remettre à zéro).</summary>
+    public Dictionary<string, string> RoutinePeriod { get; set; } = new();
+
     /// <summary>1 = avant la case « Suivi dans les succès » ; 2 = actuel. Les anciens fichiers sont migrés au chargement (Storage).</summary>
     public int DataVersion { get; set; } = 2;
 

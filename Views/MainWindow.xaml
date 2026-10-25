@@ -135,6 +135,8 @@
                            Visibility="{Binding DataContext.Page, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EqVis}, ConverterParameter=almanax}"/>
             <v:DungeonsPage Grid.Row="1" DataContext="{Binding Dungeons}"
                             Visibility="{Binding DataContext.Page, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EqVis}, ConverterParameter=dungeons}"/>
+            <v:RoutinesPage Grid.Row="1" DataContext="{Binding Routines}"
+                            Visibility="{Binding DataContext.Page, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EqVis}, ConverterParameter=routines}"/>
             <v:SongesPage Grid.Row="1" DataContext="{Binding Songes}"
                           Visibility="{Binding DataContext.Page, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EqVis}, ConverterParameter=dreams}"/>
 

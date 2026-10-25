@@ -112,6 +112,10 @@
                                                 <TextBlock Text="{Binding Detected, Converter={StaticResource Status}}" FontFamily="{StaticResource BodyXB}" FontSize="13"
                                                            Foreground="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=text}"/>
                                             </StackPanel>
+                                            <Border Background="{DynamicResource AccentSoft}" CornerRadius="6" Padding="8,1" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                    Visibility="{Binding HasRoutines, Converter={StaticResource BoolVis}}">
+                                                <TextBlock Text="{Binding RoutinesText}" Foreground="{DynamicResource Accent}" FontSize="12" FontFamily="{StaticResource BodyXB}"/>
+                                            </Border>
                                         </WrapPanel>
                                     </StackPanel>
                                 </Grid>
