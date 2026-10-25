@@ -63,15 +63,15 @@
                 </StackPanel>
             </Border>
             <!-- Mise à jour disponible : bouton rouge vers les Paramètres -->
-            <Button Command="{Binding NavigateCommand}" CommandParameter="settings" MinHeight="44" Padding="14,6" Margin="0,0,10,10"
+            <Button Command="{Binding InstallUpdateCommand}" MinHeight="44" Padding="14,6" Margin="0,0,10,10"
                     Background="#26FF6B5F" BorderBrush="{DynamicResource Bad}" BorderThickness="1" Foreground="{DynamicResource BadText}" Cursor="Hand"
-                    ToolTip="Ouvrir les Paramètres pour installer la mise à jour"
+                    ToolTip="Télécharger et installer la mise à jour, puis redémarrer l'appli"
                     Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}">
                 <StackPanel Orientation="Horizontal">
                     <Path Style="{StaticResource Icon}" Data="{StaticResource IcoBell}" Stroke="{DynamicResource BadText}" Width="15" Height="15" Margin="0,0,8,0"/>
                     <TextBlock Text="Mise à jour disponible" FontFamily="{StaticResource BodyXB}"/>
                     <TextBlock Text="{Binding UpdateVersionText}" Foreground="{DynamicResource Text}" Margin="10,0,0,0"/>
-                    <TextBlock Text="Ouvrir les Paramètres  →" Margin="14,0,0,0"/>
+                    <TextBlock Text="Cliquer pour installer  →" Margin="14,0,0,0"/>
                 </StackPanel>
             </Button>
             </WrapPanel>
@@ -93,8 +93,8 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Border Width="44" Height="44" CornerRadius="12" Background="{Binding Color, Converter={StaticResource HexBrush}}" Margin="0,0,12,0" VerticalAlignment="Top">
-                                        <TextBlock Text="{Binding Initial}" FontFamily="{StaticResource Display}" FontSize="21" Foreground="#12151A"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Image Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="34" Height="34"
+                                               RenderOptions.BitmapScalingMode="HighQuality" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <WrapPanel>

@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.18";
+    public const string Current = "0.9.19";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.19", "25/10/2026", new[]
+        {
+            "CHANGÉ — Accueil : le bouton rouge « Mise à jour disponible » télécharge et installe directement la nouvelle version, puis redémarre l'appli (plus besoin de passer par les Paramètres).",
+            "CHANGÉ — Accueil : les cartes de personnage affichent l'icône de la classe à la place de l'initiale du nom.",
+        }),
         new("0.9.18", "25/10/2026", new[]
         {
             "CHANGÉ — Donjons, vue Succès : dans la colonne « Manque », les personnages sont affichés deux par deux sur chaque ligne, et la colonne est plus large.",
