@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.0";
+    public const string Current = "0.9.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.1", "25/10/2026", new[]
+        {
+            "NOUVEAU — Accueil refait pour occuper toute la fenêtre : cartes des personnages plus grandes, Raccourcis et Invitations & Zaaps agrandis.",
+            "NOUVEAU — Les boutons Almanax et Passer en mode Mini sont en haut, à gauche de la pastille des connectés, dans une couleur vive propre à chaque thème (orange pour Classique).",
+        }),
         new("0.9.0", "25/10/2026", new[]
         {
             "NOUVEAU — Donjons, vue Succès : un bouton « i » à côté de la case Spécial affiche le nom du challenge et sa description (texte du jeu, relevé sur DofusDB). Pour Malléfisk, Toxoliath et le Vénérable Endormi, la base ne donne pas le monstre à tuer en dernier : consulte la page du donjon.",

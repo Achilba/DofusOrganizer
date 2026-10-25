@@ -30,15 +30,16 @@ public static class ThemeCatalog
                 ["Accent"] = C("#F2B544"), ["AccentText"] = C("#1B1406"), ["Text"] = C("#F3F0E8"),
                 ["Muted"] = C("#B4BAC6"), ["Dim"] = C("#8B93A3"),
                 ["Hover"] = C("#1A1F28"), ["Active"] = C("#232936"), ["AccentSoft"] = C("#2A2416"), ["Track"] = C("#3A4150"),
+                ["Hot"] = C("#FF7A2F"), ["HotText"] = C("#1A0E04"),
             }
         },
-        Derived("bonta", "Bonta", 215, 0.34, "#5FA8FF"),
-        Derived("brakmar", "Brâkmar", 355, 0.30, "#F0544F"),
-        Derived("cawotte", "Cawotte", 24, 0.30, "#E8793A"),
-        Derived("emeraude", "Émeraude", 150, 0.28, "#5FD97A"),
-        Derived("pourpre", "Pourpre", 275, 0.30, "#B57BFF"),
-        Derived("turquoise", "Turquoise", 188, 0.32, "#35D0E0"),
-        Derived("ebene", "Ébène", 40, 0.04, "#E6E1D5"),
+        Derived("bonta", "Bonta", 215, 0.34, "#5FA8FF", "#FF9F3D"),
+        Derived("brakmar", "Brâkmar", 355, 0.30, "#F0544F", "#FFB347"),
+        Derived("cawotte", "Cawotte", 24, 0.30, "#E8793A", "#2FD0B8"),
+        Derived("emeraude", "Émeraude", 150, 0.28, "#5FD97A", "#FF8A5C"),
+        Derived("pourpre", "Pourpre", 275, 0.30, "#B57BFF", "#FFC857"),
+        Derived("turquoise", "Turquoise", 188, 0.32, "#35D0E0", "#FF7A66"),
+        Derived("ebene", "Ébène", 40, 0.04, "#E6E1D5", "#F2A33A"),
     };
 
     public static ThemeDef Get(string key) => All.FirstOrDefault(t => t.Key == key) ?? All[0];
@@ -59,8 +60,8 @@ public static class ThemeCatalog
 
     private static Color C(string hex) => (Color)ColorConverter.ConvertFromString(hex);
 
-    /// <summary>Thème construit à partir d'une teinte et d'une couleur d'accent : les fonds sont des niveaux de gris teintés.</summary>
-    private static ThemeDef Derived(string key, string name, double hue, double sat, string accentHex)
+    /// <summary>Thème construit à partir d'une teinte, d'une couleur d'accent et d'une couleur « vedette » (boutons de l'accueil) : les fonds sont des niveaux de gris teintés.</summary>
+    private static ThemeDef Derived(string key, string name, double hue, double sat, string accentHex, string hotHex)
     {
         var accent = C(accentHex);
         var panel = Hsl(hue, sat, 0.10);
@@ -81,6 +82,7 @@ public static class ThemeCatalog
                 ["Track"] = Hsl(hue, sat, 0.24),
                 ["Accent"] = accent,
                 ["AccentText"] = C("#14110A"),
+                ["Hot"] = C(hotHex), ["HotText"] = C("#1A0E04"),
                 ["AccentSoft"] = Mix(panel, accent, 0.14),
                 ["Text"] = C("#F3F0E8"),
                 ["Muted"] = Hsl(hue, Math.Min(sat, 0.14), 0.75),

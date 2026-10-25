@@ -31,6 +31,9 @@
         <SolidColorBrush x:Key="Bad" Color="#FF6B5F"/>
         <SolidColorBrush x:Key="BadText" Color="#FF9A90"/>
         <SolidColorBrush x:Key="Off" Color="#6B7280"/>
+        <!-- Couleur « vedette » du thème : boutons Almanax et mode Mini de l'accueil -->
+        <SolidColorBrush x:Key="Hot" Color="#FF7A2F"/>
+        <SolidColorBrush x:Key="HotText" Color="#1A0E04"/>
         <!-- Nuances dérivées du thème (survol, sélection, fond d'accent, rails) -->
         <SolidColorBrush x:Key="Hover" Color="#1A1F28"/>
         <SolidColorBrush x:Key="Active" Color="#232936"/>

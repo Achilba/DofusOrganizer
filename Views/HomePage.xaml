@@ -8,25 +8,50 @@
             <Setter Property="Padding" Value="16,0"/>
         </Style>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="0,0,10,0">
-            <!-- Titre -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*" MinHeight="240"/>
+            <RowDefinition Height="1*" MinHeight="300"/>
+        </Grid.RowDefinitions>
+
+            <!-- Titre, boutons Almanax et Mini, pastille des connectés -->
             <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
                 <StackPanel>
                     <TextBlock Text="Accueil" Style="{StaticResource PageTitle}"/>
                     <TextBlock Text="Gestion multicompte" Style="{StaticResource PageSub}"/>
                 </StackPanel>
-                <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}"
-                        BorderThickness="1" CornerRadius="20" Padding="16,9">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="9" Height="9" Fill="{DynamicResource Good}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding ConnectedText}" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
-                    </StackPanel>
-                </Border>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="almanax" Style="{StaticResource Big}" Margin="0,0,10,0"
+                            Background="{DynamicResource Hot}" Foreground="{DynamicResource HotText}" BorderThickness="0" FontFamily="{StaticResource BodyXB}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{DynamicResource HotText}" Margin="0,0,8,0"/>
+                            <TextBlock Text="Almanax"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding ShowMiniCommand}" Style="{StaticResource Big}" Margin="0,0,10,0"
+                            Background="{DynamicResource Hot}" Foreground="{DynamicResource HotText}" BorderThickness="0" FontFamily="{StaticResource BodyXB}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Style="{StaticResource Icon}" Data="{StaticResource IcoExpand}" Stroke="{DynamicResource HotText}" Margin="0,0,8,0"/>
+                            <TextBlock Text="Passer en mode Mini"/>
+                        </StackPanel>
+                    </Button>
+                    <Border Height="44" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="22" Padding="18,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="9" Height="9" Fill="{DynamicResource Good}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ConnectedText}" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
             </Grid>
 
             <!-- Rappel Almanax -->
-            <Button HorizontalAlignment="Left" Command="{Binding NavigateCommand}" CommandParameter="almanax" Margin="0,0,0,16" MinHeight="44" Padding="14,6"
+            <Button Grid.Row="1" HorizontalAlignment="Left" Command="{Binding NavigateCommand}" CommandParameter="almanax" Margin="0,0,0,16" MinHeight="44" Padding="14,6"
                     Background="#1FF2963C" BorderBrush="{DynamicResource Warn}" BorderThickness="1" Foreground="{DynamicResource WarnText}"
                     Visibility="{Binding Almanax.NeedsReminder, Converter={StaticResource BoolVis}}">
                 <StackPanel Orientation="Horizontal">
@@ -40,59 +65,59 @@
             </Button>
 
             <!-- Personnages -->
-            <ItemsControl ItemsSource="{Binding Characters}" Margin="0,0,-12,0">
+            <ItemsControl Grid.Row="2" ItemsSource="{Binding Characters}" Margin="0,0,-12,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate><UniformGrid Columns="3"/></ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{DynamicResource Panel}" BorderThickness="1" CornerRadius="12" Padding="14" Margin="0,0,12,12"
+                        <Border Background="{DynamicResource Panel}" BorderThickness="1" CornerRadius="14" Padding="20,16" Margin="0,0,12,12"
                                 BorderBrush="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=border}">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,12">
+                            <DockPanel>
+                                <Border DockPanel.Dock="Bottom" HorizontalAlignment="Left" Height="36" CornerRadius="18" Padding="16,0"
+                                        Background="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=bg}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Ellipse Width="9" Height="9" Margin="0,0,8,0" VerticalAlignment="Center"
+                                                 Fill="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=dot}"/>
+                                        <TextBlock Text="{Binding Detected, Converter={StaticResource Status}}" FontFamily="{StaticResource BodyXB}" FontSize="14"
+                                                   Foreground="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=text}"/>
+                                    </StackPanel>
+                                </Border>
+                                <Grid VerticalAlignment="Top">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Width="40" Height="40" CornerRadius="10" Background="{Binding Color, Converter={StaticResource HexBrush}}" Margin="0,0,12,0">
-                                        <TextBlock Text="{Binding Initial}" FontFamily="{StaticResource Display}" FontSize="19" Foreground="#12151A"
+                                    <Border Width="56" Height="56" CornerRadius="14" Background="{Binding Color, Converter={StaticResource HexBrush}}" Margin="0,0,14,0">
+                                        <TextBlock Text="{Binding Initial}" FontFamily="{StaticResource Display}" FontSize="26" Foreground="#12151A"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="16" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Text="{Binding ClassName}" Foreground="{DynamicResource Muted}" FontSize="12.5"/>
+                                        <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="19" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding ClassName}" Foreground="{DynamicResource Muted}" FontSize="14"/>
                                     </StackPanel>
-                                    <Border Grid.Column="2" Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="8,3" VerticalAlignment="Center" Margin="8,0,0,0"
+                                    <Border Grid.Column="2" Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="8,3" VerticalAlignment="Top" Margin="8,0,0,0"
                                             Visibility="{Binding IsMain, Converter={StaticResource BoolVis}}">
-                                        <TextBlock Text="Principal" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
+                                        <TextBlock Text="Principal" FontSize="11.5" FontFamily="{StaticResource BodyXB}"/>
                                     </Border>
                                 </Grid>
-                                <Border HorizontalAlignment="Left" Height="32" CornerRadius="16" Padding="12,0"
-                                        Background="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=bg}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Ellipse Width="9" Height="9" Margin="0,0,8,0" VerticalAlignment="Center"
-                                                 Fill="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=dot}"/>
-                                        <TextBlock Text="{Binding Detected, Converter={StaticResource Status}}" FontFamily="{StaticResource BodyXB}"
-                                                   Foreground="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=text}"/>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
+                            </DockPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <Grid>
+            <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5*" MinWidth="300"/>
+                    <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Raccourcis -->
                 <Border Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0,0,12,0" VerticalAlignment="Stretch">
-                    <StackPanel>
-                        <TextBlock Text="Raccourcis" Style="{StaticResource H2}" FontSize="14" Margin="0,0,0,10"/>
+                    <StackPanel TextElement.FontSize="14">
+                        <TextBlock Text="Raccourcis" Style="{StaticResource H2}" FontSize="16" Margin="0,0,0,14"/>
                         <Grid Margin="0,0,0,10"><TextBlock Text="{Binding MainCharLabel}" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F1" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
                         <Grid Margin="0,0,0,10"><TextBlock Text="Personnage précédent" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
@@ -151,19 +176,19 @@
                                     </Border>
                                 </StackPanel>
                             </Button>
-                            <TextBlock Text="Invitations &amp; Zaaps" Style="{StaticResource H2}" FontSize="14" VerticalAlignment="Center"/>
+                            <TextBlock Text="Invitations &amp; Zaaps" Style="{StaticResource H2}" FontSize="16" VerticalAlignment="Center"/>
                         </DockPanel>
-                        <v:ZaapPicker Margin="0,0,0,12"/>
+                        <v:ZaapPicker Margin="0,0,0,14"/>
                         <ItemsControl ItemsSource="{Binding Favorites}" Margin="0,0,0,4">
                             <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Margin="0,0,8,8" Height="40" Padding="12,0" ToolTip="{Binding Command}"
+                                    <Button Margin="0,0,10,10" Height="44" Padding="12,0" FontSize="14" ToolTip="{Binding Command}"
                                             Command="{Binding DataContext.CopyZaapCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                             CommandParameter="{Binding}">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="20" Padding="12,0">
+                                                <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="22" Padding="16,0">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                         <Path Style="{StaticResource Icon}" Data="{StaticResource IcoStar}" Fill="{DynamicResource Accent}" Stroke="{DynamicResource Accent}" StrokeThickness="0" Width="12" Height="12" Margin="0,0,6,0"/>
                                                         <TextBlock Text="{Binding ShortName}" Foreground="{DynamicResource Text}"/>
@@ -180,23 +205,8 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <UniformGrid Columns="2">
-                            <Button Command="{Binding NavigateCommand}" CommandParameter="almanax" Style="{StaticResource Big}" Margin="0,0,4,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{DynamicResource Text}" Margin="0,0,8,0"/>
-                                    <TextBlock Text="Almanax"/>
-                                </StackPanel>
-                            </Button>
-                            <Button Command="{Binding ShowMiniCommand}" Style="{StaticResource Big}" Margin="4,0,0,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoExpand}" Stroke="{DynamicResource Text}" Margin="0,0,8,0"/>
-                                    <TextBlock Text="Passer en mode Mini"/>
-                                </StackPanel>
-                            </Button>
-                        </UniformGrid>
                     </StackPanel>
                 </Border>
             </Grid>
-        </StackPanel>
-    </ScrollViewer>
+    </Grid>
 </UserControl>
