@@ -68,56 +68,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="NameBox" TargetType="TextBox">
-            <Setter Property="Background" Value="{DynamicResource Field}"/>
-            <Setter Property="Foreground" Value="{DynamicResource Text}"/>
-            <Setter Property="CaretBrush" Value="{DynamicResource Text}"/>
-            <Setter Property="FontFamily" Value="{StaticResource BodyXB}"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="Width" Value="116"/>
-            <Setter Property="Height" Value="24"/>
-            <Setter Property="MinHeight" Value="0"/>
-            <Setter Property="Padding" Value="4,0"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border x:Name="bd" Background="{TemplateBinding Background}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="6">
-                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="Mini" TargetType="Button">
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Width" Value="24"/>
-            <Setter Property="Height" Value="24"/>
-            <Setter Property="Margin" Value="4,0,0,0"/>
-            <Setter Property="Foreground" Value="{DynamicResource Muted}"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="b" CornerRadius="6" Background="{DynamicResource KeyBg}" BorderBrush="{DynamicResource Line}" BorderThickness="1">
-                            <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" FontSize="14" FontFamily="{StaticResource BodyXB}"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -208,61 +158,63 @@
                 </Grid.RowDefinitions>
                 <Grid Margin="14,8" TextBlock.Foreground="{DynamicResource Muted}" TextBlock.FontFamily="{StaticResource BodyXB}" TextBlock.FontSize="12">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="130"/>
-                        <ColumnDefinition Width="130"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="190"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="96"/>
+                    <ColumnDefinition Width="94"/>
+                    <ColumnDefinition Width="94"/>
+                    <ColumnDefinition Width="94"/>
+                    <ColumnDefinition Width="94"/>
+                    <ColumnDefinition Width="94"/>
+                    <ColumnDefinition Width="170"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Donjon"/>
-                    <TextBlock Grid.Column="1" Text="Challenge 1" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="2" Text="Challenge 2" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="3" Text="Duo" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="4" Text="Spécial" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="5" Text="Manque aussi chez"/>
+                    <TextBlock Text="Boss"/>
+                    <TextBlock Grid.Column="1" Text="Niveau"/>
+                    <TextBlock Grid.Column="2" Text="Challenge 1" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" Text="Challenge 2" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="4" Text="Challenge 3" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Text="Duo / Trio" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="6" Text="Spécial" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="7" Text="Manque aussi chez"/>
                 </Grid>
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding AchView}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="{DynamicResource Field}" BorderThickness="0,1,0,0" Padding="14,6" MinHeight="66">
+                                <Border BorderBrush="{DynamicResource Field}" BorderThickness="0,1,0,0" Padding="14,6" MinHeight="58">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="130"/>
-                                            <ColumnDefinition Width="130"/>
-                                            <ColumnDefinition Width="70"/>
-                                            <ColumnDefinition Width="70"/>
-                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="96"/>
+                                            <ColumnDefinition Width="94"/>
+                                            <ColumnDefinition Width="94"/>
+                                            <ColumnDefinition Width="94"/>
+                                            <ColumnDefinition Width="94"/>
+                                            <ColumnDefinition Width="94"/>
+                                            <ColumnDefinition Width="170"/>
                                         </Grid.ColumnDefinitions>
-                                        <DockPanel VerticalAlignment="Center" LastChildFill="True">
-                                            <Button DockPanel.Dock="Right" Style="{StaticResource Mini}" Content="×" Command="{Binding RemoveCommand}" ToolTip="Supprimer cette ligne de boss"
-                                                    Visibility="{Binding IsExtra, Converter={StaticResource BoolVis}}"/>
-                                            <Button DockPanel.Dock="Right" Style="{StaticResource Mini}" Content="+" Command="{Binding AddCommand}" ToolTip="Ajouter une ligne pour un autre boss de ce donjon"
-                                                    Visibility="{Binding IsExtra, Converter={StaticResource InvBoolVis}}"/>
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Name}" FontSize="14" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Text}"
-                                                           Visibility="{Binding IsExtra, Converter={StaticResource InvBoolVis}}"/>
-                                                <TextBlock FontSize="12" Foreground="{DynamicResource Muted}" Visibility="{Binding IsExtra, Converter={StaticResource InvBoolVis}}">
-                                                    <Run Text="Niv. "/><Run Text="{Binding LevelText, Mode=OneWay}"/>
-                                                </TextBlock>
-                                                <TextBox Style="{StaticResource NameBox}" Width="200" HorizontalAlignment="Left" Margin="18,0,8,0" TextAlignment="Left"
-                                                         Text="{Binding BossName, UpdateSourceTrigger=LostFocus}" ToolTip="Nom du boss (modifiable)"
-                                                         Visibility="{Binding IsExtra, Converter={StaticResource BoolVis}}"/>
-                                            </StackPanel>
-                                        </DockPanel>
-                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <TextBox Style="{StaticResource NameBox}" Text="{Binding N1, UpdateSourceTrigger=LostFocus}" ToolTip="Nom du challenge (à saisir une fois)"/>
-                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C1, Mode=TwoWay}" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{Binding Name}" FontSize="14" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Text}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Bracket}" FontSize="12" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H1, Converter={StaticResource BoolVis}}">
+                                            <TextBlock Text="{Binding T1}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C1, Mode=TwoWay}"/>
                                         </StackPanel>
-                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <TextBox Style="{StaticResource NameBox}" Text="{Binding N2, UpdateSourceTrigger=LostFocus}" ToolTip="Nom du challenge (à saisir une fois)"/>
-                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C2, Mode=TwoWay}" Margin="0,5,0,0"/>
+                                        <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H2, Converter={StaticResource BoolVis}}">
+                                            <TextBlock Text="{Binding T2}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C2, Mode=TwoWay}"/>
                                         </StackPanel>
-                                        <ToggleButton Grid.Column="3" Style="{StaticResource Cell}" IsChecked="{Binding Duo, Mode=TwoWay}" VerticalAlignment="Center" ToolTip="Succès Duo"/>
-                                        <ToggleButton Grid.Column="4" Style="{StaticResource Cell}" IsChecked="{Binding Special, Mode=TwoWay}" VerticalAlignment="Center" ToolTip="Succès Spécial"/>
-                                        <TextBlock Grid.Column="5" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H3, Converter={StaticResource BoolVis}}">
+                                            <TextBlock Text="{Binding T3}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding C3, Mode=TwoWay}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HG, Converter={StaticResource BoolVis}}">
+                                            <TextBlock Text="{Binding TG}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding G, Mode=TwoWay}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="6" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HS, Converter={StaticResource BoolVis}}">
+                                            <TextBlock Text="{Binding TS}" Width="88" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
+                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding S, Mode=TwoWay}"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="7" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
@@ -275,7 +227,7 @@
                    Text="Liste relevée sur dofuspourlesnoobs.com (140 donjons, anomalies exclues), à recouper avec le jeu."
                    Visibility="{Binding ListMode, Converter={StaticResource BoolVis}}"/>
         <TextBlock Grid.Row="3" Margin="0,10,0,0" Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"
-                   Text="Les cases sont propres à chaque personnage (choisis-le en haut). Les noms des deux challenges se saisissent une fois et valent pour tous les personnages. Le bouton « + » ajoute une ligne pour un autre boss du donjon."
+                   Text="Succès relevés sur DofusDB (144 boss : challenges, Duo/Trio/Quatuor, Spécial). Les cases sont propres à chaque personnage : choisis-le en haut."
                    Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}"/>
     </Grid>
 </UserControl>

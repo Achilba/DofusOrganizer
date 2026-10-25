@@ -123,12 +123,8 @@ public class AppData
     /// <summary>Dofus au statut « Démarré » (ni à faire, ni terminé).</summary>
     public List<string> DofusStarted { get; set; } = new();
     public List<string> DungeonsDone { get; set; } = new();
-    /// <summary>Succès de donjon cochés, par nom de personnage : « Donjon|0..3 » (0 et 1 = challenges, 2 = Duo, 3 = Spécial).</summary>
-    public Dictionary<string, List<string>> DungeonAch { get; set; } = new();
-    /// <summary>Noms des deux challenges saisis par donjon : « Donjon|0 » et « Donjon|1 ».</summary>
-    public Dictionary<string, string> DungeonChallenge { get; set; } = new();
-    /// <summary>Lignes de boss ajoutées sous un donjon : « Donjon#2 » → nom du boss.</summary>
-    public Dictionary<string, string> DungeonExtra { get; set; } = new();
+    /// <summary>Succès de donjon cochés, par nom de personnage : « Boss|0..4 » (0 à 2 = challenges, 3 = Duo/Trio/Quatuor, 4 = Spécial).</summary>
+    public Dictionary<string, List<string>> BossAch { get; set; } = new();
     public List<string> AlmanaxDone { get; set; } = new();
     public List<string> AlmanaxPrepared { get; set; } = new();
     public Dictionary<string, int> Legends { get; set; } = new();

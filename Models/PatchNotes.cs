@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.7.1";
+    public const string Current = "0.8.0";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.8.0", "25/10/2026", new[]
+        {
+            "NOUVEAU — Donjons, vue Succès : la liste des 144 boss est maintenant remplie, avec le nom des challenges de chaque boss affiché au-dessus de sa case (jusqu'à 3 challenges), le succès Duo (ou Trio / Quatuor selon le boss) et le succès Spécial. Relevé sur DofusDB : 122 succès Duo et 130 succès Spécial, conformes au total annoncé par la base.",
+            "CHANGÉ — La vue Succès est maintenant organisée par boss (« Blops Royaux », « Gelées Royales »…) et non plus par donjon ; les lignes à ajouter à la main et la saisie des noms de challenges disparaissent. Les cases cochées en 0.7.x dans cette vue sont perdues (la vue Liste n'est pas touchée).",
+            "Les boss sans tranche de niveau connue (Nowel, Grozilla et Grasmera, Halouine, Survivant…) s'affichent en fin de liste.",
+        }),
         new("0.7.1", "25/10/2026", new[]
         {
             "NOUVEAU — Donjons, vue Succès : une ligne par boss. Le bouton « + » à droite d'un donjon ajoute une ligne pour un autre boss (nom modifiable, avec ses 4 cases propres à chaque personnage) ; « × » la supprime avec ses coches.",

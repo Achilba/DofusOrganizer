@@ -1,68 +1,71 @@
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 using DofusTeamOrganizer.Models;
 
 namespace DofusTeamOrganizer.ViewModels;
 
-// ═════════ Donjons : succès par personnage ═════════
-// 4 cases par donjon : Challenge 1, Challenge 2 (noms saisis par l'utilisateur), Duo, Spécial.
-// Cases cochées stockées par personnage ; noms de challenge communs à tous les personnages.
+// ═════════ Donjons : succès par boss et par personnage ═════════
+// Pour chaque boss (relevé DofusDB) : jusqu'à 3 challenges (cases 0 à 2), le succès de groupe
+// Duo / Trio / Quatuor (case 3) et le succès Spécial (case 4). Cases cochées stockées par personnage.
 
 public class AchRow : ObservableObject
 {
     private readonly DungeonsViewModel _vm;
+    private readonly BossAch _b;
 
-    public AchRow(DungeonEntry e, string key, string label, int index, DungeonsViewModel vm)
+    public AchRow(BossAch b, int order, DungeonsViewModel vm)
     {
+        _b = b;
         _vm = vm;
-        Key = key;
-        ParentName = e.Name;
-        Index = index;
-        _boss = label;
-        AddCommand = new RelayCommand(() => _vm.AddExtra(ParentName));
-        RemoveCommand = new RelayCommand(() => _vm.RemoveExtra(Key));
-        Name = e.Name;
-        LevelText = e.Level.Replace("/", " / ");
-        var m = Regex.Match(e.Level, @"\d+");
-        LevelNum = m.Success ? int.Parse(m.Value) : 0;
-        Pos = e.Pos;
+        Order = order;
     }
 
-    private string _boss;
-    /// <summary>Clé de stockage : le nom du donjon pour la ligne principale, « Donjon#n » pour un boss ajouté.</summary>
-    public string Key { get; }
-    public string ParentName { get; }
-    public int Index { get; }
-    public bool IsExtra => Index > 0;
-    public RelayCommand AddCommand { get; }
-    public RelayCommand RemoveCommand { get; }
-    public string BossName
-    {
-        get => _boss;
-        set { _boss = (value ?? "").Trim(); _vm.SetBoss(Key, _boss); Raise(nameof(BossName)); }
-    }
-    public string Name { get; }
-    public string LevelText { get; }
-    public int LevelNum { get; }
-    public string Pos { get; }
+    public int Order { get; }
+    public string Key => _b.Boss;
+    public string Name => _b.Boss;
+    public string Bracket => _b.Bracket.Contains(" à ") ? "Niv. " + _b.Bracket : _b.Bracket;
+    public int LevelNum => _b.LevelNum;
+
+    // Disponibilité et libellés des 5 cases
+    public bool H1 => _b.Challenges.Length > 0;
+    public bool H2 => _b.Challenges.Length > 1;
+    public bool H3 => _b.Challenges.Length > 2;
+    public bool HG => _b.GroupLabel != null;
+    public bool HS => _b.Special;
+    public string T1 => H1 ? _b.Challenges[0] : "";
+    public string T2 => H2 ? _b.Challenges[1] : "";
+    public string T3 => H3 ? _b.Challenges[2] : "";
+    public string TG => _b.GroupLabel ?? "";
+    public string TS => "Spécial";
+
+    public bool[] Available => new[] { H1, H2, H3, HG, HS };
+    public int Total => Available.Count(a => a);
 
     public bool C1 { get => _vm.GetAch(Key, 0); set { _vm.SetAch(Key, 0, value); Raise(nameof(C1)); } }
     public bool C2 { get => _vm.GetAch(Key, 1); set { _vm.SetAch(Key, 1, value); Raise(nameof(C2)); } }
-    public bool Duo { get => _vm.GetAch(Key, 2); set { _vm.SetAch(Key, 2, value); Raise(nameof(Duo)); } }
-    public bool Special { get => _vm.GetAch(Key, 3); set { _vm.SetAch(Key, 3, value); Raise(nameof(Special)); } }
-
-    public string N1 { get => _vm.GetChallenge(Key, 0); set { _vm.SetChallenge(Key, 0, value); Raise(nameof(N1)); } }
-    public string N2 { get => _vm.GetChallenge(Key, 1); set { _vm.SetChallenge(Key, 1, value); Raise(nameof(N2)); } }
+    public bool C3 { get => _vm.GetAch(Key, 2); set { _vm.SetAch(Key, 2, value); Raise(nameof(C3)); } }
+    public bool G { get => _vm.GetAch(Key, 3); set { _vm.SetAch(Key, 3, value); Raise(nameof(G)); } }
+    public bool S { get => _vm.GetAch(Key, 4); set { _vm.SetAch(Key, 4, value); Raise(nameof(S)); } }
 
     public string Others => _vm.OthersMissing(Key);
     public bool AnyMissing => _vm.AnyMissing(Key);
-    public int Count => (C1 ? 1 : 0) + (C2 ? 1 : 0) + (Duo ? 1 : 0) + (Special ? 1 : 0);
+
+    public int Count
+    {
+        get
+        {
+            int n = 0;
+            var a = Available;
+            for (int k = 0; k < 5; k++)
+                if (a[k] && _vm.GetAch(Key, k)) n++;
+            return n;
+        }
+    }
 
     public void RaiseOthers() => Raise(nameof(Others));
 
     public void RefreshAll()
     {
-        Raise(nameof(C1)); Raise(nameof(C2)); Raise(nameof(Duo)); Raise(nameof(Special));
+        Raise(nameof(C1)); Raise(nameof(C2)); Raise(nameof(C3)); Raise(nameof(G)); Raise(nameof(S));
         Raise(nameof(Others));
     }
 }
@@ -70,6 +73,7 @@ public class AchRow : ObservableObject
 public partial class DungeonsViewModel
 {
     private readonly List<AchRow> _achAll = new();
+    private readonly Dictionary<string, AchRow> _achByKey = new();
     private bool _achMode;
     private bool _onlyMissing;
     private string _achChar;
@@ -110,7 +114,7 @@ public partial class DungeonsViewModel
         }
     }
 
-    public string AchCounter => _achAll.Sum(r => r.Count) + " / " + (_achAll.Count * 4) + " succès";
+    public string AchCounter => _achAll.Sum(r => r.Count) + " / " + _achAll.Sum(r => r.Total) + " succès";
     public string AchShown => AchView.Count + " affichés";
 
     private void EnsureChar()
@@ -123,105 +127,51 @@ public partial class DungeonsViewModel
 
     private void ReloadAch()
     {
-        RebuildAchRows();
+        _achAll.Clear();
+        _achByKey.Clear();
+        int i = 0;
+        foreach (var b in DungeonAchData.All)
+        {
+            var r = new AchRow(b, i++, this);
+            _achAll.Add(r);
+            _achByKey[r.Key] = r;
+        }
         EnsureChar();
         Raise(nameof(CharNames));
         Raise(nameof(AchChar));
     }
 
-    private void RebuildAchRows()
-    {
-        _achAll.Clear();
-        var extras = _main.Data.DungeonExtra;
-        foreach (var e in DungeonData.All)
-        {
-            _achAll.Add(new AchRow(e, e.Name, e.Name, 0, this));
-            foreach (var kv in extras.Where(x => ParentOf(x.Key) == e.Name))
-            {
-                var n = int.TryParse(kv.Key.Substring(kv.Key.LastIndexOf('#') + 1), out var v) ? v : 2;
-                _achAll.Add(new AchRow(e, kv.Key, kv.Value, n, this));
-            }
-        }
-    }
+    private static string Key(string boss, int k) => boss + "|" + k;
 
-    private static string ParentOf(string key)
-    {
-        var i = key.LastIndexOf('#');
-        return i < 0 ? key : key.Substring(0, i);
-    }
+    internal bool GetAch(string boss, int k)
+        => _achChar != null && _main.Data.BossAch.TryGetValue(_achChar, out var l) && l.Contains(Key(boss, k));
 
-    internal void AddExtra(string parent)
-    {
-        var extras = _main.Data.DungeonExtra;
-        int n = 2;
-        while (extras.ContainsKey(parent + "#" + n)) n++;
-        extras[parent + "#" + n] = "Nouveau boss";
-        _main.RequestSave();
-        RebuildAchRows();
-        Refresh();
-    }
-
-    internal void RemoveExtra(string key)
-    {
-        var data = _main.Data;
-        data.DungeonExtra.Remove(key);
-        foreach (var l in data.DungeonAch.Values)
-            for (int k = 0; k < 4; k++) l.Remove(Key(key, k));
-        data.DungeonChallenge.Remove(Key(key, 0));
-        data.DungeonChallenge.Remove(Key(key, 1));
-        _main.RequestSave();
-        RebuildAchRows();
-        Refresh();
-    }
-
-    internal void SetBoss(string key, string label)
-    {
-        if (!_main.Data.DungeonExtra.ContainsKey(key)) return;
-        _main.Data.DungeonExtra[key] = label.Length == 0 ? "Boss" : label;
-        _main.RequestSave();
-    }
-
-    private static string Key(string dj, int k) => dj + "|" + k;
-
-    internal bool GetAch(string dj, int k)
-        => _achChar != null && _main.Data.DungeonAch.TryGetValue(_achChar, out var l) && l.Contains(Key(dj, k));
-
-    internal void SetAch(string dj, int k, bool v)
+    internal void SetAch(string boss, int k, bool v)
     {
         if (_achChar == null) return;
-        var d = _main.Data.DungeonAch;
+        var d = _main.Data.BossAch;
         if (!d.TryGetValue(_achChar, out var l)) { l = new List<string>(); d[_achChar] = l; }
-        var key = Key(dj, k);
+        var key = Key(boss, k);
         if (v) { if (!l.Contains(key)) l.Add(key); }
         else l.Remove(key);
         _main.RequestSave();
         Raise(nameof(AchCounter));
-        foreach (var r in _achAll)
-            if (r.Key == dj) r.RaiseOthers();
+        if (_achByKey.TryGetValue(boss, out var row)) row.RaiseOthers();
     }
 
-    internal string GetChallenge(string dj, int k)
-        => _main.Data.DungeonChallenge.TryGetValue(Key(dj, k), out var s) ? s : "";
-
-    internal void SetChallenge(string dj, int k, string v)
+    private bool CharMissing(string name, string boss)
     {
-        v = (v ?? "").Trim();
-        var d = _main.Data.DungeonChallenge;
-        if (v.Length == 0) d.Remove(Key(dj, k)); else d[Key(dj, k)] = v;
-        _main.RequestSave();
-    }
-
-    private bool CharMissing(string name, string dj)
-    {
-        _main.Data.DungeonAch.TryGetValue(name, out var l);
-        for (int k = 0; k < 4; k++)
-            if (l == null || !l.Contains(Key(dj, k))) return true;
+        if (!_achByKey.TryGetValue(boss, out var row)) return false;
+        _main.Data.BossAch.TryGetValue(name, out var l);
+        var a = row.Available;
+        for (int k = 0; k < 5; k++)
+            if (a[k] && (l == null || !l.Contains(Key(boss, k)))) return true;
         return false;
     }
 
-    internal bool AnyMissing(string dj) => _main.Data.Characters.Any(c => CharMissing(c.Name, dj));
+    internal bool AnyMissing(string boss) => _main.Data.Characters.Any(c => CharMissing(c.Name, boss));
 
-    internal string OthersMissing(string dj)
+    internal string OthersMissing(string boss)
     {
         var miss = new List<string>();
         int others = 0;
@@ -229,7 +179,7 @@ public partial class DungeonsViewModel
         {
             if (c.Name == _achChar) continue;
             others++;
-            if (CharMissing(c.Name, dj)) miss.Add(c.Name);
+            if (CharMissing(c.Name, boss)) miss.Add(c.Name);
         }
         if (miss.Count == 0) return "";
         if (others > 1 && miss.Count == others) return "Tous les autres";
@@ -240,15 +190,15 @@ public partial class DungeonsViewModel
     {
         var q = _query.Trim().ToLowerInvariant();
         IEnumerable<AchRow> items = _achAll.Where(d =>
-            InLevelRange(d.LevelNum) &&
+            (d.LevelNum > 0 ? InLevelRange(d.LevelNum) : _levelFilter == "tous") &&
             (!_onlyMissing || d.AnyMissing) &&
-            (q.Length == 0 || (d.ParentName + " " + d.BossName + " " + d.LevelText + " " + d.Pos).ToLowerInvariant().Contains(q)));
+            (q.Length == 0 || (d.Name + " " + d.Bracket + " " + d.T1 + " " + d.T2 + " " + d.T3).ToLowerInvariant().Contains(q)));
 
         items = _sort switch
         {
-            "niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.ParentName, StringComparer.CurrentCulture).ThenBy(d => d.Index),
-            "nom (A → Z)" => items.OrderBy(d => d.ParentName, StringComparer.CurrentCulture).ThenBy(d => d.Index),
-            _ => items.OrderBy(d => d.LevelNum).ThenBy(d => d.ParentName, StringComparer.CurrentCulture).ThenBy(d => d.Index)
+            "niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.Order),
+            "nom (A → Z)" => items.OrderBy(d => d.Name, StringComparer.CurrentCulture),
+            _ => items.OrderBy(d => d.LevelNum == 0 ? 9999 : d.LevelNum).ThenBy(d => d.Order)
         };
 
         AchView.Clear();
