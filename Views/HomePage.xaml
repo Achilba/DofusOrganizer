@@ -79,7 +79,7 @@
             <!-- Personnages -->
             <ItemsControl Grid.Row="2" ItemsSource="{Binding Characters}" Margin="0,0,-12,0">
                 <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                    <ItemsPanelTemplate><UniformGrid Columns="3"/></ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -150,9 +150,10 @@
                                 </Grid>
 
                                 <!-- Métiers : pastilles à la largeur de leur texte, la carte grandit avec leur nombre -->
-                                <ItemsControl ItemsSource="{Binding JobChips}" Margin="0,6,0,0"
+                                <ScrollViewer Height="56" Margin="0,6,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                               Visibility="{Binding HasJobs, Converter={StaticResource BoolVis}}">
-                                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="3"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                    <ItemsControl ItemsSource="{Binding JobChips}">
+                                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="6" Padding="7,2" Margin="0,0,4,4">
@@ -175,6 +176,7 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
+                                </ScrollViewer>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

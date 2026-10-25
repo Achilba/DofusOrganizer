@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.15";
+    public const string Current = "0.9.16";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.16", "25/10/2026", new[]
+        {
+            "CORRIGÉ — Accueil : les cartes des personnages sont de nouveau alignées sur trois colonnes de même taille (elles se plaçaient en désordre).",
+            "CHANGÉ — Accueil : la liste des métiers d'un personnage est dans une zone de hauteur fixe qui défile à la molette ; elle ne modifie plus la taille de la carte ni de la page.",
+        }),
         new("0.9.15", "25/10/2026", new[]
         {
             "NOUVEAU — Accueil : quand une mise à jour est disponible, un bouton rouge « Mise à jour disponible · Version X » apparaît à côté du rappel de l'Almanax. Un clic ouvre les Paramètres, où se trouve le bouton d'installation.",
