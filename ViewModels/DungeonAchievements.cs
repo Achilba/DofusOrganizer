@@ -101,7 +101,14 @@ public partial class DungeonsViewModel
 
     public bool OnlyMissing { get => _onlyMissing; set { if (Set(ref _onlyMissing, value)) Refresh(); } }
 
-    public List<string> CharNames => _main.Data.Characters.Select(c => c.Name).ToList();
+    /// <summary>Personnages suivis dans la vue Succès (Forgelance et Sacrieur exclus).</summary>
+    private IEnumerable<Character> AchChars()
+        => _main.Data.Characters.Where(c => !IsExcluded(c.ClassName));
+
+    private static bool IsExcluded(string cls)
+        => !string.IsNullOrEmpty(cls) && (cls.StartsWith("Forgelance", StringComparison.OrdinalIgnoreCase) || cls.StartsWith("Sacrieur", StringComparison.OrdinalIgnoreCase));
+
+    public List<string> CharNames => AchChars().Select(c => c.Name).ToList();
 
     public string AchChar
     {
@@ -119,10 +126,11 @@ public partial class DungeonsViewModel
 
     private void EnsureChar()
     {
-        var names = _main.Data.Characters.Select(c => c.Name).ToList();
+        var names = AchChars().Select(c => c.Name).ToList();
         if (_achChar != null && names.Contains(_achChar)) return;
         var sel = _main.Data.SelectedCharacter;
-        _achChar = sel >= 0 && sel < names.Count ? names[sel] : names.FirstOrDefault();
+        var selName = sel >= 0 && sel < _main.Data.Characters.Count ? _main.Data.Characters[sel].Name : null;
+        _achChar = selName != null && names.Contains(selName) ? selName : names.FirstOrDefault();
     }
 
     private void ReloadAch()
@@ -169,13 +177,13 @@ public partial class DungeonsViewModel
         return false;
     }
 
-    internal bool AnyMissing(string boss) => _main.Data.Characters.Any(c => CharMissing(c.Name, boss));
+    internal bool AnyMissing(string boss) => AchChars().Any(c => CharMissing(c.Name, boss));
 
     internal string OthersMissing(string boss)
     {
         var miss = new List<string>();
         int others = 0;
-        foreach (var c in _main.Data.Characters)
+        foreach (var c in AchChars())
         {
             if (c.Name == _achChar) continue;
             others++;

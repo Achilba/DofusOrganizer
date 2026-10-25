@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.8.4";
+    public const string Current = "0.8.5";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.8.5", "25/10/2026", new[]
+        {
+            "CHANGÉ — Donjons, vue Succès : la dernière colonne s'appelle « Manque » (elle liste les autres personnages à qui il manque encore un succès sur ce boss, ou « Tous ») et n'est plus coupée. Les personnages de classe Forgelance et Sacrieur ne sont plus proposés dans cette vue ni comptés dans « Manque ».",
+        }),
         new("0.8.4", "25/10/2026", new[]
         {
             "CHANGÉ — Fenêtre plus large (1120 px au lieu de 1056, minimum 1010 px au lieu de 960) pour que le tableau des succès de donjon tienne en entier, sans défilement horizontal. Elle ne se redimensionne pas toute seule : si ta fenêtre était déjà ouverte à l'ancienne taille, elle prend la nouvelle au prochain lancement.",
