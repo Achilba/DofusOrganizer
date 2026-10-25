@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.11";
+    public const string Current = "0.9.12";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.12", "25/10/2026", new[]
+        {
+            "CHANGÉ — Accueil : la case Niveau n'affiche plus le mot « Oméga » ; le chiffre passe simplement en doré pour un niveau Oméga (survole-le pour voir « Oméga 60 »). Les métiers sont plus compacts : trois colonnes, texte plus petit, niveau 200 en doré.",
+            "CHANGÉ — La fenêtre est plus large (1300 px, minimum 1200) pour que les textes des cartes ne passent plus à la ligne.",
+        }),
         new("0.9.11", "25/10/2026", new[]
         {
             "CORRIGÉ — Personnages : la saisie manuelle du niveau d'alignement fonctionne (elle était effacée en quittant le champ). Valide en quittant le champ ou avec Entrée ; la valeur est limitée entre 1 et 100.",

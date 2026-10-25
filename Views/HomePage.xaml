@@ -84,7 +84,7 @@
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <WrapPanel>
-                                            <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="19" TextWrapping="Wrap" Margin="0,0,8,0"/>
+                                            <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" FontSize="19" Margin="0,0,8,0"/>
                                             <Border Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="8,2" VerticalAlignment="Center"
                                                     Visibility="{Binding IsMain, Converter={StaticResource BoolVis}}">
                                                 <TextBlock Text="Principal" FontSize="11.5" FontFamily="{StaticResource BodyXB}"/>
@@ -110,47 +110,52 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,4,0">
                                         <StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Niveau" Foreground="{DynamicResource Muted}" FontSize="11" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
-                                                <Border Background="#33F2B544" CornerRadius="4" Padding="5,0" Margin="6,0,0,0" VerticalAlignment="Center"
-                                                        Visibility="{Binding IsOmega, Converter={StaticResource BoolVis}}">
-                                                    <TextBlock Text="Oméga" Foreground="#F2B544" FontSize="10.5" FontFamily="{StaticResource BodyXB}"/>
-                                                </Border>
-                                            </StackPanel>
-                                            <TextBlock Text="{Binding LevelValue}" FontSize="21" FontFamily="{StaticResource BodyXB}" TextWrapping="Wrap"/>
+                                            <TextBlock Text="Niveau" Foreground="{DynamicResource Muted}" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
+                                            <TextBlock Text="{Binding LevelValue}" FontSize="21" FontFamily="{StaticResource BodyXB}" ToolTip="{Binding LevelText}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="{DynamicResource Text}"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsOmega}" Value="True">
+                                                                <Setter Property="Foreground" Value="#F2B544"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
                                         </StackPanel>
                                     </Border>
                                     <Border Grid.Column="1" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="4,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="Alignement" Foreground="{DynamicResource Muted}" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
-                                            <TextBlock Text="{Binding Faction}" FontSize="16" FontFamily="{StaticResource BodyXB}" TextWrapping="Wrap"
+                                            <TextBlock Text="{Binding Faction}" FontSize="16" FontFamily="{StaticResource BodyXB}"
                                                        Foreground="{Binding FactionColor, Converter={StaticResource HexBrush}}"/>
-                                            <TextBlock Text="{Binding OrderText}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding OrderText}" Foreground="{DynamicResource Muted}" FontSize="12"/>
                                         </StackPanel>
                                     </Border>
                                 </Grid>
 
-                                <!-- Métiers : deux colonnes, la carte grandit avec leur nombre -->
-                                <ItemsControl ItemsSource="{Binding JobChips}" Margin="0,10,0,0"
+                                <!-- Métiers : trois colonnes compactes, la carte grandit avec leur nombre -->
+                                <ItemsControl ItemsSource="{Binding JobChips}" Margin="0,8,0,0"
                                               Visibility="{Binding HasJobs, Converter={StaticResource BoolVis}}">
-                                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="2"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="3"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="8" Padding="9,4" Margin="2">
+                                            <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="6" Padding="6,2" Margin="1.5">
                                                 <DockPanel>
-                                                    <TextBlock DockPanel.Dock="Right" Text="{Binding Level}" FontFamily="{StaticResource BodyXB}" FontSize="12.5" Margin="6,0,0,0">
+                                                    <TextBlock DockPanel.Dock="Right" Text="{Binding Level}" FontFamily="{StaticResource BodyXB}" FontSize="11.5" Margin="5,0,0,0">
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock">
                                                                 <Setter Property="Foreground" Value="{DynamicResource Muted}"/>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding Max}" Value="True">
-                                                                        <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                                                                        <Setter Property="Foreground" Value="#F2B544"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </TextBlock.Style>
                                                     </TextBlock>
-                                                    <TextBlock Text="{Binding Name}" FontSize="12.5" FontFamily="{StaticResource BodyXB}" TextWrapping="Wrap"/>
+                                                    <TextBlock Text="{Binding Name}" FontSize="11.5" FontFamily="{StaticResource BodyXB}"/>
                                                 </DockPanel>
                                             </Border>
                                         </DataTemplate>
