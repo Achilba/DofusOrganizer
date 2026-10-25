@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.10.0";
+    public const string Current = "0.10.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.10.1", "25/10/2026", new[]
+        {
+            "NOUVEAU — Songes : un bouton en haut permet de passer de « Strat » à « Drops ». « Drops » garde les légendes actuelles.",
+            "NOUVEAU — Songes, vue Strat : des rubriques par type de run (« Paradoxe 1 Salle » et « Paradoxe 1 Boss » au départ, tu peux en ajouter, renommer et supprimer). Dans chaque rubrique : tu choisis des personnages, un de leurs stuffs (ajoutés dans la page Personnages, avec un bouton pour l'ouvrir), puis tu écris ta stratégie dans un champ libre.",
+        }),
         new("0.10.0", "25/10/2026", new[]
         {
             "NOUVEAU — Page « Tâches » (entre Songes et Notes) : une case par tâche et par personnage, avec remise à zéro automatique. Tâches par défaut : « Guildaton » et « Trousseau de clés », chaque mardi à 3 h du matin.",

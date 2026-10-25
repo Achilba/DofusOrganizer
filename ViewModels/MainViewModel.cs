@@ -431,6 +431,7 @@ public class MainViewModel : ObservableObject
             if (value == "dungeons") Dungeons?.Reload();
             if (value == "home") foreach (var c in Characters) c.RefreshCardInfo();
             if (value == "routines") Routines?.CheckResets();
+            if (value == "dreams") Songes?.Strat.RefreshChars();
         }
     }
 
@@ -618,6 +619,7 @@ public class MainViewModel : ObservableObject
         Raise(nameof(MainCharLabel));
         Dungeons?.Reload();
         Routines?.RenameChar(old, newName);
+        Songes?.Strat.RenameChar(old, newName);
         Routines?.Refresh();
         RequestSave();
         return "";

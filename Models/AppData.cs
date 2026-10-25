@@ -110,6 +110,51 @@ public class Character : TrackedObject
     [JsonIgnore] public string Initial => string.IsNullOrEmpty(_name) ? "?" : _name.Substring(0, 1).ToUpperInvariant();
 }
 
+/// <summary>Une ligne d'équipe d'une rubrique de strat : un personnage et l'un de ses stuffs.</summary>
+public class StratSlot : TrackedObject
+{
+    /// <summary>Renvoie les stuffs d'un personnage (branché par StratViewModel).</summary>
+    public static Func<string, IEnumerable<StuffLink>> Resolver;
+
+    private string _char = "";
+    private string _stuff = "";
+
+    public string Char
+    {
+        get => _char;
+        set { if (value != null && Set(ref _char, value)) { _lastJoin = null; Stuff = ""; Raise(nameof(StuffChoices)); } }
+    }
+    public string Stuff
+    {
+        get => _stuff;
+        set { if (value != null && Set(ref _stuff, value)) { Raise(nameof(Url)); Raise(nameof(HasUrl)); } }
+    }
+
+    [JsonIgnore] public IEnumerable<string> StuffChoices => (Resolver?.Invoke(_char) ?? Enumerable.Empty<StuffLink>()).Select(s => s.Name).ToList();
+    [JsonIgnore] public string Url => Resolver?.Invoke(_char)?.FirstOrDefault(s => s.Name == _stuff)?.Url ?? "";
+    [JsonIgnore] public bool HasUrl => !string.IsNullOrWhiteSpace(Url);
+    private string _lastJoin;
+    /// <summary>Relit les stuffs du personnage ; ne touche à l'affichage que si la liste a changé (sinon la sélection serait perdue).</summary>
+    public void RefreshChoices()
+    {
+        var j = string.Join("\u001f", StuffChoices);
+        if (j == _lastJoin) return;
+        _lastJoin = j;
+        Raise(nameof(StuffChoices)); Raise(nameof(Url)); Raise(nameof(HasUrl)); Raise(nameof(Stuff));
+    }
+}
+
+/// <summary>Une rubrique de strat (par exemple « Paradoxe 1 Salle ») : équipe choisie + texte libre.</summary>
+public class StratRun : TrackedObject
+{
+    private string _name = "";
+    private string _text = "";
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public string Name { get => _name; set => Set(ref _name, value ?? ""); }
+    public string Text { get => _text; set => Set(ref _text, value ?? ""); }
+    public ObservableCollection<StratSlot> Slots { get; set; } = new();
+}
+
 /// <summary>Une tâche récurrente (par personnage) : tous les jours à minuit, ou un jour fixe de la semaine à 3 h.</summary>
 public class RoutineDef
 {
@@ -124,6 +169,15 @@ public class RoutineDef
 
 public class AppData
 {
+    public ObservableCollection<StratRun> StratRuns { get; set; } = new()
+    {
+        new StratRun { Name = "Paradoxe 1 Salle" },
+        new StratRun { Name = "Paradoxe 1 Boss" },
+    };
+    public string StratSelected { get; set; } = "";
+    /// <summary>Vue de la page Songes : « Strat » ou « Drops ».</summary>
+    public string SongesMode { get; set; } = "Strat";
+
     public List<RoutineDef> Routines { get; set; } = new()
     {
         new RoutineDef { Id = "guildaton", Name = "Guildaton", Weekly = true, Weekday = 2 },

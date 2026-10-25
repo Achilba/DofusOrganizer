@@ -150,8 +150,25 @@ public class SongesViewModel : ObservableObject
     public SongesViewModel(MainViewModel main)
     {
         _main = main;
+        Strat = new StratViewModel(main);
         Reload();
     }
+
+    public StratViewModel Strat { get; }
+    public string[] Modes { get; } = { "Strat", "Drops" };
+    public string Mode
+    {
+        get => _main.Data.SongesMode == "Drops" ? "Drops" : "Strat";
+        set
+        {
+            if (value == null || value == Mode) return;
+            _main.Data.SongesMode = value;
+            _main.RequestSave();
+            Raise(); Raise(nameof(IsStrat)); Raise(nameof(IsDrops));
+        }
+    }
+    public bool IsStrat => Mode == "Strat";
+    public bool IsDrops => Mode == "Drops";
 
     public void Reload()
     {
@@ -161,6 +178,8 @@ public class SongesViewModel : ObservableObject
         foreach (var n in GameLists.LegendsClassic) Classic.Add(Make("c|", n));
         Raise(nameof(Total));
         Raise(nameof(TotalText));
+        Strat?.Reload();
+        Raise(nameof(Mode)); Raise(nameof(IsStrat)); Raise(nameof(IsDrops));
     }
 
     private LegendItem Make(string prefix, string name)
