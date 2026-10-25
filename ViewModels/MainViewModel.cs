@@ -415,6 +415,7 @@ public class MainViewModel : ObservableObject
             UpdateNav();
             // La liste des personnages suivis peut avoir changé depuis la page Personnages.
             if (value == "dungeons") Dungeons?.Reload();
+            if (value == "home") foreach (var c in Characters) c.RefreshCardInfo();
         }
     }
 

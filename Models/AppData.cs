@@ -13,7 +13,7 @@ public class TrackedObject : ObservableObject
     protected override void Raise([CallerMemberName] string name = null)
     {
         base.Raise(name);
-        if (name != "Detected" && name != "IsMain" && name != "Number") Changed?.Invoke();
+        if (name != "Detected" && name != "IsMain" && name != "Number" && name != "TopJobs" && name != "FactionText" && name != "InfoChips") Changed?.Invoke();
     }
 }
 
@@ -83,6 +83,15 @@ public class Character : TrackedObject
     [JsonIgnore] public bool Detected { get => _detected; set => Set(ref _detected, value); }
     [JsonIgnore] public bool IsMain { get => _isMain; set => Set(ref _isMain, value); }
     [JsonIgnore] public int Number { get => _number; set => Set(ref _number, value); }
+    /// <summary>Faction et ordre pour la carte de l'accueil, par exemple « Bonta · Ordre 1 » ; « Neutre » sans faction.</summary>
+    [JsonIgnore] public string FactionText => string.IsNullOrEmpty(_faction) || _faction == "Neutre" ? "Neutre"
+        : (string.IsNullOrEmpty(_order) || _order == "Aucun" ? _faction : _faction + " · " + _order);
+    /// <summary>Métiers au niveau 200, sous la forme « Mineur 200 » (carte de l'accueil).</summary>
+    /// <summary>Pastilles de la carte : niveau, faction, puis métiers 200.</summary>
+    [JsonIgnore] public string[] InfoChips => new[] { LevelText, FactionText }.Concat(TopJobs).ToArray();
+    [JsonIgnore] public string[] TopJobs => Jobs.Where(j => j.Level >= 200).Select(j => j.Name + " 200").ToArray();
+    /// <summary>À appeler quand on affiche l'accueil : la faction ou les métiers ont pu changer.</summary>
+    public void RefreshCardInfo() { Raise(nameof(FactionText)); Raise(nameof(TopJobs)); Raise(nameof(InfoChips)); }
     [JsonIgnore] public string Initial => string.IsNullOrEmpty(_name) ? "?" : _name.Substring(0, 1).ToUpperInvariant();
 }
 
