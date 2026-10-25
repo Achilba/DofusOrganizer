@@ -42,16 +42,16 @@ public partial class DungeonsViewModel : ObservableObject
     private readonly MainViewModel _main;
     private readonly List<DungeonItem> _all = new();
     private string _query = "";
-    private string _sort = "niveau croissant";
+    private string _sort = "Niveau croissant";
     private bool _hideDone;
-    private string _levelFilter = "tous";
+    private string _levelFilter = "Tous";
 
     public ObservableCollection<DungeonItem> View { get; } = new();
     /// <summary>Tous les donjons (sans filtre), pour la recherche globale.</summary>
     public IReadOnlyList<DungeonItem> All => _all;
-    public string[] LevelFilterChoices { get; } = { "tous", "1 à 50", "51 à 100", "101 à 150", "151 et plus" };
+    public string[] LevelFilterChoices { get; } = { "Tous", "1 à 50", "51 à 100", "101 à 150", "151 à 200" };
     public string LevelFilter { get => _levelFilter; set { if (value != null && Set(ref _levelFilter, value)) Refresh(); } }
-    public string[] SortChoices { get; } = { "niveau croissant", "niveau décroissant", "nom (A → Z)" };
+    public string[] SortChoices { get; } = { "Niveau croissant", "Niveau décroissant", "Nom (A → Z)" };
 
     public DungeonsViewModel(MainViewModel main)
     {
@@ -90,7 +90,7 @@ public partial class DungeonsViewModel : ObservableObject
         "1 à 50" => n <= 50,
         "51 à 100" => n >= 51 && n <= 100,
         "101 à 150" => n >= 101 && n <= 150,
-        "151 et plus" => n >= 151,
+        "151 à 200" => n >= 151,
         _ => true
     };
 
@@ -103,8 +103,8 @@ public partial class DungeonsViewModel : ObservableObject
 
         items = _sort switch
         {
-            "niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.Name, StringComparer.CurrentCulture),
-            "nom (A → Z)" => items.OrderBy(d => d.Name, StringComparer.CurrentCulture),
+            "Niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.Name, StringComparer.CurrentCulture),
+            "Nom (A → Z)" => items.OrderBy(d => d.Name, StringComparer.CurrentCulture),
             _ => items.OrderBy(d => d.LevelNum).ThenBy(d => d.Name, StringComparer.CurrentCulture)
         };
 

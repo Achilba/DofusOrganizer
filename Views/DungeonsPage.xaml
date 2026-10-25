@@ -112,9 +112,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid Margin="14,8" TextBlock.Foreground="{DynamicResource Muted}" TextBlock.FontFamily="{StaticResource BodyXB}" TextBlock.FontSize="12">
+                <Grid Margin="14,8,26,8" TextBlock.Foreground="{DynamicResource Muted}" TextBlock.FontFamily="{StaticResource BodyXB}" TextBlock.FontSize="12">
                     <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" MinWidth="200"/>
+                    <ColumnDefinition Width="210"/>
                     <ColumnDefinition Width="56"/>
                     <ColumnDefinition Width="84"/>
                     <ColumnDefinition Width="84"/>
@@ -129,16 +129,16 @@
                     <TextBlock Grid.Column="3" Text="Chall 2" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="4" Text="Duo / Trio" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="5" Text="Spécial" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="6" Text="Manque"/>
+                    <TextBlock Grid.Column="6" Text="Manque" HorizontalAlignment="Center"/>
                 </Grid>
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
                     <ItemsControl ItemsSource="{Binding AchView}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="{DynamicResource Field}" BorderThickness="0,1,0,0" Padding="14,6" MinHeight="58">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" MinWidth="200"/>
+                                            <ColumnDefinition Width="210"/>
                                             <ColumnDefinition Width="56"/>
                                             <ColumnDefinition Width="84"/>
                                             <ColumnDefinition Width="84"/>
@@ -165,7 +165,7 @@
                                             <TextBlock Text="{Binding TS}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
                                             <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding S, Mode=TwoWay}"/>
                                         </StackPanel>
-                                        <TextBlock Grid.Column="6" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

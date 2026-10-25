@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.8.5";
+    public const string Current = "0.8.6";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.8.6", "25/10/2026", new[]
+        {
+            "CORRIGÉ — Donjons, vue Succès : les en-têtes et le contenu des colonnes Niveau à Manque sont alignés au centre ; la colonne « Manque » se met à jour dès qu'on coche une case (elle liste tous les personnages à qui il manque encore un succès sur ce boss, y compris celui qui est sélectionné).",
+            "CHANGÉ — Filtre de niveau : « 151 à 200 » à la place de « 151 et plus ». Les choix « Tous » et « Tri : Niveau croissant / Niveau décroissant / Nom (A → Z) » prennent une majuscule. Largeur minimale de la fenêtre portée à 1040 px.",
+        }),
         new("0.8.5", "25/10/2026", new[]
         {
             "CHANGÉ — Donjons, vue Succès : la dernière colonne s'appelle « Manque » (elle liste les autres personnages à qui il manque encore un succès sur ce boss, ou « Tous ») et n'est plus coupée. Les personnages de classe Forgelance et Sacrieur ne sont plus proposés dans cette vue ni comptés dans « Manque ».",

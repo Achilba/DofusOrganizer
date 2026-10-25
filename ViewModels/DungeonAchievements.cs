@@ -179,18 +179,13 @@ public partial class DungeonsViewModel
 
     internal bool AnyMissing(string boss) => AchChars().Any(c => CharMissing(c.Name, boss));
 
+    /// <summary>Personnages (hors Forgelance et Sacrieur) à qui il manque encore au moins un succès de ce boss.</summary>
     internal string OthersMissing(string boss)
     {
-        var miss = new List<string>();
-        int others = 0;
-        foreach (var c in AchChars())
-        {
-            if (c.Name == _achChar) continue;
-            others++;
-            if (CharMissing(c.Name, boss)) miss.Add(c.Name);
-        }
+        var all = AchChars().ToList();
+        var miss = all.Where(c => CharMissing(c.Name, boss)).Select(c => c.Name).ToList();
         if (miss.Count == 0) return "";
-        if (others > 1 && miss.Count == others) return "Tous";
+        if (all.Count > 1 && miss.Count == all.Count) return "Tous";
         return string.Join(", ", miss);
     }
 
@@ -204,8 +199,8 @@ public partial class DungeonsViewModel
 
         items = _sort switch
         {
-            "niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.Order),
-            "nom (A → Z)" => items.OrderBy(d => d.Name, StringComparer.CurrentCulture),
+            "Niveau décroissant" => items.OrderByDescending(d => d.LevelNum).ThenBy(d => d.Order),
+            "Nom (A → Z)" => items.OrderBy(d => d.Name, StringComparer.CurrentCulture),
             _ => items.OrderBy(d => d.LevelNum).ThenBy(d => d.Order)
         };
 
