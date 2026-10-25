@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.20";
+    public const string Current = "0.9.21";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.21", "25/10/2026", new[]
+        {
+            "NOUVEAU — Accueil : glisse une carte de personnage sur une autre pour changer leur ordre ; le premier reste le personnage principal et l'ordre est enregistré.",
+            "NOUVEAU — Accueil : un clic sur le niveau, l'alignement ou un métier d'une carte ouvre la fiche de ce personnage.",
+        }),
         new("0.9.20", "25/10/2026", new[]
         {
             "NOUVEAU — Donjons : une croix dans le champ de recherche pour le vider en un clic.",

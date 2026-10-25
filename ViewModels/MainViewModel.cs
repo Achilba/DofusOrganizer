@@ -407,6 +407,28 @@ public class MainViewModel : ObservableObject
         RequestSave();
     }
 
+    /// <summary>Glisser-déposer sur l'accueil : place le personnage à la position de la carte visée.</summary>
+    public void MoveCharacterTo(Character c, Character target)
+    {
+        if (c == null || target == null || c == target) return;
+        int i = Characters.IndexOf(c), j = Characters.IndexOf(target);
+        if (i < 0 || j < 0) return;
+        var sel = CharactersPage?.Selected;
+        Characters.Move(i, j);
+        UpdateOrder();
+        BuildNoteKeys();
+        if (sel != null) Data.SelectedCharacter = Math.Max(0, Characters.IndexOf(sel));
+        RequestSave();
+    }
+
+    /// <summary>Ouvre la fiche d'un personnage (clic sur une carte de l'accueil).</summary>
+    public void OpenCharacter(Character c)
+    {
+        if (c == null) return;
+        CharactersPage.Selected = c;
+        Page = "chars";
+    }
+
     // ───────── Navigation / état ─────────
 
     public string Page
