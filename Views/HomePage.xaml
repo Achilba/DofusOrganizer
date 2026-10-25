@@ -14,11 +14,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*" MinHeight="300"/>
+            <RowDefinition Height="1*" MinHeight="190"/>
         </Grid.RowDefinitions>
 
             <!-- Titre, boutons Almanax et Mini, pastille des connectés -->
-            <Grid Margin="0,0,0,16">
+            <Grid Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -65,11 +65,11 @@
             <!-- Personnages -->
             <ItemsControl Grid.Row="2" ItemsSource="{Binding Characters}" Margin="0,0,-12,0">
                 <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate><UniformGrid Columns="3"/></ItemsPanelTemplate>
+                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{DynamicResource Active}" BorderThickness="1" CornerRadius="14" Padding="16" Margin="0,0,12,12"
+                        <Border Background="{DynamicResource Active}" BorderThickness="1" CornerRadius="14" Padding="14,10" Margin="0,0,12,10"
                                 BorderBrush="{Binding Detected, Converter={StaticResource Status}, ConverterParameter=border}">
                             <StackPanel>
                                 <!-- En-tête : avatar, nom, classe et statut -->
@@ -78,8 +78,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Width="48" Height="48" CornerRadius="13" Background="{Binding Color, Converter={StaticResource HexBrush}}" Margin="0,0,12,0" VerticalAlignment="Top">
-                                        <TextBlock Text="{Binding Initial}" FontFamily="{StaticResource Display}" FontSize="23" Foreground="#12151A"
+                                    <Border Width="44" Height="44" CornerRadius="12" Background="{Binding Color, Converter={StaticResource HexBrush}}" Margin="0,0,12,0" VerticalAlignment="Top">
+                                        <TextBlock Text="{Binding Initial}" FontFamily="{StaticResource Display}" FontSize="21" Foreground="#12151A"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
@@ -103,15 +103,15 @@
                                 </Grid>
 
                                 <!-- Niveau et alignement -->
-                                <Grid Margin="0,12,0,0">
+                                <Grid Margin="0,8,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="5*"/>
                                         <ColumnDefinition Width="7*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,4,0">
+                                    <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="10,5" Margin="0,0,4,0">
                                         <StackPanel>
                                             <TextBlock Text="Niveau" Foreground="{DynamicResource Muted}" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
-                                            <TextBlock Text="{Binding LevelValue}" FontSize="21" FontFamily="{StaticResource BodyXB}" ToolTip="{Binding LevelText}">
+                                            <TextBlock Text="{Binding LevelValue}" FontSize="19" FontFamily="{StaticResource BodyXB}" ToolTip="{Binding LevelText}">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="Foreground" Value="{DynamicResource Text}"/>
@@ -125,23 +125,23 @@
                                             </TextBlock>
                                         </StackPanel>
                                     </Border>
-                                    <Border Grid.Column="1" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="4,0,0,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="10,5" Margin="4,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="Alignement" Foreground="{DynamicResource Muted}" FontSize="11" FontFamily="{StaticResource BodyXB}"/>
-                                            <TextBlock Text="{Binding Faction}" FontSize="16" FontFamily="{StaticResource BodyXB}"
+                                            <TextBlock Text="{Binding Faction}" FontSize="15" FontFamily="{StaticResource BodyXB}"
                                                        Foreground="{Binding FactionColor, Converter={StaticResource HexBrush}}"/>
-                                            <TextBlock Text="{Binding OrderText}" Foreground="{DynamicResource Muted}" FontSize="12"/>
+                                            <TextBlock Text="{Binding OrderText}" Foreground="{DynamicResource Muted}" FontSize="11.5"/>
                                         </StackPanel>
                                     </Border>
                                 </Grid>
 
-                                <!-- Métiers : trois colonnes compactes, la carte grandit avec leur nombre -->
-                                <ItemsControl ItemsSource="{Binding JobChips}" Margin="0,8,0,0"
+                                <!-- Métiers : pastilles à la largeur de leur texte, la carte grandit avec leur nombre -->
+                                <ItemsControl ItemsSource="{Binding JobChips}" Margin="0,6,0,0"
                                               Visibility="{Binding HasJobs, Converter={StaticResource BoolVis}}">
                                     <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="3"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="6" Padding="6,2" Margin="1.5">
+                                            <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="6" Padding="7,2" Margin="0,0,4,4">
                                                 <DockPanel>
                                                     <TextBlock DockPanel.Dock="Right" Text="{Binding Level}" FontFamily="{StaticResource BodyXB}" FontSize="11.5" Margin="5,0,0,0">
                                                         <TextBlock.Style>
@@ -169,24 +169,26 @@
 
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5*" MinWidth="300"/>
-                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="6*" MinWidth="300"/>
+                    <ColumnDefinition Width="5*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Raccourcis -->
                 <Border Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0,0,12,0" VerticalAlignment="Stretch">
                     <StackPanel TextElement.FontSize="14">
-                        <TextBlock Text="Raccourcis" Style="{StaticResource H2}" FontSize="16" Margin="0,0,0,14"/>
-                        <Grid Margin="0,0,0,10"><TextBlock Text="{Binding MainCharLabel}" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                        <TextBlock Text="Raccourcis" Style="{StaticResource H2}" FontSize="16" Margin="0,0,0,10"/>
+                        <UniformGrid Columns="2">
+                        <Grid Margin="0,0,16,10"><TextBlock Text="{Binding MainCharLabel}" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F1" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
-                        <Grid Margin="0,0,0,10"><TextBlock Text="Personnage précédent" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                        <Grid Margin="0,0,16,10"><TextBlock Text="Personnage précédent" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F6" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
-                        <Grid Margin="0,0,0,10"><TextBlock Text="Copier les invitations" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                        <Grid Margin="0,0,16,10"><TextBlock Text="Copier les invitations" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="F12" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
-                        <Grid Margin="0,0,0,10"><TextBlock Text="Afficher / masquer" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                        <Grid Margin="0,0,16,10"><TextBlock Text="Afficher / masquer" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
                             <Border Style="{StaticResource KeyCap}" HorizontalAlignment="Right"><TextBlock Text="Ctrl+Alt+O" FontFamily="{StaticResource BodyXB}" FontSize="12"/></Border></Grid>
+                        </UniformGrid>
                         <!-- Touche * : interrupteur -->
-                        <ToggleButton x:Name="StarToggle" IsChecked="{Binding SwapEnabled, Mode=TwoWay}" Height="44" Cursor="Hand" Margin="0,0,0,10"
+                        <ToggleButton x:Name="StarToggle" IsChecked="{Binding SwapEnabled, Mode=TwoWay}" Height="40" Cursor="Hand" Margin="0,0,0,8"
                                       ToolTip="Touche étoile : passer au personnage suivant">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
@@ -237,12 +239,12 @@
                             </Button>
                             <TextBlock Text="Invitations &amp; Zaaps" Style="{StaticResource H2}" FontSize="16" VerticalAlignment="Center"/>
                         </DockPanel>
-                        <v:ZaapPicker Margin="0,0,0,14"/>
+                        <v:ZaapPicker Margin="0,0,0,10"/>
                         <ItemsControl ItemsSource="{Binding Favorites}" Margin="0,0,0,4">
                             <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Margin="0,0,10,10" Height="44" Padding="12,0" FontSize="14" ToolTip="{Binding Command}"
+                                    <Button Margin="0,0,8,8" Height="38" Padding="12,0" FontSize="14" ToolTip="{Binding Command}"
                                             Command="{Binding DataContext.CopyZaapCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                             CommandParameter="{Binding}">
                                         <Button.Template>

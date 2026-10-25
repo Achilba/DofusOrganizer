@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.13";
+    public const string Current = "0.9.14";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.14", "25/10/2026", new[]
+        {
+            "CHANGÉ — Accueil : tout tient dans la fenêtre sans défiler vers le bas. Cartes de personnages plus compactes, raccourcis sur deux colonnes, bas de page plus bas.",
+            "CORRIGÉ — Accueil : les métiers sont des pastilles à la largeur de leur nom, donc aucun mot n'est coupé (par exemple Forgemage).",
+        }),
         new("0.9.13", "25/10/2026", new[]
         {
             "CORRIGÉ — Personnages : en cliquant dans le niveau d'alignement, le niveau du personnage ou le niveau d'un métier, tout le chiffre est sélectionné ; ce que tu tapes le remplace au lieu de s'ajouter à l'ancien (avant, 100 + 50 donnait 10050, ramené à 100, et rien ne changeait). La valeur est prise en compte à chaque frappe.",
