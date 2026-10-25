@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using DofusTeamOrganizer.Models;
 
 namespace DofusTeamOrganizer.ViewModels;
@@ -17,9 +18,14 @@ public class AchRow : ObservableObject
         _b = b;
         _vm = vm;
         Order = order;
+        OpenCommand = new RelayCommand(() =>
+        {
+            try { Process.Start(new ProcessStartInfo(_b.Url) { UseShellExecute = true }); } catch { }
+        });
     }
 
     public int Order { get; }
+    public RelayCommand OpenCommand { get; }
     public string Key => _b.Boss;
     public string Name => _b.Boss;
     public string Bracket => _b.Level.ToString();

@@ -68,6 +68,29 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="InfoBtn" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Width" Value="22"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{DynamicResource Muted}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" CornerRadius="11" Background="{DynamicResource KeyBg}" BorderBrush="{DynamicResource Line2}" BorderThickness="1">
+                            <TextBlock Text="i" Foreground="{TemplateBinding Foreground}" FontSize="12" FontFamily="{StaticResource BodyXB}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -147,7 +170,11 @@
 
                                             <ColumnDefinition Width="120"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Name}" FontSize="14" TextWrapping="Wrap" Foreground="{DynamicResource Text}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <DockPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                                            <Button DockPanel.Dock="Right" Style="{StaticResource InfoBtn}" Margin="6,0,0,0" Command="{Binding OpenCommand}"
+                                                    ToolTip="Ouvrir la page du donjon sur Dofusyelle"/>
+                                            <TextBlock Text="{Binding Name}" FontSize="14" TextWrapping="Wrap" Foreground="{DynamicResource Text}" VerticalAlignment="Center"/>
+                                        </DockPanel>
                                         <TextBlock Grid.Column="1" Text="{Binding Bracket}" FontSize="13" FontFamily="{StaticResource BodyXB}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding H1, Converter={StaticResource BoolVis}}">
                                             <TextBlock Text="{Binding T1}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
