@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.6";
+    public const string Current = "0.9.7";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.7", "25/10/2026", new[]
+        {
+            "CHANGÉ — Accueil : cartes de personnages réorganisées. En-tête (avatar, nom, classe et statut), puis deux cases Niveau et Alignement (cité, ordre et niveau d'alignement), puis tous les métiers en deux colonnes, du plus haut niveau au plus bas ; les métiers à 200 sont à la couleur d'accent. La carte grandit avec le nombre de métiers.",
+            "NOUVEAU — Le nom de la cité est en bleu clair pour Bonta et en rouge pour Brâkmar.",
+        }),
         new("0.9.6", "25/10/2026", new[]
         {
             "CORRIGÉ — Accueil : les noms et les avatars ne sont plus écrasés ni coupés. Le statut revient en bas de la carte, et les cartes s'agrandissent toutes seules quand on ajoute des métiers ou d'autres infos. La page défile si elle ne tient plus dans la fenêtre.",
