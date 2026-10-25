@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.9.14";
+    public const string Current = "0.9.15";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.15", "25/10/2026", new[]
+        {
+            "NOUVEAU — Accueil : quand une mise à jour est disponible, un bouton rouge « Mise à jour disponible · Version X » apparaît à côté du rappel de l'Almanax. Un clic ouvre les Paramètres, où se trouve le bouton d'installation.",
+        }),
         new("0.9.14", "25/10/2026", new[]
         {
             "CHANGÉ — Accueil : tout tient dans la fenêtre sans défiler vers le bas. Cartes de personnages plus compactes, raccourcis sur deux colonnes, bas de page plus bas.",

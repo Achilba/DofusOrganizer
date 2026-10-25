@@ -241,8 +241,11 @@ public class MainViewModel : ObservableObject
     private void RaiseUpdate()
     {
         Raise(nameof(UpdateAvailable));
+        Raise(nameof(UpdateVersionText));
         foreach (var n in NavItems) if (n.Key == "settings") n.Badge = UpdateAvailable;
     }
+    /// <summary>Texte du bouton rouge de l'accueil, par exemple « Version 0.9.15 ».</summary>
+    public string UpdateVersionText => _update == null ? "" : "Version " + _update.Version;
     public bool UpdateAvailable => _update != null && !_updateBusy;
     public bool UpdateBusy { get => _updateBusy; private set { if (Set(ref _updateBusy, value)) RaiseUpdate(); } }
     public string InstallUpdateLabel => _update == null ? "" : "Installer la version " + _update.Version;

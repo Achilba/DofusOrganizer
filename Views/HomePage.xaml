@@ -44,8 +44,9 @@
                 </StackPanel>
             </Grid>
 
+            <WrapPanel Grid.Row="1">
             <!-- Rappel Almanax : offrande du jour et bouton Fait -->
-            <Border Grid.Row="1" HorizontalAlignment="Left" Margin="0,0,0,16" Padding="14,6" CornerRadius="8" MinHeight="44"
+            <Border Margin="0,0,10,10" Padding="14,6" CornerRadius="8" MinHeight="44"
                     Background="#1FF2963C" BorderBrush="{DynamicResource Warn}" BorderThickness="1"
                     Visibility="{Binding Almanax.NeedsReminder, Converter={StaticResource BoolVis}}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -61,6 +62,19 @@
                             Background="{DynamicResource Hot}" Foreground="{DynamicResource HotText}" BorderThickness="0" FontFamily="{StaticResource BodyXB}"/>
                 </StackPanel>
             </Border>
+            <!-- Mise à jour disponible : bouton rouge vers les Paramètres -->
+            <Button Command="{Binding NavigateCommand}" CommandParameter="settings" MinHeight="44" Padding="14,6" Margin="0,0,10,10"
+                    Background="#26FF6B5F" BorderBrush="{DynamicResource Bad}" BorderThickness="1" Foreground="{DynamicResource BadText}" Cursor="Hand"
+                    ToolTip="Ouvrir les Paramètres pour installer la mise à jour"
+                    Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}">
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoBell}" Stroke="{DynamicResource BadText}" Width="15" Height="15" Margin="0,0,8,0"/>
+                    <TextBlock Text="Mise à jour disponible" FontFamily="{StaticResource BodyXB}"/>
+                    <TextBlock Text="{Binding UpdateVersionText}" Foreground="{DynamicResource Text}" Margin="10,0,0,0"/>
+                    <TextBlock Text="Ouvrir les Paramètres  →" Margin="14,0,0,0"/>
+                </StackPanel>
+            </Button>
+            </WrapPanel>
 
             <!-- Personnages -->
             <ItemsControl Grid.Row="2" ItemsSource="{Binding Characters}" Margin="0,0,-12,0">
