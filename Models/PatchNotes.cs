@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.8.9";
+    public const string Current = "0.9.0";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.9.0", "25/10/2026", new[]
+        {
+            "NOUVEAU — Donjons, vue Succès : un bouton « i » à côté de la case Spécial affiche le nom du challenge et sa description (texte du jeu, relevé sur DofusDB). Pour Malléfisk, Toxoliath et le Vénérable Endormi, la base ne donne pas le monstre à tuer en dernier : consulte la page du donjon.",
+        }),
         new("0.8.9", "25/10/2026", new[]
         {
             "NOUVEAU — Donjons, vue Succès : un bouton « i » à droite du nom de chaque boss ouvre la page de son donjon sur dofusyelle.com (adresses vérifiées une par une sur le site). Les quatre Grozilla et Grasmera ouvrent la même page.",

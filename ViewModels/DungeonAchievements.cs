@@ -42,6 +42,7 @@ public class AchRow : ObservableObject
     public string T3 => H3 ? _b.Challenges[2] : "";
     public string TG => _b.GroupLabel ?? "";
     public string TS => "Spécial";
+    public string SpecialTip => _b.SpecialName == null ? "" : _b.SpecialName + "\n" + _b.SpecialDesc;
 
     public bool[] Available => new[] { H1, H2, H3, HG, HS };
     public int Total => Available.Count(a => a);

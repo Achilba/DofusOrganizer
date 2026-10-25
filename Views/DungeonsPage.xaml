@@ -190,7 +190,15 @@
                                         </StackPanel>
                                         <StackPanel Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HS, Converter={StaticResource BoolVis}}">
                                             <TextBlock Text="{Binding TS}" Width="80" FontSize="11" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,4"/>
-                                            <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding S, Mode=TwoWay}"/>
+                                            <Grid>
+                                                <ToggleButton Style="{StaticResource Cell}" IsChecked="{Binding S, Mode=TwoWay}"/>
+                                                <Button Style="{StaticResource InfoBtn}" HorizontalAlignment="Right" Margin="0,0,3,0" Width="20" Height="20" Cursor="Help"
+                                                        ToolTipService.InitialShowDelay="100" ToolTipService.ShowDuration="30000">
+                                                    <Button.ToolTip>
+                                                        <TextBlock Text="{Binding SpecialTip}" MaxWidth="320" TextWrapping="Wrap"/>
+                                                    </Button.ToolTip>
+                                                </Button>
+                                            </Grid>
                                         </StackPanel>
                                         <TextBlock Grid.Column="6" Text="{Binding Others, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Grid>
