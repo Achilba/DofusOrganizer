@@ -103,10 +103,23 @@ public partial class App : Application
     private void SetSongeMini(bool on)
     {
         if (!on) { SetMini(false); return; }
-        _main.Hide();
-        _mini.Hide();
-        _songeMiniActive = true;
-        _songeMini.Show();
+        try
+        {
+            _songeMini.Show();
+            _songeMini.Topmost = _vm.Data.MiniAlwaysOnTop;
+            _songeMiniActive = true;
+            _main.Hide();
+            _mini.Hide();
+        }
+        catch (Exception ex)
+        {
+            // Si la barre ne peut pas s'afficher, on garde l'appli visible et on note l'erreur
+            _storage.LogError(ex.ToString());
+            _songeMiniActive = false;
+            _songeMini.Hide();
+            _main.Show();
+            _vm.ShowToast("Impossible d'ouvrir la barre Mini Songe");
+        }
     }
 
     private void SetMini(bool mini)

@@ -13,7 +13,9 @@ public partial class SongeMiniWindow : Window
     public SongeMiniWindow()
     {
         InitializeComponent();
-        IsVisibleChanged += (_, _) => { if (IsVisible) Place(); };
+        // Même méthode que la barre Mini : taille fixe au départ, puis la fenêtre s'ajuste à son contenu une fois affichée
+        Loaded += (_, _) => { SizeToContent = SizeToContent.Width; Place(); };
+        IsVisibleChanged += (_, _) => { if (IsVisible && Vm != null) Topmost = Vm.Data.MiniAlwaysOnTop; };
         LocationChanged += (_, _) => RememberPosition();
     }
 
