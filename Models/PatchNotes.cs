@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.11.5";
+    public const string Current = "0.11.6";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.11.6", "26/10/2026", new[]
+        {
+            "NOUVEAU — Barre Mini Songe : le bouton « Invitations » (copie des invitations, comme sur la barre Mini habituelle) est de retour.",
+        }),
         new("0.11.5", "26/10/2026", new[]
         {
             "NOUVEAU — Barre Mini Songe : la pastille de mise à jour s'affiche sur le bouton de retour à l'appli, comme sur la barre Mini habituelle.",
