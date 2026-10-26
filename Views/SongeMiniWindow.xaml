@@ -40,7 +40,12 @@
             <!-- Retour à la fenêtre complète -->
             <Button Command="{Binding ShowMainCommand}" Width="32" Height="32" MinHeight="0" Padding="0" Margin="0" BorderBrush="{DynamicResource Text}"
                     ToolTip="Revenir à l'interface complète">
-                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCompress}" Stroke="{DynamicResource Text}" Width="14" Height="14"/>
+                <Grid>
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCompress}" Stroke="{DynamicResource Text}" Width="14" Height="14"/>
+                    <Ellipse Width="10" Height="10" Fill="{DynamicResource Warn}" Stroke="{DynamicResource Side}" StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-13,-13,0"
+                             ToolTip="Mise à jour disponible (Paramètres)"
+                             Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolVis}}"/>
+                </Grid>
             </Button>
         </StackPanel>
     </Border>
