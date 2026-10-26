@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.11.3";
+    public const string Current = "0.11.4";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.11.4", "26/10/2026", new[]
+        {
+            "CORRIGÉ — Barre Mini Songe : le type de run affichait « DofusTeamOrganizer.Models.StratRun » au lieu de son nom.",
+        }),
         new("0.11.3", "26/10/2026", new[]
         {
             "CORRIGÉ — Songes : la barre « Mode mini Songe » ne s'affichait pas ; elle s'ouvre maintenant comme la barre Mini habituelle. Si elle ne peut pas s'ouvrir, l'appli reste visible.",

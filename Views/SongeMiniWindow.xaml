@@ -12,8 +12,14 @@
             <Path Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="8" Height="14" Margin="4,0,10,0" ToolTip="Glisser pour déplacer"/>
 
             <!-- Type de run -->
-            <ComboBox ItemsSource="{Binding Songes.Strat.Runs}" SelectedItem="{Binding Songes.Strat.Selected, Mode=TwoWay}" DisplayMemberPath="Name"
-                      MinWidth="160" Height="32" VerticalAlignment="Center" Margin="0,0,6,0" ToolTip="Type de run"/>
+            <ComboBox ItemsSource="{Binding Songes.Strat.Runs}" SelectedItem="{Binding Songes.Strat.Selected, Mode=TwoWay}"
+                      MinWidth="160" Height="32" VerticalAlignment="Center" Margin="0,0,6,0" ToolTip="Type de run">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <!-- − compteur + -->
             <Button Content="−" Command="{Binding Songes.Strat.DecCommand}" IsEnabled="{Binding Songes.Strat.Selected.CanDec}"
