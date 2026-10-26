@@ -134,8 +134,14 @@ public class LegendItem : ObservableObject
     public int Qty
     {
         get => _qty;
-        set { if (Set(ref _qty, Math.Max(0, value))) { Raise(nameof(CanDec)); _changed?.Invoke(this); } }
+        set
+        {
+            int old = _qty;
+            if (Set(ref _qty, Math.Max(0, value))) { LastDelta = _qty - old; Raise(nameof(CanDec)); _changed?.Invoke(this); }
+        }
     }
+    /// <summary>Dernière variation du compteur (positive : une légende de plus).</summary>
+    public int LastDelta { get; private set; }
     public bool CanDec => _qty > 0;
 }
 
@@ -152,6 +158,10 @@ public class SongesViewModel : ObservableObject
         _main = main;
         Strat = new StratViewModel(main);
         Reload();
+        // Les durées affichées (« depuis 2 h 14 », « dernier run il y a 21 min ») se mettent à jour toutes seules
+        var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
+        timer.Tick += (_, _) => { Raise(nameof(DropSince)); Strat.RaiseTimes(); };
+        timer.Start();
     }
 
     public StratViewModel Strat { get; }
@@ -179,6 +189,7 @@ public class SongesViewModel : ObservableObject
         Raise(nameof(Total));
         Raise(nameof(TotalText));
         Strat?.Reload();
+        RaiseDrop();
         Raise(nameof(Mode)); Raise(nameof(IsStrat)); Raise(nameof(IsDrops));
     }
 
@@ -192,10 +203,28 @@ public class SongesViewModel : ObservableObject
     private void OnChanged(LegendItem item)
     {
         _main.Data.Legends[item.Key] = item.Qty;
+        if (item.LastDelta > 0 && (item.Key.StartsWith("a|") || item.Key.StartsWith("c|")))
+        {
+            // Dernier drop : le numéro de run est le compteur du run actif à cet instant
+            var run = Strat.Selected;
+            _main.Data.LastDrop = new DropInfo { Name = item.Name, At = DateTime.Now, Run = run?.Count ?? 0, RunName = run?.Name ?? "" };
+            RaiseDrop();
+        }
         _main.RequestSave();
         Raise(nameof(Total));
         Raise(nameof(TotalText));
     }
+
+    private void RaiseDrop()
+    {
+        Raise(nameof(HasDrop)); Raise(nameof(DropName)); Raise(nameof(DropSince)); Raise(nameof(DropRun)); Raise(nameof(DropRunLine));
+    }
+
+    public bool HasDrop => _main.Data.LastDrop != null;
+    public string DropName => _main.Data.LastDrop?.Name ?? "Aucun drop enregistré";
+    public string DropSince => _main.Data.LastDrop == null ? "—" : StratViewModel.Elapsed(_main.Data.LastDrop.At);
+    public string DropRun => _main.Data.LastDrop == null ? "—" : _main.Data.LastDrop.Run.ToString();
+    public string DropRunLine => _main.Data.LastDrop == null ? "" : "Run : " + _main.Data.LastDrop.RunName;
 
     public int Total => Animal.Sum(a => a.Qty) + Classic.Sum(c => c.Qty);
     public string TotalText => "Légendes droppées : " + Total;

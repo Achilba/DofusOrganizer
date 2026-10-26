@@ -5,11 +5,19 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.10.1";
+    public const string Current = "0.11.0";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.11.0", "26/10/2026", new[]
+        {
+            "CHANGÉ — Songes : les rubriques s'appellent maintenant des « Runs », avec un bouton « + Run » qui propose des modèles (Paradoxe 1 Salle, Paradoxe 1 Boss, run vide) et l'import d'un run partagé.",
+            "NOUVEAU — Songes, équipe : quatre personnages au maximum, chacun avec un numéro INI (1 à 4). Les cartes sont rangées deux par deux dans un grand cadre et suivent l'ordre INI ; on les déplace en glissant la poignée sur toute la hauteur de la carte.",
+            "NOUVEAU — Songes, runs : compteur « Runs réalisés » (+ / −) avec le total du jour et l'heure du dernier run, bouton Dupliquer, Copier la strat, Exporter vers un fichier et Mode lecture (équipe et texte en grand).",
+            "NOUVEAU — Songes, stratégie : une ligne « - [ ] étape » devient une case à cocher dans « Étapes à cocher » (le texte est mis à jour quand tu coches).",
+            "NOUVEAU — Songes, Drops : un encart « Dernier drop » indique la dernière légende obtenue, le temps écoulé depuis et le numéro du run actif à ce moment.",
+        }),
         new("0.10.1", "25/10/2026", new[]
         {
             "NOUVEAU — Songes : un bouton en haut permet de passer de « Strat » à « Drops ». « Drops » garde les légendes actuelles.",

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using DofusTeamOrganizer.ViewModels;
@@ -10,10 +11,16 @@ public class TrackedObject : ObservableObject
 {
     public static event Action Changed;
 
+    /// <summary>Prévient les vues sans déclencher de sauvegarde (valeurs calculées).</summary>
+    protected void RaiseQuiet(string name) => base.Raise(name);
+
+    /// <summary>Demande une sauvegarde (modification d'une liste, qui n'est pas suivie automatiquement).</summary>
+    protected static void NotifyChanged() => Changed?.Invoke();
+
     protected override void Raise([CallerMemberName] string name = null)
     {
         base.Raise(name);
-        if (name != "Detected" && name != "IsMain" && name != "Number" && name != "LevelValue" && name != "IsOmega" && name != "FactionColor" && name != "OrderText" && name != "JobChips" && name != "HasJobs" && name != "RoutinesText" && name != "HasRoutines") Changed?.Invoke();
+        if (name != "Ini" && name != "CanAddSlot" && name != "CanDec" && name != "ClassName" && name != "Detected" && name != "IsMain" && name != "Number" && name != "LevelValue" && name != "IsOmega" && name != "FactionColor" && name != "OrderText" && name != "JobChips" && name != "HasJobs" && name != "RoutinesText" && name != "HasRoutines") Changed?.Invoke();
     }
 }
 
@@ -115,15 +122,30 @@ public class StratSlot : TrackedObject
 {
     /// <summary>Renvoie les stuffs d'un personnage (branché par StratViewModel).</summary>
     public static Func<string, IEnumerable<StuffLink>> Resolver;
+    /// <summary>Renvoie la classe d'un personnage (pour l'icône).</summary>
+    public static Func<string, string> ClassResolver;
+    private static readonly int[] Choices = { 1, 2, 3, 4 };
 
+    private int _ini = 1;
     private string _char = "";
     private string _stuff = "";
 
     public string Char
     {
         get => _char;
-        set { if (value != null && Set(ref _char, value)) { _lastJoin = null; Stuff = ""; Raise(nameof(StuffChoices)); } }
+        set { if (value != null && Set(ref _char, value)) { _lastJoin = null; Stuff = ""; Raise(nameof(StuffChoices)); RaiseQuiet(nameof(ClassName)); } }
     }
+    [JsonIgnore] public string ClassName => ClassResolver?.Invoke(_char) ?? "";
+    [JsonIgnore] public StratRun Owner { get; set; }
+    [JsonIgnore] public int[] IniChoices => Choices;
+    /// <summary>Position dans l'ordre d'initiative (1 à 4) : c'est la place dans la liste ; la changer déplace la carte.</summary>
+    [JsonIgnore]
+    public int Ini
+    {
+        get => _ini;
+        set { if (value != _ini && value >= 1 && Owner != null) Owner.MoveSlot(this, value - 1); }
+    }
+    public void SetIni(int n) { if (_ini == n) return; _ini = n; RaiseQuiet(nameof(Ini)); }
     public string Stuff
     {
         get => _stuff;
@@ -144,15 +166,79 @@ public class StratSlot : TrackedObject
     }
 }
 
-/// <summary>Une rubrique de strat (par exemple « Paradoxe 1 Salle ») : équipe choisie + texte libre.</summary>
+/// <summary>Un run type de la strat (par exemple « Paradoxe 1 Salle ») : équipe choisie dans l'ordre d'initiative, texte libre et nombre de runs faits.</summary>
 public class StratRun : TrackedObject
 {
+    public const int MaxSlots = 4;
+
     private string _name = "";
     private string _text = "";
+    private int _count;
+    private ObservableCollection<StratSlot> _slots;
+
+    public StratRun() { Slots = new ObservableCollection<StratSlot>(); }
+
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string Name { get => _name; set => Set(ref _name, value ?? ""); }
     public string Text { get => _text; set => Set(ref _text, value ?? ""); }
-    public ObservableCollection<StratSlot> Slots { get; set; } = new();
+    /// <summary>Nombre de runs réalisés.</summary>
+    public int Count { get => _count; set { if (Set(ref _count, Math.Max(0, value))) RaiseQuiet(nameof(CanDec)); } }
+    /// <summary>Date du dernier run ajouté avec le compteur.</summary>
+    public DateTime? LastRun { get; set; }
+    [JsonIgnore] public bool CanDec => _count > 0;
+    [JsonIgnore] public bool CanAddSlot => _slots.Count < MaxSlots;
+
+    /// <summary>Équipe, dans l'ordre d'initiative (la première carte est l'INI 1).</summary>
+    public ObservableCollection<StratSlot> Slots
+    {
+        get => _slots;
+        set
+        {
+            if (_slots != null) _slots.CollectionChanged -= SlotsChanged;
+            _slots = value ?? new ObservableCollection<StratSlot>();
+            _slots.CollectionChanged += SlotsChanged;
+            Renumber();
+        }
+    }
+
+    private void SlotsChanged(object sender, NotifyCollectionChangedEventArgs e) => Renumber();
+
+    private void Renumber()
+    {
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            _slots[i].Owner = this;
+            _slots[i].SetIni(i + 1);
+        }
+        RaiseQuiet(nameof(CanAddSlot));
+    }
+
+    /// <summary>Place une carte à un nouvel endroit de l'ordre d'initiative.</summary>
+    public void MoveSlot(StratSlot s, int newIndex)
+    {
+        int i = _slots.IndexOf(s);
+        if (i < 0) return;
+        newIndex = Math.Max(0, Math.Min(newIndex, _slots.Count - 1));
+        if (newIndex != i)
+        {
+            _slots.Move(i, newIndex);
+            NotifyChanged();
+        }
+        else Renumber();
+    }
+
+    /// <summary>Texte copié par « Copier la strat » : équipe dans l'ordre INI, puis la stratégie.</summary>
+    public string Summary()
+        => _name + "\n" + string.Join("\n", _slots.Select((x, i) => "INI " + (i + 1) + " · " + x.Char + (string.IsNullOrEmpty(x.Stuff) ? "" : " · " + x.Stuff))) + "\n\n" + _text;
+}
+
+/// <summary>Dernière légende obtenue : son nom, l'heure et le numéro du run en cours à ce moment.</summary>
+public class DropInfo
+{
+    public string Name { get; set; } = "";
+    public DateTime At { get; set; }
+    public int Run { get; set; }
+    public string RunName { get; set; } = "";
 }
 
 /// <summary>Une tâche récurrente (par personnage) : tous les jours à minuit, ou un jour fixe de la semaine à 3 h.</summary>
@@ -175,6 +261,11 @@ public class AppData
         new StratRun { Name = "Paradoxe 1 Boss" },
     };
     public string StratSelected { get; set; } = "";
+    /// <summary>Dernière légende obtenue (page Songes, vue Drops).</summary>
+    public DropInfo LastDrop { get; set; }
+    /// <summary>Runs ajoutés aujourd'hui avec le compteur (remis à zéro quand la date change).</summary>
+    public int RunsToday { get; set; }
+    public string RunsDay { get; set; } = "";
     /// <summary>Vue de la page Songes : « Strat » ou « Drops ».</summary>
     public string SongesMode { get; set; } = "Strat";
 

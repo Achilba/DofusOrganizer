@@ -40,61 +40,183 @@
         <Grid Grid.Row="1" DataContext="{Binding Strat}" Visibility="{Binding DataContext.IsStrat, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolVis}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+
+            <!-- Runs : une puce par run, et « + Run » qui propose des modèles -->
             <DockPanel Margin="0,0,0,10">
-                <Button DockPanel.Dock="Right" Content="+ Ajouter une rubrique" Command="{Binding AddRunCommand}" Margin="8,0,10,0" VerticalAlignment="Top"/>
+                <Button DockPanel.Dock="Right" Content="+ Run  ▾" Command="{Binding ToggleTemplatesCommand}" Margin="8,0,10,8" VerticalAlignment="Top" Height="40"/>
                 <ListBox ItemsSource="{Binding Runs}" SelectedItem="{Binding Selected, Mode=TwoWay}" DisplayMemberPath="Name"
                          ItemContainerStyle="{StaticResource Chip}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource Text}"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
                 </ListBox>
             </DockPanel>
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="{Binding HasSelected, Converter={StaticResource BoolVis}}">
-                <StackPanel Margin="0,0,10,0" DataContext="{Binding Selected}">
+            <Border Grid.Row="1" Style="{StaticResource Card}" Padding="12" Margin="0,0,10,10" Visibility="{Binding TemplatesOpen, Converter={StaticResource BoolVis}}">
+                <WrapPanel>
+                    <TextBlock Text="Créer un run :" Foreground="{DynamicResource Muted}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <Button Content="Paradoxe 1 Salle" Command="{Binding AddRunCommand}" CommandParameter="salle" Margin="0,0,8,0"/>
+                    <Button Content="Paradoxe 1 Boss" Command="{Binding AddRunCommand}" CommandParameter="boss" Margin="0,0,8,0"/>
+                    <Button Content="Run vide" Command="{Binding AddRunCommand}" CommandParameter="vide" Margin="0,0,8,0"/>
+                    <Button Content="Importer un run" Command="{Binding ImportRunCommand}"/>
+                </WrapPanel>
+            </Border>
+
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Visibility="{Binding HasSelected, Converter={StaticResource BoolVis}}">
+                <StackPanel Margin="0,0,10,0">
+                    <!-- Nom et actions -->
                     <Border Style="{StaticResource Card}">
                         <DockPanel>
-                            <Button DockPanel.Dock="Right" Content="Supprimer la rubrique" Margin="12,0,0,0"
-                                    Command="{Binding DataContext.Strat.DeleteRunCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="12,0,0,0">
+                                <Button Content="Dupliquer" Command="{Binding DuplicateRunCommand}" Margin="0,0,6,0" ToolTip="Copie le run entier (équipe et texte) dans un nouveau run"/>
+                                <Button Content="Copier la strat" Command="{Binding CopyRunCommand}" Margin="0,0,6,0" ToolTip="Copie l'équipe dans l'ordre INI et le texte"/>
+                                <Button Content="Exporter" Command="{Binding ExportRunCommand}" Margin="0,0,6,0" ToolTip="Enregistre le run dans un fichier à partager"/>
+                                <Button Content="{Binding ReadLabel}" Command="{Binding ToggleReadingCommand}" Margin="0,0,6,0"/>
+                                <Button Content="Supprimer" Command="{Binding DeleteRunCommand}"/>
+                            </StackPanel>
                             <TextBlock DockPanel.Dock="Left" Text="Nom" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" MaxLength="60"/>
+                            <TextBox Text="{Binding Selected.Name, UpdateSourceTrigger=PropertyChanged}" MaxLength="60"/>
                         </DockPanel>
                     </Border>
-                    <Border Style="{StaticResource Card}">
+
+                    <!-- Compteur de runs -->
+                    <StackPanel Orientation="Horizontal" Margin="2,0,0,14">
+                        <TextBlock Text="RUNS RÉALISÉS" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="12" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1.5" CornerRadius="10" Height="38" ClipToBounds="True">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="−" Command="{Binding DecCommand}" IsEnabled="{Binding Selected.CanDec}" Width="34" MinHeight="0" Height="38" Padding="0" BorderThickness="0" Background="Transparent"/>
+                                <TextBlock Text="{Binding Selected.Count}" Width="48" TextAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource BodyXB}" FontSize="16" Foreground="{DynamicResource Accent}"/>
+                                <Button Content="+" Command="{Binding IncCommand}" Width="34" MinHeight="0" Height="38" Padding="0" BorderThickness="0" Background="Transparent"/>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="{Binding RunMeta}" Foreground="{DynamicResource Muted}" FontSize="12.5" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Mode édition -->
+                    <StackPanel Visibility="{Binding IsEditing, Converter={StaticResource BoolVis}}">
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <DockPanel Margin="0,0,0,10">
+                                    <Button DockPanel.Dock="Right" Content="+ Ajouter un personnage" Command="{Binding AddSlotCommand}"
+                                            Visibility="{Binding Selected.CanAddSlot, Converter={StaticResource BoolVis}}"/>
+                                    <TextBlock Text="Équipe et stuffs" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                                </DockPanel>
+                                <TextBlock Text="Glisse une carte par sa poignée pour changer l'ordre (INI), ou change le numéro INI de la carte. Quatre personnages au maximum."
+                                           Style="{StaticResource PageSub}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                                <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="14" Padding="12,12,2,2">
+                                    <ItemsControl ItemsSource="{Binding Selected.Slots}">
+                                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="2"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="12" Margin="0,0,10,10"
+                                                        AllowDrop="True" DragOver="Slot_DragOver" Drop="Slot_Drop">
+                                                    <DockPanel>
+                                                        <!-- Poignée sur toute la hauteur de la carte -->
+                                                        <Border DockPanel.Dock="Left" Width="26" Background="{DynamicResource Field}" CornerRadius="11,0,0,11" Cursor="SizeAll"
+                                                                ToolTip="Glisser pour changer l'ordre" PreviewMouseLeftButtonDown="Grip_Down" PreviewMouseMove="Grip_Move">
+                                                            <Path Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="8" Height="14"
+                                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Grid Margin="10">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
+                                                            </Grid.RowDefinitions>
+                                                            <DockPanel Margin="0,0,0,8">
+                                                                <Button DockPanel.Dock="Right" Content="✕" Width="28" Height="28" MinHeight="0" Padding="0" Margin="6,0,0,0" ToolTip="Retirer ce personnage"
+                                                                        Command="{Binding DataContext.Strat.RemoveSlotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                                                <Border DockPanel.Dock="Left" Width="40" Height="40" CornerRadius="10" Background="{DynamicResource Field}" Margin="0,0,10,0">
+                                                                    <Image Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="30" Height="30" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                                </Border>
+                                                                <ComboBox ItemsSource="{Binding DataContext.Strat.CharNames, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                          SelectedItem="{Binding Char, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                                            </DockPanel>
+                                                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+                                                                <TextBlock Text="INI" Foreground="#7CC4FF" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                                <ComboBox ItemsSource="{Binding IniChoices}" SelectedItem="{Binding Ini, Mode=TwoWay}" Width="64"/>
+                                                            </StackPanel>
+                                                            <DockPanel Grid.Row="2">
+                                                                <Button DockPanel.Dock="Right" Content="Ouvrir" Margin="6,0,0,0" ToolTip="Ouvrir le stuff"
+                                                                        Visibility="{Binding HasUrl, Converter={StaticResource BoolVis}}"
+                                                                        Command="{Binding DataContext.Strat.OpenStuffCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                                                <ComboBox ItemsSource="{Binding StuffChoices}" SelectedItem="{Binding Stuff, Mode=TwoWay}"/>
+                                                            </DockPanel>
+                                                        </Grid>
+                                                    </DockPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                                <TextBlock Text="Choisis un personnage, puis l'un de ses stuffs (ajoutés dans la page Personnages)." Style="{StaticResource PageSub}" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <TextBlock Text="Stratégie" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                                <TextBlock Text="Une ligne qui commence par « - [ ] » devient une case à cocher dans « Étapes à cocher »." Style="{StaticResource PageSub}" Margin="0,0,0,10"/>
+                                <TextBox Text="{Binding Selected.Text, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="260"
+                                         VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" Padding="10"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Mode lecture -->
+                    <StackPanel Visibility="{Binding Reading, Converter={StaticResource BoolVis}}">
+                        <ItemsControl ItemsSource="{Binding Selected.Slots}" Margin="0,0,0,10">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="2"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource Card}" Margin="0,0,10,10" Padding="14">
+                                        <DockPanel>
+                                            <Border DockPanel.Dock="Left" Width="56" Height="56" CornerRadius="14" Background="{DynamicResource Field}" Margin="0,0,14,0">
+                                                <Image Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="42" Height="42" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                            </Border>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Ini, StringFormat='INI {0}'}" Foreground="#7CC4FF" FontFamily="{StaticResource BodyXB}" FontSize="13"/>
+                                                <TextBlock Text="{Binding Char}" FontFamily="{StaticResource BodyXB}" FontSize="19"/>
+                                                <TextBlock Text="{Binding Stuff}" Foreground="{DynamicResource Muted}" FontSize="14"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Border Style="{StaticResource Card}" Visibility="{Binding HasChecks, Converter={StaticResource BoolVis}}">
+                            <StackPanel>
+                                <TextBlock Text="Étapes à cocher" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                                <ItemsControl ItemsSource="{Binding Checks}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked, Mode=TwoWay}" FontSize="16" Margin="0,0,0,8"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}">
+                            <TextBlock Text="{Binding ReadText}" TextWrapping="Wrap" FontSize="17" LineHeight="26"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Étapes à cocher en mode édition -->
+                    <Border Style="{StaticResource Card}" Visibility="{Binding ShowEditChecks, Converter={StaticResource BoolVis}}">
                         <StackPanel>
-                            <DockPanel Margin="0,0,0,10">
-                                <Button DockPanel.Dock="Right" Content="+ Ajouter un personnage"
-                                        Command="{Binding DataContext.Strat.AddSlotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
-                                <TextBlock Text="Équipe et stuffs" Style="{StaticResource H2}" VerticalAlignment="Center"/>
-                            </DockPanel>
-                            <ItemsControl ItemsSource="{Binding Slots}">
+                            <TextBlock Text="Étapes à cocher" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                            <ItemsControl ItemsSource="{Binding Checks}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <WrapPanel Margin="0,0,0,8">
-                                            <ComboBox Width="200" ItemsSource="{Binding DataContext.Strat.CharNames, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                      SelectedItem="{Binding Char, Mode=TwoWay}" Margin="0,0,10,0"/>
-                                            <ComboBox Width="300" ItemsSource="{Binding StuffChoices}" SelectedItem="{Binding Stuff, Mode=TwoWay}" Margin="0,0,10,0"/>
-                                            <Button Content="Ouvrir le stuff" Margin="0,0,10,0" Visibility="{Binding HasUrl, Converter={StaticResource BoolVis}}"
-                                                    Command="{Binding DataContext.Strat.OpenStuffCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
-                                            <Button Content="Retirer"
-                                                    Command="{Binding DataContext.Strat.RemoveSlotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
-                                        </WrapPanel>
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked, Mode=TwoWay}" Margin="0,0,0,8"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <TextBlock Text="Choisis un personnage, puis l'un de ses stuffs (ajoutés dans la page Personnages)." Style="{StaticResource PageSub}"/>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource Card}">
-                        <StackPanel>
-                            <TextBlock Text="Stratégie" Style="{StaticResource H2}" Margin="0,0,0,10"/>
-                            <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="260"
-                                     VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" Padding="10"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
             </ScrollViewer>
-            <TextBlock Grid.Row="1" Text="Aucune rubrique : ajoute-en une avec le bouton ci-dessus." Style="{StaticResource PageSub}" HorizontalAlignment="Center" Margin="0,40,0,0"
+            <TextBlock Grid.Row="2" Text="Aucun run : ajoute-en un avec « + Run »." Style="{StaticResource PageSub}" HorizontalAlignment="Center" Margin="0,40,0,0"
                        Visibility="{Binding NoSelection, Converter={StaticResource BoolVis}}"/>
         </Grid>
 
@@ -111,11 +233,45 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="1" HorizontalAlignment="Left" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="18" Padding="14,8" Margin="0,0,0,12">
-            <TextBlock FontFamily="{StaticResource BodyXB}">
-                <Run Text="Légendes droppées : "/><Run Text="{Binding Total, Mode=OneWay}" Foreground="{DynamicResource Accent}"/>
-            </TextBlock>
-        </Border>
+        <StackPanel Grid.Row="1" Margin="0,0,0,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="18" Padding="14,8" Margin="0,0,12,0" VerticalAlignment="Center">
+                    <TextBlock FontFamily="{StaticResource BodyXB}">
+                        <Run Text="Légendes droppées : "/><Run Text="{Binding Total, Mode=OneWay}" Foreground="{DynamicResource Accent}"/>
+                    </TextBlock>
+                </Border>
+                <!-- Dernier drop : nom, durée écoulée et numéro du run actif à ce moment -->
+                <Border Grid.Column="1" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="14" Padding="16,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="DERNIER DROP" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding DropName}" FontFamily="{StaticResource BodyXB}" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="14,0,14,0">
+                            <TextBlock Text="DEPUIS" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" HorizontalAlignment="Right"/>
+                            <TextBlock Text="{Binding DropSince}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="15" HorizontalAlignment="Right"/>
+                        </StackPanel>
+                        <Border Grid.Column="2" Width="1" Background="{DynamicResource Line}" Margin="0,2,0,2"/>
+                        <StackPanel Grid.Column="3" Margin="14,0,0,0">
+                            <TextBlock Text="AU RUN N°" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" HorizontalAlignment="Right"/>
+                            <TextBlock Text="{Binding DropRun}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="15" HorizontalAlignment="Right"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+            <TextBlock Text="{Binding Strat.ActiveRunLine, StringFormat='Le numéro de run est celui du run actif ({0}) au moment où tu ajoutes une légende.'}"
+                       Foreground="{DynamicResource Dim}" FontSize="12" Margin="4,6,0,0" TextWrapping="Wrap"/>
+        </StackPanel>
 
         <Border Grid.Row="2" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True" Margin="0,0,0,12">
             <ItemsControl ItemsSource="{Binding Top}" ItemTemplate="{StaticResource LegendRow}">
