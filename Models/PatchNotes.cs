@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.11.0";
+    public const string Current = "0.11.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.11.1", "26/10/2026", new[]
+        {
+            "NOUVEAU — Songes : bouton « Mode mini Songe » (en haut à gauche de « Strat »). Il ouvre une barre Mini réservée aux songes : type de run, compteur − / + Run, total du jour (« Auj. ») et bouton de retour à l'appli.",
+        }),
         new("0.11.0", "26/10/2026", new[]
         {
             "CHANGÉ — Songes : les rubriques s'appellent maintenant des « Runs », avec un bouton « + Run » qui propose des modèles (Paradoxe 1 Salle, Paradoxe 1 Boss, run vide) et l'import d'un run partagé.",

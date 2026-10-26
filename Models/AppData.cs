@@ -293,6 +293,9 @@ public class AppData
     public double MiniOpacity { get; set; } = 1.0;
     public double? MiniLeft { get; set; }
     public double? MiniTop { get; set; }
+    /// <summary>Position de la barre Mini réservée aux songes.</summary>
+    public double? SongeMiniLeft { get; set; }
+    public double? SongeMiniTop { get; set; }
     /// <summary>Position de la mini-barre mémorisée par configuration d'écrans (clé = taille et origine de l'écran virtuel).</summary>
     public Dictionary<string, double[]> MiniPositions { get; set; } = new();
     /// <summary>Raccourcis personnalisés (clé = action). Absent : valeur par défaut.</summary>

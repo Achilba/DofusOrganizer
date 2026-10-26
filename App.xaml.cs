@@ -15,6 +15,8 @@ public partial class App : Application
     private MainViewModel _vm;
     private MainWindow _main;
     private MiniWindow _mini;
+    private SongeMiniWindow _songeMini;
+    private bool _songeMiniActive;
     private Storage _storage;
 
     protected override void OnStartup(StartupEventArgs e)
@@ -58,9 +60,11 @@ public partial class App : Application
 
         _main = new MainWindow { DataContext = _vm };
         _mini = new MiniWindow { DataContext = _vm };
+        _songeMini = new SongeMiniWindow { DataContext = _vm };
 
         _vm.ToggleVisibilityRequested += ToggleVisibility;
         _vm.MiniModeRequested += SetMini;
+        _vm.SongeMiniRequested += SetSongeMini;
         _main.Closed += (_, _) => Quit();
 
         _vm.PatchNotesRequested += ShowPatchNotes;
@@ -95,8 +99,20 @@ public partial class App : Application
         w.Show();
     }
 
+    /// <summary>Barre Mini réservée aux songes (on revient à l'appli avec son bouton de retour).</summary>
+    private void SetSongeMini(bool on)
+    {
+        if (!on) { SetMini(false); return; }
+        _main.Hide();
+        _mini.Hide();
+        _songeMiniActive = true;
+        _songeMini.Show();
+    }
+
     private void SetMini(bool mini)
     {
+        _songeMini.Hide();
+        _songeMiniActive = false;
         _vm.Data.StartInMini = mini;
         _vm.RequestSave();
         if (mini) { _main.Hide(); _mini.Show(); _mini.Topmost = _vm.Data.MiniAlwaysOnTop; }
@@ -105,7 +121,8 @@ public partial class App : Application
 
     private void ToggleVisibility()
     {
-        if (_main.IsVisible || _mini.IsVisible) { _main.Hide(); _mini.Hide(); }
+        if (_main.IsVisible || _mini.IsVisible || _songeMini.IsVisible) { _main.Hide(); _mini.Hide(); _songeMini.Hide(); }
+        else if (_songeMiniActive) _songeMini.Show();
         else SetMini(_vm.Data.StartInMini);
     }
 

@@ -102,6 +102,8 @@ public class MainViewModel : ObservableObject
     public event Action ToggleVisibilityRequested;
     public event Action<bool> MiniModeRequested; // true = afficher la mini-barre
     public event Action MiniSettingsChanged;
+    public event Action<bool> SongeMiniRequested; // true = afficher la barre Mini des songes
+    public void RequestSongeMini() => SongeMiniRequested?.Invoke(true);
     public event Action PatchNotesRequested;
 
     public ObservableCollection<ZaapEntry> Favorites { get; } = new();

@@ -157,6 +157,7 @@ public class SongesViewModel : ObservableObject
     {
         _main = main;
         Strat = new StratViewModel(main);
+        MiniSongeCommand = new RelayCommand(() => _main.RequestSongeMini());
         Reload();
         // Les durées affichées (« depuis 2 h 14 », « dernier run il y a 21 min ») se mettent à jour toutes seules
         var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
@@ -165,6 +166,7 @@ public class SongesViewModel : ObservableObject
     }
 
     public StratViewModel Strat { get; }
+    public RelayCommand MiniSongeCommand { get; }
     public string[] Modes { get; } = { "Strat", "Drops" };
     public string Mode
     {

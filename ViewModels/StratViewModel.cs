@@ -178,6 +178,7 @@ public class StratViewModel : ObservableObject
     // ───────── Compteur de runs ─────────
 
     public string TodayText => "Aujourd'hui : " + TodayCount;
+    public string TodayCountText => TodayCount.ToString();
     public string RunMeta => TodayText + " · dernier run " + (_selected?.LastRun == null ? "jamais" : Ago(_selected.LastRun.Value));
     /// <summary>Le run actif, tel qu'il compte pour les drops : « Paradoxe 1 Salle, n° 12 ».</summary>
     public string ActiveRunLine => _selected == null ? "aucun run" : _selected.Name + ", n° " + _selected.Count;
@@ -197,7 +198,7 @@ public class StratViewModel : ObservableObject
 
     public void RaiseTimes()
     {
-        Raise(nameof(TodayText)); Raise(nameof(RunMeta)); Raise(nameof(ActiveRunLine));
+        Raise(nameof(TodayText)); Raise(nameof(TodayCountText)); Raise(nameof(RunMeta)); Raise(nameof(ActiveRunLine));
     }
 
     private void Bump(int delta)
