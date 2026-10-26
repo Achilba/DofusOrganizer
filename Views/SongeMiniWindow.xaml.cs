@@ -15,7 +15,12 @@ public partial class SongeMiniWindow : Window
         InitializeComponent();
         // Même méthode que la barre Mini : taille fixe au départ, puis la fenêtre s'ajuste à son contenu une fois affichée
         Loaded += (_, _) => { SizeToContent = SizeToContent.Width; Place(); };
-        IsVisibleChanged += (_, _) => { if (IsVisible && Vm != null) Topmost = Vm.Data.MiniAlwaysOnTop; };
+        IsVisibleChanged += (_, _) =>
+        {
+            if (!IsVisible || Vm == null) return;
+            Topmost = Vm.Data.MiniAlwaysOnTop;
+            if (_placed) MiniPlacement.Apply(this, Vm.Data, 560);
+        };
         LocationChanged += (_, _) => RememberPosition();
     }
 
@@ -28,19 +33,13 @@ public partial class SongeMiniWindow : Window
         Topmost = vm.Data.MiniAlwaysOnTop;
         if (_placed) return;
         _placed = true;
-        var wa = SystemParameters.WorkArea;
-        Left = vm.Data.SongeMiniLeft ?? (wa.Left + (wa.Width - 560) / 2);
-        Top = vm.Data.SongeMiniTop ?? (wa.Top + 8);
-        // garde la barre à l'écran si l'écran a changé
-        Left = Math.Max(SystemParameters.VirtualScreenLeft, Math.Min(Left, SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth - 100));
-        Top = Math.Max(SystemParameters.VirtualScreenTop, Math.Min(Top, SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight - 60));
+        MiniPlacement.Apply(this, vm.Data, 560);
     }
 
     private void RememberPosition()
     {
         if (!_placed || Vm == null || !IsVisible) return;
-        Vm.Data.SongeMiniLeft = Left;
-        Vm.Data.SongeMiniTop = Top;
+        MiniPlacement.Remember(this, Vm.Data);
         Vm.RequestSave();
     }
 
