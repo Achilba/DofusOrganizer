@@ -7,19 +7,21 @@
             <Setter Property="MinHeight" Value="44"/>
             <Setter Property="Padding" Value="16,0"/>
         </Style>
-        <Style x:Key="IncBtn" TargetType="ToggleButton">
+        <!-- Interrupteur de la colonne « Raccourcis » : couleur « vedette » du thème -->
+        <Style x:Key="HotSwitch" TargetType="CheckBox">
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="b" Height="40" Padding="14,0" CornerRadius="8" BorderThickness="1.5" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}">
-                            <TextBlock x:Name="t" Text="Sauté" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border x:Name="track" Width="46" Height="26" CornerRadius="13" Background="{DynamicResource Track}">
+                            <Ellipse x:Name="knob" Width="18" Height="18" Fill="{DynamicResource Muted}" HorizontalAlignment="Left" Margin="4,0,0,0"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
-                                <Setter TargetName="t" Property="Text" Value="Inclus dans *"/>
-                                <Setter TargetName="t" Property="Foreground" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="track" Property="Background" Value="{DynamicResource Hot}"/>
+                                <Setter TargetName="knob" Property="Fill" Value="{DynamicResource HotText}"/>
+                                <Setter TargetName="knob" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="knob" Property="Margin" Value="0,0,4,0"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -31,7 +33,7 @@
         <StackPanel Margin="0,0,10,0">
             <StackPanel Margin="0,0,0,16">
                 <TextBlock Text="Paramètres" Style="{StaticResource PageTitle}"/>
-                <TextBlock Text="Sauvegardes, barre Mini, raccourcis" Style="{StaticResource PageSub}"/>
+                <TextBlock Text="Sauvegardes, barre Mini, raccourcis, personnages" Style="{StaticResource PageSub}"/>
             </StackPanel>
 
             <!-- Sauvegardes -->
@@ -149,36 +151,88 @@
                 </StackPanel>
             </Border>
 
-            <!-- Ordre des personnages -->
+            <!-- Personnages et fonctions -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="Ordre des personnages" Style="{StaticResource H2}" Margin="0,0,0,10"/>
-                    <TextBlock Text="Utilise les flèches pour changer l'ordre : le raccourci « Personnage suivant » suit cet ordre. Désactive « Inclus » pour qu'un personnage soit sauté."
-                               Style="{StaticResource MutedText}" Margin="0,0,0,12"/>
+                    <TextBlock Text="Personnages et fonctions" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Choisis dans quelles fonctions chaque personnage apparaît : un clic sur le nom d'une fonction l'active ou la désactive pour tous. L'ordre se règle en glissant-déposant les lignes : « Personnage suivant » et l'accueil le suivent. L'interrupteur de droite décide si le personnage est visité par « Personnage suivant / précédent »."
+                               Style="{StaticResource MutedText}" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                    <Grid Margin="12,0,12,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="220"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="92"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="PERSONNAGE" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11.5" VerticalAlignment="Bottom" Margin="26,0,0,4"/>
+                        <ItemsControl Grid.Column="1" Grid.ColumnSpan="5" ItemsSource="{Binding FeatureColumns}">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Rows="1"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding ToggleAllCommand}" Background="Transparent" BorderThickness="0" MinHeight="0" Padding="2,2" ToolTip="Activer ou désactiver pour tous">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Label}" Foreground="{DynamicResource Text}" FontFamily="{StaticResource BodyXB}" FontSize="12.5" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding CountText}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="11.5" HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
                     <ItemsControl ItemsSource="{Binding Characters}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="12,6" Margin="0,0,0,8" MinHeight="52">
-                                    <DockPanel>
-                                        <ToggleButton DockPanel.Dock="Right" Style="{StaticResource IncBtn}" IsChecked="{Binding InSwap, Mode=TwoWay}" Margin="8,0,0,0"/>
-                                        <Button DockPanel.Dock="Right" Width="40" Padding="0" Margin="8,0,0,0" ToolTip="Descendre"
-                                                Command="{Binding DataContext.MoveDownCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
-                                            <TextBlock Text="↓" FontSize="16"/>
-                                        </Button>
-                                        <Button DockPanel.Dock="Right" Width="40" Padding="0" ToolTip="Monter"
-                                                Command="{Binding DataContext.MoveUpCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
-                                            <TextBlock Text="↑" FontSize="16"/>
-                                        </Button>
-                                        <Path DockPanel.Dock="Left" Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="10" Height="18" Margin="0,0,10,0"/>
-                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Number}" Foreground="{DynamicResource Dim}" Width="22" VerticalAlignment="Center"/>
-                                        <TextBlock VerticalAlignment="Center">
-                                            <Run Text="{Binding Name, Mode=OneWay}" FontFamily="{StaticResource BodyXB}"/><Run Text=" · " Foreground="{DynamicResource Muted}"/><Run Text="{Binding ClassName, Mode=OneWay}" Foreground="{DynamicResource Muted}"/>
-                                        </TextBlock>
-                                    </DockPanel>
+                                <Border BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="12,6" Margin="0,0,0,8" MinHeight="52"
+                                        AllowDrop="True" DragOver="Row_DragOver" Drop="Row_Drop">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="{DynamicResource Panel}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AnyOff}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource Bg}"/>
+                                                    <Setter Property="Opacity" Value="0.6"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="220"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="92"/>
+                        </Grid.ColumnDefinitions>
+                                        <DockPanel VerticalAlignment="Center">
+                                            <Border DockPanel.Dock="Left" Background="Transparent" Cursor="SizeAll" Margin="0,0,8,0" Padding="2,6" ToolTip="Glisser pour changer l'ordre"
+                                                    PreviewMouseLeftButtonDown="Grip_Down" PreviewMouseMove="Grip_Move">
+                                                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="10" Height="18"/>
+                                            </Border>
+                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Number}" Foreground="{DynamicResource Dim}" Width="20" VerticalAlignment="Center"/>
+                                            <Image DockPanel.Dock="Left" Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="26" Height="26" Margin="0,0,10,0"
+                                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name, Mode=OneWay}" FontFamily="{StaticResource BodyXB}" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding ClassName, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="11.5"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding ShowHome}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Accueil"/>
+                                        <CheckBox Grid.Column="2" IsChecked="{Binding AchTracked}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Succès DJ"/>
+                                        <CheckBox Grid.Column="3" IsChecked="{Binding ShowTasks}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Tâches"/>
+                                        <CheckBox Grid.Column="4" IsChecked="{Binding ShowDreams}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Songes"/>
+                                        <CheckBox Grid.Column="5" IsChecked="{Binding ShowNotes}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Notes"/>
+                                        <CheckBox Grid.Column="6" Style="{StaticResource HotSwitch}" IsChecked="{Binding InSwap}" HorizontalAlignment="Center" ToolTip="Raccourcis : inclus dans « Personnage suivant / précédent »"/>
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <TextBlock Text="Le dernier interrupteur (Raccourcis) décide si le personnage est visité par les raccourcis de changement de personnage." Foreground="{DynamicResource Dim}" FontSize="12" Margin="0,2,0,0" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 

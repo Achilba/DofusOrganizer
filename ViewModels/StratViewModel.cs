@@ -129,7 +129,10 @@ public class StratViewModel : ObservableObject
     /// <summary>À appeler quand la liste des personnages ou leurs stuffs ont pu changer.</summary>
     public void RefreshChars()
     {
-        var names = _main.Characters.Select(c => c.Name).ToList();
+        // Seuls les personnages cochés « Songes » sont proposés ; ceux déjà dans un run restent visibles pour ne pas vider les listes
+        var names = _main.Characters
+            .Where(c => c.ShowDreams || Runs.Any(r => r.Slots.Any(s => s.Char == c.Name)))
+            .Select(c => c.Name).ToList();
         if (!CharNames.SequenceEqual(names))
         {
             CharNames.Clear();

@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.11.1";
+    public const string Current = "0.11.2";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.11.2", "26/10/2026", new[]
+        {
+            "NOUVEAU — Paramètres, « Personnages et fonctions » : pour chaque personnage, des cases pour choisir s'il apparaît dans l'Accueil, les Succès DJ, les Tâches, les Songes et les Notes (décoché : il disparaît de la fonction, ses données sont gardées), et un interrupteur « Raccourcis » (l'ancien « Inclus »). Un clic sur le nom d'une fonction l'active ou la désactive pour tous, et la ligne s'assombrit dès qu'une fonction est décochée.",
+            "CHANGÉ — Paramètres : l'ordre des personnages se change maintenant en glissant-déposant les lignes (les flèches sont retirées).",
+        }),
         new("0.11.1", "26/10/2026", new[]
         {
             "NOUVEAU — Songes : bouton « Mode mini Songe » (en haut à gauche de « Strat »). Il ouvre une barre Mini réservée aux songes : type de run, compteur − / + Run, total du jour (« Auj. ») et bouton de retour à l'appli.",

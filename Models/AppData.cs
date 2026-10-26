@@ -59,9 +59,24 @@ public class Character : TrackedObject
 
     public string Name { get => _name; set => Set(ref _name, value); }
     public string ClassName { get => _className; set { if (value != null) Set(ref _className, value); } }
-    public bool InSwap { get => _inSwap; set => Set(ref _inSwap, value); }
+    public bool InSwap { get => _inSwap; set { if (Set(ref _inSwap, value)) OnFeature(); } }
     /// <summary>Personnage suivi dans la vue Succès de la page Donjons (et dans la colonne « Manque »).</summary>
-    public bool AchTracked { get => _achTracked; set => Set(ref _achTracked, value); }
+    public bool AchTracked { get => _achTracked; set { if (Set(ref _achTracked, value)) OnFeature(); } }
+
+    // Fonctions où le personnage apparaît (Paramètres) : décoché = il disparaît de la fonction, ses données sont gardées
+    private bool _showHome = true;
+    private bool _showTasks = true;
+    private bool _showDreams = true;
+    private bool _showNotes = true;
+    public bool ShowHome { get => _showHome; set { if (Set(ref _showHome, value)) OnFeature(); } }
+    public bool ShowTasks { get => _showTasks; set { if (Set(ref _showTasks, value)) OnFeature(); } }
+    public bool ShowDreams { get => _showDreams; set { if (Set(ref _showDreams, value)) OnFeature(); } }
+    public bool ShowNotes { get => _showNotes; set { if (Set(ref _showNotes, value)) OnFeature(); } }
+    /// <summary>Levé quand une de ces cases change (l'appli rafraîchit alors les pages concernées).</summary>
+    public static event Action FeatureChanged;
+    private void OnFeature() { RaiseQuiet(nameof(AnyOff)); FeatureChanged?.Invoke(); }
+    /// <summary>Vrai si au moins une fonction est décochée (la ligne est assombrie dans les Paramètres).</summary>
+    [JsonIgnore] public bool AnyOff => !(_showHome && _showTasks && _showDreams && _showNotes && _achTracked && _inSwap);
     public string Color { get; set; } = "#F2B544";
 
     public int CharLevel

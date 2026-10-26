@@ -367,6 +367,15 @@ public class MainViewModel : ObservableObject
         });
 
         TrackedObject.Changed += RequestSave;
+        Character.FeatureChanged += OnFeatureChanged;
+        FeatureColumns = new[]
+        {
+            new FeatureColumn(this, "Accueil", c => c.ShowHome, (c, v) => c.ShowHome = v),
+            new FeatureColumn(this, "Succès DJ", c => c.AchTracked, (c, v) => c.AchTracked = v),
+            new FeatureColumn(this, "Tâches", c => c.ShowTasks, (c, v) => c.ShowTasks = v),
+            new FeatureColumn(this, "Songes", c => c.ShowDreams, (c, v) => c.ShowDreams = v),
+            new FeatureColumn(this, "Notes", c => c.ShowNotes, (c, v) => c.ShowNotes = v),
+        };
 
         BuildLists();
         UpdateOrder();
@@ -398,6 +407,48 @@ public class MainViewModel : ObservableObject
         }
         Raise(nameof(MainCharLabel));
         Raise(nameof(ConnectedText));
+        RefreshHomeCharacters();
+        foreach (var f in FeatureColumns ?? Array.Empty<FeatureColumn>()) f.Refresh();
+    }
+
+    // ───────── Fonctions par personnage (Paramètres) ─────────
+
+    public FeatureColumn[] FeatureColumns { get; private set; }
+
+    /// <summary>Personnages affichés sur l'accueil (ceux dont la case « Accueil » est cochée), dans l'ordre choisi.</summary>
+    public ObservableCollection<Character> HomeCharacters { get; } = new();
+
+    private void RefreshHomeCharacters()
+    {
+        var want = Characters.Where(c => c.ShowHome).ToList();
+        if (HomeCharacters.SequenceEqual(want)) return;
+        HomeCharacters.Clear();
+        foreach (var c in want) HomeCharacters.Add(c);
+    }
+
+    private void OnFeatureChanged()
+    {
+        RefreshHomeCharacters();
+        foreach (var f in FeatureColumns ?? Array.Empty<FeatureColumn>()) f.Refresh();
+        BuildNoteKeys();
+        Raise(nameof(SelectedNote));
+        Raise(nameof(NoteText));
+        Routines?.Refresh();
+        Songes?.Strat.RefreshChars();
+        RequestSave();
+    }
+
+    /// <summary>Glisser-déposer d'un personnage dans les Paramètres : le place à un nouvel endroit de l'ordre.</summary>
+    public void MoveCharacterTo(Character c, int index)
+    {
+        int i = Characters.IndexOf(c);
+        if (c == null || i < 0) return;
+        index = Math.Max(0, Math.Min(index, Characters.Count - 1));
+        if (i == index) return;
+        Characters.Move(i, index);
+        UpdateOrder();
+        BuildNoteKeys();
+        RequestSave();
     }
 
     private void Move(Character c, int dir)
@@ -565,7 +616,7 @@ public class MainViewModel : ObservableObject
     {
         NoteKeys.Clear();
         NoteKeys.Add("Commun");
-        foreach (var c in Data.Characters) NoteKeys.Add(c.Name);
+        foreach (var c in Data.Characters.Where(x => x.ShowNotes)) NoteKeys.Add(c.Name);
         if (!NoteKeys.Contains(_selectedNote)) _selectedNote = "Commun";
     }
 

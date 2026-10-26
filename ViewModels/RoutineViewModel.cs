@@ -174,7 +174,7 @@ public class RoutineViewModel : ObservableObject
     public void Refresh()
     {
         CharNames.Clear();
-        foreach (var c in _main.Characters) CharNames.Add(c.Name);
+        foreach (var c in _main.Characters.Where(x => x.ShowTasks)) CharNames.Add(c.Name);
         DailyRows.Clear();
         WeeklyRows.Clear();
         foreach (var d in Data.Routines)
@@ -190,7 +190,7 @@ public class RoutineViewModel : ObservableObject
     public void UpdateCounts()
     {
         foreach (var c in _main.Characters)
-            c.SetRoutinesLeft(Data.Routines.Count(r => !Data.RoutineDone.Contains(r.Id + "|" + c.Name)));
+            c.SetRoutinesLeft(c.ShowTasks ? Data.Routines.Count(r => !Data.RoutineDone.Contains(r.Id + "|" + c.Name)) : 0);
     }
 
     // ───────── Ajout et suppression ─────────
