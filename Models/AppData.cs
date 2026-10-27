@@ -311,6 +311,7 @@ public class AppData
     /// <summary>Position de la barre Mini réservée aux songes.</summary>
     public double? SongeMiniLeft { get; set; }
     public double? SongeMiniTop { get; set; }
+    public Dictionary<string, double[]> SongeMiniPositions { get; set; } = new();
     /// <summary>Position de la mini-barre mémorisée par configuration d'écrans (clé = taille et origine de l'écran virtuel).</summary>
     public Dictionary<string, double[]> MiniPositions { get; set; } = new();
     /// <summary>Raccourcis personnalisés (clé = action). Absent : valeur par défaut.</summary>

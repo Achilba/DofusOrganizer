@@ -11,15 +11,28 @@ internal static class MiniPlacement
         (int)SystemParameters.VirtualScreenLeft + "," + (int)SystemParameters.VirtualScreenTop + "," +
         (int)SystemParameters.VirtualScreenWidth + "x" + (int)SystemParameters.VirtualScreenHeight;
 
-    public static void Apply(Window w, AppData d, double fallbackWidth)
+    /// <summary>Place la fenêtre à sa place mémorisée. La barre Mini Songe a sa propre place (au premier lancement, elle reprend celle de la barre Mini).</summary>
+    public static void Apply(Window w, AppData d, double fallbackWidth, bool songe = false)
     {
         var wa = SystemParameters.WorkArea;
         d.MiniPositions ??= new();
+        d.SongeMiniPositions ??= new();
         double left, top;
-        if (d.MiniPositions.TryGetValue(ScreenKey(), out var p) && p != null && p.Length == 2)
+        var key = ScreenKey();
+        if (songe && d.SongeMiniPositions.TryGetValue(key, out var sp) && sp != null && sp.Length == 2)
+        {
+            left = sp[0];
+            top = sp[1];
+        }
+        else if (!songe && d.MiniPositions.TryGetValue(key, out var p) && p != null && p.Length == 2)
         {
             left = p[0];
             top = p[1];
+        }
+        else if (songe && d.MiniPositions.TryGetValue(key, out var mp) && mp != null && mp.Length == 2)
+        {
+            left = mp[0];
+            top = mp[1];
         }
         else
         {
@@ -34,8 +47,16 @@ internal static class MiniPlacement
         w.Top = top;
     }
 
-    public static void Remember(Window w, AppData d)
+    public static void Remember(Window w, AppData d, bool songe = false)
     {
+        if (songe)
+        {
+            d.SongeMiniLeft = w.Left;
+            d.SongeMiniTop = w.Top;
+            d.SongeMiniPositions ??= new();
+            d.SongeMiniPositions[ScreenKey()] = new[] { w.Left, w.Top };
+            return;
+        }
         d.MiniLeft = w.Left;
         d.MiniTop = w.Top;
         d.MiniPositions ??= new();

@@ -19,7 +19,7 @@ public partial class SongeMiniWindow : Window
         {
             if (!IsVisible || Vm == null) return;
             Topmost = Vm.Data.MiniAlwaysOnTop;
-            if (_placed) MiniPlacement.Apply(this, Vm.Data, 560);
+            if (_placed) MiniPlacement.Apply(this, Vm.Data, 560, true);
         };
         LocationChanged += (_, _) => RememberPosition();
     }
@@ -33,13 +33,13 @@ public partial class SongeMiniWindow : Window
         Topmost = vm.Data.MiniAlwaysOnTop;
         if (_placed) return;
         _placed = true;
-        MiniPlacement.Apply(this, vm.Data, 560);
+        MiniPlacement.Apply(this, vm.Data, 560, true);
     }
 
     private void RememberPosition()
     {
         if (!_placed || Vm == null || !IsVisible) return;
-        MiniPlacement.Remember(this, Vm.Data);
+        MiniPlacement.Remember(this, Vm.Data, true);
         Vm.RequestSave();
     }
 

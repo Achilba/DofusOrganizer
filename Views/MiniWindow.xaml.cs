@@ -14,8 +14,6 @@ public partial class MiniWindow : Window
         InitializeComponent();
         Loaded += (_, _) => ApplySettings();
         LocationChanged += (_, _) => RememberPosition();
-        // Si la barre Mini Songe a été déplacée entre-temps, on reprend la place commune
-        IsVisibleChanged += (_, _) => { if (IsVisible && _placed && Vm != null) MiniPlacement.Apply(this, Vm.Data, Width); };
         DataContextChanged += (_, e) =>
         {
             if (e.NewValue is MainViewModel vm) vm.MiniSettingsChanged += ApplySettings;

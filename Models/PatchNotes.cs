@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.11.7";
+    public const string Current = "0.11.8";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.11.8", "27/10/2026", new[]
+        {
+            "CHANGÉ — La barre Mini Songe et la barre Mini habituelle gardent chacune leur propre place (la barre Songe démarre à la place de la barre Mini la première fois).",
+        }),
         new("0.11.7", "26/10/2026", new[]
         {
             "CORRIGÉ — Barre Mini Songe : elle retrouve sa place, et partage maintenant la place de la barre Mini habituelle : quelle que soit la barre qu'on ouvre, elle apparaît là où se trouvait la précédente.",
