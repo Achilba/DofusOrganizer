@@ -62,6 +62,17 @@
                 </StackPanel>
             </Border>
 
+            <!-- Réinitialisation -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Réinitialisation" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Remet toute l'appli à zéro, comme une nouvelle installation : données, réglages, thème, raccourcis et positions des barres. Une copie de sécurité est gardée dans le dossier Backups."
+                               Style="{StaticResource MutedText}" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                    <Button Content="Tout réinitialiser…" Command="{Binding ResetAllCommand}" Style="{StaticResource Big}" HorizontalAlignment="Left"
+                            BorderBrush="{DynamicResource Warn}" Foreground="{DynamicResource Warn}"/>
+                </StackPanel>
+            </Border>
+
             <!-- Mode Mini -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackPanel>

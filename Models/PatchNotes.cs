@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.2";
+    public const string Current = "0.12.3";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.3", "28/10/2026", new[]
+        {
+            "NOUVEAU — Paramètres > Réinitialisation : « Tout réinitialiser » remet l'appli comme une nouvelle installation (double confirmation, copie de sécurité gardée dans Backups, puis écran de bienvenue).",
+        }),
         new("0.12.2", "28/10/2026", new[]
         {
             "NOUVEAU — Écran de bienvenue au premier lancement : on saisit ses personnages (nom et classe) avant de commencer.",

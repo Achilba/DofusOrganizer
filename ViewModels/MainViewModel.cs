@@ -246,6 +246,7 @@ public class MainViewModel : ObservableObject
     public RelayCommand ExportCommand { get; }
     public RelayCommand CopyBackupCommand { get; }
     public RelayCommand ImportCommand { get; }
+    public RelayCommand ResetAllCommand { get; }
     public RelayCommand OpenFolderCommand { get; }
     public RelayCommand UndoCommand { get; }
     public RelayCommand CopyErrorLogCommand { get; }
@@ -364,6 +365,7 @@ public class MainViewModel : ObservableObject
         ExportCommand = new RelayCommand(Export);
         CopyBackupCommand = new RelayCommand(CopyBackup);
         ImportCommand = new RelayCommand(Import);
+        ResetAllCommand = new RelayCommand(ResetAll);
         OpenFolderCommand = new RelayCommand(() => System.Diagnostics.Process.Start("explorer.exe", Storage.Dir));
         UndoCommand = new RelayCommand(RunUndo);
         RetrySaveCommand = new RelayCommand(SaveNow);
@@ -902,10 +904,16 @@ public class MainViewModel : ObservableObject
         if (dlg.ShowDialog() != true) return;
         var d = Storage.Import(dlg.FileName);
         if (d == null) { Status = "Ce fichier n'est pas un export valide : rien n'a été modifié."; return; }
+        ApplyLoadedData(d, "Données importées");
+    }
+
+    /// <summary>Remplace toutes les données par celles de <paramref name="d"/> et rafraîchit tous les écrans.</summary>
+    private void ApplyLoadedData(AppData d, string toast)
+    {
         Data = d;
         foreach (var p in new[] { nameof(Data), nameof(SwapEnabled), nameof(MiniAlwaysOnTop), nameof(MiniOpacity), nameof(AutoBackup),
                                   nameof(LastBackup), nameof(NoteText), nameof(MainCounter), nameof(SpecialCounter), nameof(Characters),
-                                  nameof(RememberMiniPosition), nameof(MiniCompact), nameof(MiniFull), nameof(MiniOpacityText) })
+                                  nameof(RememberMiniPosition), nameof(MiniCompact), nameof(MiniFull), nameof(MiniOpacityText), nameof(ScaleChoice) })
             Raise(p);
         BuildThemeRows();
         ThemeCatalog.Apply(Data.Theme);
@@ -916,8 +924,42 @@ public class MainViewModel : ObservableObject
         Songes.Reload();
         Almanax.Reload();
         Routines.Reload();
+        Hotkeys.Apply(GetShortcut);
         MiniSettingsChanged?.Invoke();
-        ShowToast("Données importées");
+        UiScaleChanged?.Invoke();
+        ShowToast(toast);
+    }
+
+    public event Action WelcomeRequested;
+
+    /// <summary>Remet l'appli comme une nouvelle installation. Une copie des données actuelles est gardée dans le dossier Backups.</summary>
+    private void ResetAll()
+    {
+        var r1 = System.Windows.MessageBox.Show(
+            "Toutes tes données seront effacées : personnages, succès, tâches, notes, songes, raccourcis, thème et réglages.\n\nL'appli redeviendra comme une nouvelle installation.\nUne copie de sécurité est gardée, tu pourras la restaurer avec « Importer une sauvegarde ».\n\nContinuer ?",
+            "Tout réinitialiser", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxResult.No);
+        if (r1 != System.Windows.MessageBoxResult.Yes) return;
+        var r2 = System.Windows.MessageBox.Show("Dernière confirmation : tout effacer maintenant ?", "Tout réinitialiser",
+            System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxResult.No);
+        if (r2 != System.Windows.MessageBoxResult.Yes) return;
+        try
+        {
+            Storage.Save(Data);
+            var copy = System.IO.Path.Combine(Storage.BackupDir, "data-avant-reinitialisation-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json");
+            System.IO.Directory.CreateDirectory(Storage.BackupDir);
+            System.IO.File.Copy(Storage.FilePath, copy, true);
+        }
+        catch (Exception ex)
+        {
+            Status = "Réinitialisation annulée : la copie de sécurité a échoué (" + ex.Message + ")";
+            return;
+        }
+        var fresh = new AppData { LastSeenVersion = PatchNotes.Current };
+        Storage.Save(fresh);
+        try { if (AutoStart.IsEnabled()) AutoStart.Set(false); } catch { }
+        ApplyLoadedData(fresh, "Application réinitialisée");
+        Raise(nameof(StartWithWindows));
+        WelcomeRequested?.Invoke();
     }
 
     // ───────── Notes de version ─────────

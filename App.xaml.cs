@@ -68,6 +68,13 @@ public partial class App : Application
         _main.Closed += (_, _) => Quit();
 
         _vm.PatchNotesRequested += ShowPatchNotes;
+        _vm.WelcomeRequested += () =>
+        {
+            var wel = new WelcomeWindow();
+            if (_main.IsVisible) wel.Owner = _main;
+            if (wel.ShowDialog() == true) _vm.ApplyWelcome(wel.Result);
+            _vm.MarkWelcomeDone();
+        };
 
         if (data.StartInMini) SetMini(true); else SetMini(false);
 
