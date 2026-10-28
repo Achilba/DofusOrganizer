@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.4";
+    public const string Current = "0.12.5";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.5", "28/10/2026", new[]
+        {
+            "CORRIGÉ — L'appli ne se lançait plus depuis la 0.12.4 (style de bouton manquant dans la page Songes).",
+        }),
         new("0.12.4", "28/10/2026", new[]
         {
             "NOUVEAU — Songes > Stats : ajoute une run avec son type (Rêve, Paradoxe ou Cauchemar de 1 à 3), son temps et son nombre de vagues. Tableau par type (nombre, temps moyen, meilleur temps, vagues moyennes) et liste des dernières runs.",
