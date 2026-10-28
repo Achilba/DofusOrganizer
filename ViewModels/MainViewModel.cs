@@ -102,6 +102,26 @@ public class MainViewModel : ObservableObject
     public event Action ToggleVisibilityRequested;
     public event Action<bool> MiniModeRequested; // true = afficher la mini-barre
     public event Action MiniSettingsChanged;
+    public event Action UiScaleChanged;
+
+    public string[] ScaleChoices { get; } = { "90 %", "100 %", "110 %", "125 %" };
+    public string ScaleChoice
+    {
+        get
+        {
+            var t = (int)Math.Round(Data.UiScale * 100) + " %";
+            return Array.IndexOf(ScaleChoices, t) >= 0 ? t : "100 %";
+        }
+        set
+        {
+            if (value == null || value == ScaleChoice) return;
+            if (!int.TryParse(value.Replace("%", "").Trim(), out var pct)) return;
+            Data.UiScale = pct / 100.0;
+            Raise();
+            RequestSave();
+            UiScaleChanged?.Invoke();
+        }
+    }
     public event Action<bool> SongeMiniRequested; // true = afficher la barre Mini des songes
     public void RequestSongeMini() => SongeMiniRequested?.Invoke(true);
     public event Action PatchNotesRequested;

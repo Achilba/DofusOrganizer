@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.0";
+    public const string Current = "0.12.1";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.1", "28/10/2026", new[]
+        {
+            "NOUVEAU — Paramètres > Apparence : taille du texte (90 %, 100 %, 110 %, 125 %) pour la fenêtre principale.",
+        }),
         new("0.12.0", "28/10/2026", new[]
         {
             "NOUVEAU — Songes : vue « Stats » (légendes suivies, runs comptés, moyenne de runs par légende, écart du dernier drop, plus long écart, drops du jour et de la semaine, liste des derniers drops).",

@@ -122,6 +122,13 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <TextBlock Text="Taille du texte" FontFamily="{StaticResource BodyXB}" Margin="0,8,0,4"/>
+                    <TextBlock Text="Agrandit ou réduit toute la fenêtre principale. Sur un petit écran, garde 100 % ou moins." Style="{StaticResource MutedText}" Margin="0,0,0,8"/>
+                    <ListBox ItemsSource="{Binding ScaleChoices}" SelectedItem="{Binding ScaleChoice, Mode=TwoWay}"
+                             ItemContainerStyle="{StaticResource Chip}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource Text}"
+                             HorizontalAlignment="Left">
+                        <ListBox.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ListBox.ItemsPanel>
+                    </ListBox>
                 </StackPanel>
             </Border>
 

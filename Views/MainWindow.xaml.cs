@@ -13,6 +13,20 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         SourceInitialized += (_, _) => WindowStyler.UseDarkTitleBar(new WindowInteropHelper(this).Handle);
+        DataContextChanged += (_, e) =>
+        {
+            if (e.NewValue is MainViewModel vm) { vm.UiScaleChanged += ApplyScale; ApplyScale(); }
+        };
+        Loaded += (_, _) => ApplyScale();
+    }
+
+    /// <summary>Taille du texte : agrandit ou réduit tout le contenu de la fenêtre principale.</summary>
+    private void ApplyScale()
+    {
+        if (Content is not FrameworkElement root) return;
+        var s = (DataContext as MainViewModel)?.Data.UiScale ?? 1.0;
+        if (s < 0.8 || s > 1.5) s = 1.0;
+        root.LayoutTransform = Math.Abs(s - 1.0) < 0.001 ? Transform.Identity : new ScaleTransform(s, s);
     }
 
     private GlobalSearch Search => (DataContext as MainViewModel)?.Search;
