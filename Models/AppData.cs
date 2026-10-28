@@ -254,6 +254,8 @@ public class DropInfo
     public DateTime At { get; set; }
     public int Run { get; set; }
     public string RunName { get; set; } = "";
+    /// <summary>Nombre total de runs comptés au moment du drop (sert aux statistiques).</summary>
+    public int Total { get; set; }
 }
 
 /// <summary>Une tâche récurrente (par personnage) : tous les jours à minuit, ou un jour fixe de la semaine à 3 h.</summary>
@@ -281,6 +283,10 @@ public class AppData
     /// <summary>Runs ajoutés aujourd'hui avec le compteur (remis à zéro quand la date change).</summary>
     public int RunsToday { get; set; }
     public string RunsDay { get; set; } = "";
+    /// <summary>Total de runs comptés depuis l'arrivée des statistiques (0.12.0).</summary>
+    public int RunsTotal { get; set; }
+    /// <summary>Historique des légendes obtenues (les 300 dernières), pour les statistiques.</summary>
+    public List<DropInfo> DropHistory { get; set; } = new();
     /// <summary>Vue de la page Songes : « Strat » ou « Drops ».</summary>
     public string SongesMode { get; set; } = "Strat";
 

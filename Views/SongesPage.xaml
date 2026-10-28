@@ -311,5 +311,90 @@
         <TextBlock Grid.Row="7" Margin="0,10,0,0" Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"
                    Text="Noms relevés sur krosmolab.fr (Ressources des Songes, niveau 200), à recouper avec le jeu."/>
         </Grid>
+
+        <!-- Vue Stats -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsStats, Converter={StaticResource BoolVis}}">
+            <StackPanel Margin="0,0,0,12">
+                <WrapPanel>
+                    <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
+                        <StackPanel>
+                            <TextBlock Text="LÉGENDES SUIVIES" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding StatTotal}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
+                        <StackPanel>
+                            <TextBlock Text="RUNS COMPTÉS" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding StatRuns}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
+                        <StackPanel>
+                            <TextBlock Text="MOYENNE PAR LÉGENDE" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding StatAverage}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
+                        <StackPanel>
+                            <TextBlock Text="ÉCART DU DERNIER DROP" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding StatLastGap}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
+                        <StackPanel>
+                            <TextBlock Text="PLUS LONG ÉCART" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding StatLongest}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
+                        <StackPanel>
+                            <TextBlock Text="AUJOURD'HUI" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding StatToday}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
+                        <StackPanel>
+                            <TextBlock Text="7 DERNIERS JOURS" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding StatWeek}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
+                        </StackPanel>
+                    </Border>
+                </WrapPanel>
+                <TextBlock Text="Les statistiques comptent les légendes animales et classiques ajoutées depuis la version 0.12.0. Retirer une légende par erreur la retire aussi de l'historique."
+                           Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="2,0,0,12"/>
+                <TextBlock Text="Derniers drops" FontFamily="{StaticResource BodyXB}" FontSize="15" Margin="0,0,0,8"/>
+                <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="4">
+                    <Grid>
+                        <ItemsControl ItemsSource="{Binding RecentDrops}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="10,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="90"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Name}" FontFamily="{StaticResource BodyXB}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Run}" Foreground="{DynamicResource Muted}" Margin="0,0,14,0"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Since}" Foreground="{DynamicResource Accent}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="Aucun drop enregistré pour l'instant : ajoute une légende dans la vue Drops." Foreground="{DynamicResource Dim}" Margin="10,10" TextWrapping="Wrap">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasHistory}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

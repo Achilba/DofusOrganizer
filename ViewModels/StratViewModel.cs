@@ -212,6 +212,7 @@ public class StratViewModel : ObservableObject
         EnsureDay();
         r.Count += delta;
         Data.RunsToday = Math.Max(0, Data.RunsToday + delta);
+        Data.RunsTotal = Math.Max(0, Data.RunsTotal + delta);
         if (delta > 0) r.LastRun = DateTime.Now;
         _main.RequestSave();
         RaiseTimes();

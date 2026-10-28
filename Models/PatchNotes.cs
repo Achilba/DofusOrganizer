@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.11.8";
+    public const string Current = "0.12.0";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.0", "28/10/2026", new[]
+        {
+            "NOUVEAU — Songes : vue « Stats » (légendes suivies, runs comptés, moyenne de runs par légende, écart du dernier drop, plus long écart, drops du jour et de la semaine, liste des derniers drops).",
+        }),
         new("0.11.8", "27/10/2026", new[]
         {
             "CHANGÉ — La barre Mini Songe et la barre Mini habituelle gardent chacune leur propre place (la barre Songe démarre à la place de la barre Mini la première fois).",

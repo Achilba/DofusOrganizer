@@ -145,6 +145,14 @@ public class LegendItem : ObservableObject
     public bool CanDec => _qty > 0;
 }
 
+/// <summary>Une ligne de la liste « Derniers drops » des statistiques.</summary>
+public class DropRow
+{
+    public string Name { get; init; } = "";
+    public string Since { get; init; } = "";
+    public string Run { get; init; } = "";
+}
+
 public class SongesViewModel : ObservableObject
 {
     private readonly MainViewModel _main;
@@ -161,26 +169,29 @@ public class SongesViewModel : ObservableObject
         Reload();
         // Les durées affichées (« depuis 2 h 14 », « dernier run il y a 21 min ») se mettent à jour toutes seules
         var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
-        timer.Tick += (_, _) => { Raise(nameof(DropSince)); Strat.RaiseTimes(); };
+        timer.Tick += (_, _) => { Raise(nameof(DropSince)); Strat.RaiseTimes(); if (IsStats) RefreshStats(); };
         timer.Start();
     }
 
     public StratViewModel Strat { get; }
     public RelayCommand MiniSongeCommand { get; }
-    public string[] Modes { get; } = { "Strat", "Drops" };
+    public string[] Modes { get; } = { "Strat", "Drops", "Stats" };
+    public ObservableCollection<DropRow> RecentDrops { get; } = new();
     public string Mode
     {
-        get => _main.Data.SongesMode == "Drops" ? "Drops" : "Strat";
+        get => _main.Data.SongesMode == "Drops" ? "Drops" : _main.Data.SongesMode == "Stats" ? "Stats" : "Strat";
         set
         {
             if (value == null || value == Mode) return;
             _main.Data.SongesMode = value;
             _main.RequestSave();
-            Raise(); Raise(nameof(IsStrat)); Raise(nameof(IsDrops));
+            Raise(); Raise(nameof(IsStrat)); Raise(nameof(IsDrops)); Raise(nameof(IsStats));
+            if (value == "Stats") RefreshStats();
         }
     }
     public bool IsStrat => Mode == "Strat";
     public bool IsDrops => Mode == "Drops";
+    public bool IsStats => Mode == "Stats";
 
     public void Reload()
     {
@@ -192,7 +203,8 @@ public class SongesViewModel : ObservableObject
         Raise(nameof(TotalText));
         Strat?.Reload();
         RaiseDrop();
-        Raise(nameof(Mode)); Raise(nameof(IsStrat)); Raise(nameof(IsDrops));
+        Raise(nameof(Mode)); Raise(nameof(IsStrat)); Raise(nameof(IsDrops)); Raise(nameof(IsStats));
+        RefreshStats();
     }
 
     private LegendItem Make(string prefix, string name)
@@ -210,8 +222,19 @@ public class SongesViewModel : ObservableObject
             // Dernier drop : le numéro de run est le compteur du run actif à cet instant
             var run = Strat.Selected;
             _main.Data.LastDrop = new DropInfo { Name = item.Name, At = DateTime.Now, Run = run?.Count ?? 0, RunName = run?.Name ?? "" };
+            var hist = _main.Data.DropHistory ??= new();
+            hist.Add(new DropInfo { Name = item.Name, At = DateTime.Now, Run = run?.Count ?? 0, RunName = run?.Name ?? "", Total = _main.Data.RunsTotal });
+            if (hist.Count > 300) hist.RemoveRange(0, hist.Count - 300);
             RaiseDrop();
         }
+        else if (item.LastDelta < 0 && (item.Key.StartsWith("a|") || item.Key.StartsWith("c|")))
+        {
+            // Une légende retirée par erreur disparaît aussi de l'historique
+            var hist = _main.Data.DropHistory;
+            int i = hist?.FindLastIndex(h => h.Name == item.Name) ?? -1;
+            if (i >= 0) hist.RemoveAt(i);
+        }
+        if (IsStats) RefreshStats();
         _main.RequestSave();
         Raise(nameof(Total));
         Raise(nameof(TotalText));
@@ -227,6 +250,41 @@ public class SongesViewModel : ObservableObject
     public string DropSince => _main.Data.LastDrop == null ? "—" : StratViewModel.Elapsed(_main.Data.LastDrop.At);
     public string DropRun => _main.Data.LastDrop == null ? "—" : _main.Data.LastDrop.Run.ToString();
     public string DropRunLine => _main.Data.LastDrop == null ? "" : "Run : " + _main.Data.LastDrop.RunName;
+
+    // ---- Statistiques ----
+    private static string Plural(int n, string one, string many) => n + " " + (n > 1 ? many : one);
+
+    public string StatTotal { get; private set; } = "0";
+    public string StatRuns { get; private set; } = "0";
+    public string StatAverage { get; private set; } = "—";
+    public string StatLastGap { get; private set; } = "—";
+    public string StatLongest { get; private set; } = "—";
+    public string StatToday { get; private set; } = "0";
+    public string StatWeek { get; private set; } = "0";
+    public bool HasHistory { get; private set; }
+
+    public void RefreshStats()
+    {
+        var d = _main.Data;
+        var hist = d.DropHistory ?? new();
+        int n = hist.Count;
+        HasHistory = n > 0;
+        StatTotal = n.ToString();
+        StatRuns = d.RunsTotal.ToString();
+        StatAverage = n == 0 || d.RunsTotal == 0 ? "—" : Math.Round((double)d.RunsTotal / n, 1).ToString("0.#") + " runs";
+        // Écart entre deux drops = différence du total de runs au moment de chaque drop
+        int last = n >= 2 ? Math.Max(0, hist[n - 1].Total - hist[n - 2].Total) : -1;
+        StatLastGap = last < 0 ? "—" : Plural(last, "run", "runs");
+        int longest = -1;
+        for (int i = 1; i < n; i++) longest = Math.Max(longest, hist[i].Total - hist[i - 1].Total);
+        StatLongest = longest < 0 ? "—" : Plural(longest, "run", "runs");
+        StatToday = hist.Count(h => h.At.Date == DateTime.Today).ToString();
+        StatWeek = hist.Count(h => h.At >= DateTime.Today.AddDays(-6)).ToString();
+        RecentDrops.Clear();
+        foreach (var h in Enumerable.Reverse(hist).Take(12))
+            RecentDrops.Add(new DropRow { Name = h.Name, Since = StratViewModel.Elapsed(h.At), Run = h.Run > 0 ? "run n° " + h.Run : "" });
+        foreach (var p in new[] { nameof(StatTotal), nameof(StatRuns), nameof(StatAverage), nameof(StatLastGap), nameof(StatLongest), nameof(StatToday), nameof(StatWeek), nameof(HasHistory) }) Raise(p);
+    }
 
     public int Total => Animal.Sum(a => a.Qty) + Classic.Sum(c => c.Qty);
     public string TotalText => "Légendes droppées : " + Total;
