@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.1";
+    public const string Current = "0.12.2";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.2", "28/10/2026", new[]
+        {
+            "NOUVEAU — Écran de bienvenue au premier lancement : on saisit ses personnages (nom et classe) avant de commencer.",
+        }),
         new("0.12.1", "28/10/2026", new[]
         {
             "NOUVEAU — Paramètres > Apparence : taille du texte (90 %, 100 %, 110 %, 125 %) pour la fenêtre principale.",

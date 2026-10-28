@@ -922,6 +922,29 @@ public class MainViewModel : ObservableObject
 
     // ───────── Notes de version ─────────
 
+    /// <summary>Premier lancement : données par défaut intactes (un seul personnage d'origine) et écran pas encore vu.</summary>
+    public bool ShouldShowWelcome =>
+        !Data.WelcomeDone && Characters.Count == 1 && Characters[0].Name == "Personnage 1";
+
+    public void MarkWelcomeDone()
+    {
+        Data.WelcomeDone = true;
+        RequestSave();
+    }
+
+    /// <summary>Applique les personnages saisis à l'écran de bienvenue : le premier remplace « Personnage 1 ».</summary>
+    public void ApplyWelcome(IList<(string Name, string ClassName)> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            var c = i == 0 ? Characters[0] : AddCharacter();
+            c.Name = list[i].Name;
+            c.ClassName = list[i].ClassName;
+        }
+        CharactersChanged();
+        RequestSave();
+    }
+
     public bool ShouldShowPatchNotes => Data.LastSeenVersion != PatchNotes.Current;
 
     public void MarkPatchNotesSeen()

@@ -314,6 +314,8 @@ public class AppData
     public double MiniOpacity { get; set; } = 1.0;
     /// <summary>Taille du texte et des éléments de la fenêtre principale (1 = 100 %).</summary>
     public double UiScale { get; set; } = 1.0;
+    /// <summary>L'écran de bienvenue a été vu (ou passé).</summary>
+    public bool WelcomeDone { get; set; }
     public double? MiniLeft { get; set; }
     public double? MiniTop { get; set; }
     /// <summary>Position de la barre Mini réservée aux songes.</summary>

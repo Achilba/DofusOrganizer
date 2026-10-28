@@ -77,6 +77,20 @@ public partial class App : Application
         updateTimer.Tick += (_, _) => _ = _vm.CheckUpdateAsync(silent: true);
         updateTimer.Start();
 
+        // Premier lancement : écran de bienvenue (les notes de version sont alors inutiles)
+        if (_vm.ShouldShowWelcome)
+        {
+            _vm.MarkPatchNotesSeen();
+            var wel = new WelcomeWindow();
+            if (wel.ShowDialog() == true) _vm.ApplyWelcome(wel.Result);
+            _vm.MarkWelcomeDone();
+        }
+        else if (!_vm.Data.WelcomeDone)
+        {
+            // Données déjà personnalisées : pas d'écran de bienvenue
+            _vm.MarkWelcomeDone();
+        }
+
         // Notes de version : affichées une fois après chaque mise à jour
         if (_vm.ShouldShowPatchNotes)
         {
