@@ -258,6 +258,15 @@ public class DropInfo
     public int Total { get; set; }
 }
 
+/// <summary>Une run saisie à la main dans les statistiques des Songes : type, durée et nombre de vagues.</summary>
+public class RunEntry
+{
+    public string Type { get; set; } = "";
+    public int Seconds { get; set; }
+    public int Waves { get; set; }
+    public DateTime At { get; set; }
+}
+
 /// <summary>Une tâche récurrente (par personnage) : tous les jours à minuit, ou un jour fixe de la semaine à 3 h.</summary>
 public class RoutineDef
 {
@@ -287,6 +296,8 @@ public class AppData
     public int RunsTotal { get; set; }
     /// <summary>Historique des légendes obtenues (les 300 dernières), pour les statistiques.</summary>
     public List<DropInfo> DropHistory { get; set; } = new();
+    /// <summary>Runs saisies dans les statistiques (les 500 dernières).</summary>
+    public List<RunEntry> RunLog { get; set; } = new();
     /// <summary>Vue de la page Songes : « Strat » ou « Drops ».</summary>
     public string SongesMode { get; set; } = "Strat";
 

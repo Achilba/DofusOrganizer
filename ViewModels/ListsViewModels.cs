@@ -153,6 +153,26 @@ public class DropRow
     public string Run { get; init; } = "";
 }
 
+/// <summary>Une run de la liste des statistiques, avec son bouton de suppression.</summary>
+public class RunLogRow
+{
+    public string Type { get; init; } = "";
+    public string Time { get; init; } = "—";
+    public string Waves { get; init; } = "—";
+    public string Since { get; init; } = "";
+    public RelayCommand DeleteCommand { get; init; }
+}
+
+/// <summary>Résumé par type de run : nombre, temps moyen, meilleur temps, vagues moyennes.</summary>
+public class RunTypeStat
+{
+    public string Type { get; init; } = "";
+    public string Count { get; init; } = "";
+    public string Average { get; init; } = "—";
+    public string Best { get; init; } = "—";
+    public string Waves { get; init; } = "—";
+}
+
 public class SongesViewModel : ObservableObject
 {
     private readonly MainViewModel _main;
@@ -165,6 +185,7 @@ public class SongesViewModel : ObservableObject
     {
         _main = main;
         Strat = new StratViewModel(main);
+        AddRunEntryCommand = new RelayCommand(AddRunEntry);
         MiniSongeCommand = new RelayCommand(() => _main.RequestSongeMini());
         Reload();
         // Les durées affichées (« depuis 2 h 14 », « dernier run il y a 21 min ») se mettent à jour toutes seules
@@ -177,6 +198,101 @@ public class SongesViewModel : ObservableObject
     public RelayCommand MiniSongeCommand { get; }
     public string[] Modes { get; } = { "Strat", "Drops", "Stats" };
     public ObservableCollection<DropRow> RecentDrops { get; } = new();
+
+    // ---- Runs saisies (type, durée, vagues) ----
+    public string[] RunTypes { get; } = { "Rêve 1", "Rêve 2", "Rêve 3", "Paradoxe 1", "Paradoxe 2", "Paradoxe 3", "Cauchemar 1", "Cauchemar 2", "Cauchemar 3" };
+    public ObservableCollection<RunLogRow> RecentRuns { get; } = new();
+    public ObservableCollection<RunTypeStat> RunTypeStats { get; } = new();
+    public RelayCommand AddRunEntryCommand { get; private set; }
+
+    private string _newType = "Rêve 1";
+    public string NewType { get => _newType; set { if (value != null) Set(ref _newType, value); } }
+    private string _newTime = "";
+    public string NewTime { get => _newTime; set { if (Set(ref _newTime, value ?? "")) RunFormMessage = ""; } }
+    private string _newWaves = "";
+    public string NewWaves { get => _newWaves; set { if (Set(ref _newWaves, value ?? "")) RunFormMessage = ""; } }
+    private string _runFormMessage = "";
+    public string RunFormMessage { get => _runFormMessage; private set => Set(ref _runFormMessage, value); }
+    public bool HasRuns { get; private set; }
+
+    /// <summary>Lit une durée : « 3:45 » (min:s), « 1:02:10 » (h:min:s) ou « 4 » (4 minutes). Renvoie -1 si illisible, 0 si vide.</summary>
+    public static int ParseDuration(string text)
+    {
+        var t = (text ?? "").Trim().Replace(',', '.').Replace('h', ':').Replace("min", ":").Replace("m", ":").Replace("s", "").Replace(" ", "").Trim(':');
+        if (t.Length == 0) return 0;
+        var parts = t.Split(':');
+        if (parts.Length > 3) return -1;
+        var n = new int[parts.Length];
+        for (int i = 0; i < parts.Length; i++)
+            if (!int.TryParse(parts[i], out n[i]) || n[i] < 0) return -1;
+        if (parts.Length == 1) return n[0] * 60;
+        if (parts.Length == 2) return n[0] * 60 + n[1];
+        return n[0] * 3600 + n[1] * 60 + n[2];
+    }
+
+    public static string FormatDuration(int s)
+    {
+        if (s <= 0) return "—";
+        return s >= 3600 ? $"{s / 3600}:{s % 3600 / 60:00}:{s % 60:00}" : $"{s / 60}:{s % 60:00}";
+    }
+
+    private void AddRunEntry()
+    {
+        int secs = ParseDuration(NewTime);
+        if (secs < 0) { RunFormMessage = "Durée illisible : écris-la comme 3:45 (minutes:secondes)."; return; }
+        int waves = 0;
+        if (NewWaves.Trim().Length > 0 && (!int.TryParse(NewWaves.Trim(), out waves) || waves < 0 || waves > 999))
+        { RunFormMessage = "Le nombre de vagues doit être un nombre entier."; return; }
+        if (secs == 0 && waves == 0) { RunFormMessage = "Indique au moins la durée ou le nombre de vagues."; return; }
+        var log = _main.Data.RunLog ??= new();
+        log.Add(new RunEntry { Type = NewType, Seconds = secs, Waves = waves, At = DateTime.Now });
+        if (log.Count > 500) log.RemoveRange(0, log.Count - 500);
+        _main.RequestSave();
+        NewTime = ""; NewWaves = "";
+        RunFormMessage = "Run ajoutée.";
+        RefreshStats();
+    }
+
+    private void RefreshRuns()
+    {
+        var log = _main.Data.RunLog ?? new();
+        HasRuns = log.Count > 0;
+        RunTypeStats.Clear();
+        foreach (var type in RunTypes)
+        {
+            var l = log.Where(r => r.Type == type).ToList();
+            if (l.Count == 0) continue;
+            var timed = l.Where(r => r.Seconds > 0).ToList();
+            var waved = l.Where(r => r.Waves > 0).ToList();
+            RunTypeStats.Add(new RunTypeStat
+            {
+                Type = type,
+                Count = l.Count.ToString(),
+                Average = timed.Count == 0 ? "—" : FormatDuration((int)Math.Round(timed.Average(r => r.Seconds))),
+                Best = timed.Count == 0 ? "—" : FormatDuration(timed.Min(r => r.Seconds)),
+                Waves = waved.Count == 0 ? "—" : Math.Round(waved.Average(r => r.Waves), 1).ToString("0.#"),
+            });
+        }
+        RecentRuns.Clear();
+        foreach (var r in Enumerable.Reverse(log).Take(10))
+        {
+            var entry = r;
+            RecentRuns.Add(new RunLogRow
+            {
+                Type = r.Type,
+                Time = FormatDuration(r.Seconds),
+                Waves = r.Waves > 0 ? r.Waves + " vagues" : "—",
+                Since = StratViewModel.Elapsed(r.At),
+                DeleteCommand = new RelayCommand(() =>
+                {
+                    _main.Data.RunLog.Remove(entry);
+                    _main.RequestSave();
+                    RefreshStats();
+                }),
+            });
+        }
+        Raise(nameof(HasRuns));
+    }
     public string Mode
     {
         get => _main.Data.SongesMode == "Drops" ? "Drops" : _main.Data.SongesMode == "Stats" ? "Stats" : "Strat";
@@ -280,6 +396,7 @@ public class SongesViewModel : ObservableObject
         StatLongest = longest < 0 ? "—" : Plural(longest, "run", "runs");
         StatToday = hist.Count(h => h.At.Date == DateTime.Today).ToString();
         StatWeek = hist.Count(h => h.At >= DateTime.Today.AddDays(-6)).ToString();
+        RefreshRuns();
         RecentDrops.Clear();
         foreach (var h in Enumerable.Reverse(hist).Take(12))
             RecentDrops.Add(new DropRow { Name = h.Name, Since = StratViewModel.Elapsed(h.At), Run = h.Run > 0 ? "run n° " + h.Run : "" });

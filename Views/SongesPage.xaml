@@ -361,6 +361,94 @@
                 </WrapPanel>
                 <TextBlock Text="Les statistiques comptent les légendes animales et classiques ajoutées depuis la version 0.12.0. Retirer une légende par erreur la retire aussi de l'historique."
                            Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="2,0,0,12"/>
+                <!-- Ajouter une run : type, durée, vagues -->
+                <TextBlock Text="Ajouter une run" FontFamily="{StaticResource BodyXB}" FontSize="15" Margin="0,0,0,8"/>
+                <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,12">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Text="TYPE" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="0,0,0,3"/>
+                                <ComboBox ItemsSource="{Binding RunTypes}" SelectedItem="{Binding NewType, Mode=TwoWay}" Width="150"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Text="TEMPS (MIN:S)" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="0,0,0,3"/>
+                                <TextBox Text="{Binding NewTime, UpdateSourceTrigger=PropertyChanged}" Width="110" ToolTip="Par exemple 3:45"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Text="VAGUES" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="0,0,0,3"/>
+                                <TextBox Text="{Binding NewWaves, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+                            </StackPanel>
+                            <Button Content="Ajouter" Command="{Binding AddRunEntryCommand}" VerticalAlignment="Bottom" Style="{StaticResource Big}"
+                                    Background="{DynamicResource Accent}" Foreground="{DynamicResource AccentText}" BorderBrush="{DynamicResource Accent}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding RunFormMessage}" Foreground="{DynamicResource Muted}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="Par type de run" FontFamily="{StaticResource BodyXB}" FontSize="15" Margin="0,0,0,8"/>
+                <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="4" Margin="0,0,0,12">
+                    <StackPanel>
+                        <Grid Margin="10,6,10,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/><ColumnDefinition Width="60"/><ColumnDefinition Width="90"/><ColumnDefinition Width="90"/><ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="TYPE" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Grid.Column="1" Text="RUNS" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="2" Text="TEMPS MOYEN" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="3" Text="MEILLEUR" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="4" Text="VAGUES" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding RunTypeStats}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="10,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/><ColumnDefinition Width="60"/><ColumnDefinition Width="90"/><ColumnDefinition Width="90"/><ColumnDefinition Width="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Type}" FontFamily="{StaticResource BodyXB}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Count}" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Average}" Foreground="{DynamicResource Accent}" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding Best}" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding Waves}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="Aucune run saisie pour l'instant." Foreground="{DynamicResource Dim}" Margin="10,6,10,8">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasRuns}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="Dernières runs" FontFamily="{StaticResource BodyXB}" FontSize="15" Margin="0,0,0,8"/>
+                <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="4" Margin="0,0,0,12">
+                    <ItemsControl ItemsSource="{Binding RecentRuns}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="10,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/><ColumnDefinition Width="70"/><ColumnDefinition Width="90"/><ColumnDefinition Width="90"/><ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Type}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Time}" Foreground="{DynamicResource Accent}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Waves}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding Since}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="4" Content="✕" Command="{Binding DeleteCommand}" Width="28" Height="26" Padding="0" Margin="10,0,0,0" ToolTip="Supprimer cette run"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
                 <TextBlock Text="Derniers drops" FontFamily="{StaticResource BodyXB}" FontSize="15" Margin="0,0,0,8"/>
                 <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="4">
                     <Grid>
