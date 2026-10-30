@@ -16,105 +16,7 @@
             <Setter Property="MinHeight" Value="44"/>
             <Setter Property="Padding" Value="14,0"/>
         </Style>
-    </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <!-- Titre + progression -->
-        <Grid Margin="0,0,0,14">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel>
-                <TextBlock Text="Almanax" Style="{StaticResource PageTitle}"/>
-                <TextBlock Text="{Binding WeekLabel}" Style="{StaticResource PageSub}"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Border Width="150" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,10,0">
-                    <StackPanel>
-                        <DockPanel>
-                            <TextBlock DockPanel.Dock="Right" Text="{Binding WeekCounter}" FontFamily="{StaticResource BodyXB}"/>
-                            <TextBlock Text="Semaine" Foreground="{DynamicResource Muted}" FontSize="12"/>
-                        </DockPanel>
-                        <ProgressBar Style="{StaticResource Meter}" Value="{Binding WeekPct, Mode=OneWay}" Margin="0,6,0,0"/>
-                    </StackPanel>
-                </Border>
-                <Border Width="150" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8">
-                    <StackPanel>
-                        <DockPanel>
-                            <TextBlock DockPanel.Dock="Right" Text="{Binding YearCounter}" FontFamily="{StaticResource BodyXB}"/>
-                            <TextBlock Text="{Binding YearLabel}" Foreground="{DynamicResource Muted}" FontSize="12"/>
-                        </DockPanel>
-                        <ProgressBar Style="{StaticResource Meter}" Foreground="{DynamicResource Accent}" Value="{Binding YearPct, Mode=OneWay}" Margin="0,6,0,0"/>
-                    </StackPanel>
-                </Border>
-            </StackPanel>
-        </Grid>
-
-        <!-- Navigation semaine -->
-        <DockPanel Grid.Row="1" Margin="0,0,0,14" LastChildFill="False">
-            <Button DockPanel.Dock="Left" Style="{StaticResource ArrowBtn}" Command="{Binding PrevCommand}" IsEnabled="{Binding CanPrev}" Margin="0,0,8,0" ToolTip="Semaine précédente">
-                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoChevronLeft}" Stroke="{DynamicResource Text}" StrokeThickness="2.5" Width="18" Height="18"/>
-            </Button>
-            <Border DockPanel.Dock="Left" MinWidth="220" Height="44" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
-                <TextBlock Text="{Binding WeekShort}" FontFamily="{StaticResource BodyXB}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Border>
-            <Button DockPanel.Dock="Left" Style="{StaticResource ArrowBtn}" Command="{Binding NextCommand}" IsEnabled="{Binding CanNext}" Margin="0,0,8,0" ToolTip="Semaine suivante">
-                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoChevronRight}" Stroke="{DynamicResource Text}" StrokeThickness="2.5" Width="18" Height="18"/>
-            </Button>
-            <Button DockPanel.Dock="Left" Content="Aujourd'hui" Command="{Binding TodayCommand}" MinHeight="44" Padding="16,0"/>
-            <Button DockPanel.Dock="Right" Command="{Binding ToggleViewCommand}" MinHeight="44" Padding="16,0">
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource BtnGhost}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsMonthView}" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource Accent}"/>
-                                <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-                <StackPanel Orientation="Horizontal">
-                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="17" Height="17" Margin="0,0,8,0"/>
-                    <TextBlock Text="{Binding ViewButtonText}"/>
-                </StackPanel>
-            </Button>
-        </DockPanel>
-
-        <!-- Boutons rapides (vue semaine) -->
-        <WrapPanel Grid.Row="2" Margin="0,0,0,14" Visibility="{Binding IsWeekView, Converter={StaticResource BoolVis}}">
-            <Button Content="Tout à préparer" Command="{Binding AllTodoCommand}" Style="{StaticResource BigBtn}" BorderBrush="#4A5160" Margin="0,0,8,0"/>
-            <Button Content="Tout préparé" Command="{Binding AllPrepCommand}" Style="{StaticResource BigBtn}" Background="Transparent" Foreground="{DynamicResource WarnText}" BorderBrush="{DynamicResource Warn}" Margin="0,0,8,0"/>
-            <Button Content="Tout validé" Command="{Binding AllDoneCommand}" Style="{StaticResource BigBtn}" Background="{DynamicResource Good}" Foreground="{DynamicResource GoodDark}" BorderBrush="{DynamicResource Good}" Margin="0,0,8,0"/>
-            <Button Command="{Binding ZaapCommand}" Style="{StaticResource BigBtn}" Background="Transparent" Foreground="{DynamicResource Accent}" BorderBrush="{DynamicResource Accent}">
-                <StackPanel Orientation="Horizontal">
-                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCopy}" Stroke="{DynamicResource Accent}" Margin="0,0,8,0"/>
-                    <TextBlock Text="Zaap"/>
-                </StackPanel>
-            </Button>
-        </WrapPanel>
-
-        <!-- Légende -->
-        <WrapPanel Grid.Row="3" Margin="0,0,0,14">
-            <StackPanel Orientation="Horizontal" Margin="0,0,16,0"><Ellipse Width="10" Height="10" Fill="{DynamicResource Off}" Margin="0,0,6,0"/><TextBlock Text="À faire" Foreground="{DynamicResource Muted}" FontSize="12.5"/></StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,0,16,0"><Ellipse Width="10" Height="10" Fill="{DynamicResource Warn}" Margin="0,0,6,0"/><TextBlock Text="Ressource préparée" Foreground="{DynamicResource Muted}" FontSize="12.5"/></StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,0,16,0"><Ellipse Width="10" Height="10" Fill="{DynamicResource Good}" Margin="0,0,6,0"/><TextBlock Text="Validé" Foreground="{DynamicResource Muted}" FontSize="12.5"/></StackPanel>
-            <StackPanel Orientation="Horizontal"><Ellipse Width="10" Height="10" Fill="{DynamicResource Bad}" Margin="0,0,6,0"/><TextBlock Text="Manqué" Foreground="{DynamicResource Muted}" FontSize="12.5"/></StackPanel>
-        </WrapPanel>
-
-        <!-- Vue semaine -->
-        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsWeekView, Converter={StaticResource BoolVis}}">
-            <ItemsControl ItemsSource="{Binding Days}" Margin="0,0,10,0">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+        <DataTemplate x:Key="AlmanaxDayCard">
                         <Border Background="{Binding Bg}" BorderBrush="{Binding Border}" BorderThickness="1.5" CornerRadius="12" Margin="0,0,0,8" MinHeight="56">
                             <Grid>
                                 <Border Width="4" HorizontalAlignment="Left" Background="{DynamicResource Accent}" CornerRadius="12,0,0,12" Margin="-1.5,-1.5,0,-1.5"
@@ -203,8 +105,127 @@
                             </Grid>
                         </Border>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre + progression -->
+        <Grid Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Almanax" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="{Binding WeekLabel}" Style="{StaticResource PageSub}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Border Width="150" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,10,0">
+                    <StackPanel>
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding WeekCounter}" FontFamily="{StaticResource BodyXB}"/>
+                            <TextBlock Text="Semaine" Foreground="{DynamicResource Muted}" FontSize="12"/>
+                        </DockPanel>
+                        <ProgressBar Style="{StaticResource Meter}" Value="{Binding WeekPct, Mode=OneWay}" Margin="0,6,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Border Width="150" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8">
+                    <StackPanel>
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding YearCounter}" FontFamily="{StaticResource BodyXB}"/>
+                            <TextBlock Text="{Binding YearLabel}" Foreground="{DynamicResource Muted}" FontSize="12"/>
+                        </DockPanel>
+                        <ProgressBar Style="{StaticResource Meter}" Foreground="{DynamicResource Accent}" Value="{Binding YearPct, Mode=OneWay}" Margin="0,6,0,0"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <!-- Navigation semaine -->
+        <DockPanel Grid.Row="1" Margin="0,0,0,14" LastChildFill="False">
+            <Button DockPanel.Dock="Left" Style="{StaticResource ArrowBtn}" Command="{Binding PrevCommand}" IsEnabled="{Binding CanPrev}" Margin="0,0,8,0" ToolTip="Semaine précédente">
+                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoChevronLeft}" Stroke="{DynamicResource Text}" StrokeThickness="2.5" Width="18" Height="18"/>
+            </Button>
+            <Border DockPanel.Dock="Left" MinWidth="220" Height="44" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
+                <TextBlock Text="{Binding WeekShort}" FontFamily="{StaticResource BodyXB}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Button DockPanel.Dock="Left" Style="{StaticResource ArrowBtn}" Command="{Binding NextCommand}" IsEnabled="{Binding CanNext}" Margin="0,0,8,0" ToolTip="Semaine suivante">
+                <Path Style="{StaticResource Icon}" Data="{StaticResource IcoChevronRight}" Stroke="{DynamicResource Text}" StrokeThickness="2.5" Width="18" Height="18"/>
+            </Button>
+            <Button DockPanel.Dock="Left" Content="Aujourd'hui" Command="{Binding TodayCommand}" MinHeight="44" Padding="16,0"/>
+            <Button DockPanel.Dock="Right" Command="{Binding ToggleViewCommand}" MinHeight="44" Padding="16,0">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource BtnGhost}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMonthView}" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="17" Height="17" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding ViewButtonText}"/>
+                </StackPanel>
+            </Button>
+            <Button DockPanel.Dock="Right" Command="{Binding ToggleUpcomingCommand}" MinHeight="44" Padding="16,0" Margin="8,0,0,0" Content="{Binding UpcomingButtonText}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource BtnGhost}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsUpcomingView}" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </DockPanel>
+
+        <!-- Boutons rapides (vue semaine) -->
+        <WrapPanel Grid.Row="2" Margin="0,0,0,14" Visibility="{Binding IsWeekView, Converter={StaticResource BoolVis}}">
+            <Button Content="Tout à préparer" Command="{Binding AllTodoCommand}" Style="{StaticResource BigBtn}" BorderBrush="#4A5160" Margin="0,0,8,0"/>
+            <Button Content="Tout préparé" Command="{Binding AllPrepCommand}" Style="{StaticResource BigBtn}" Background="Transparent" Foreground="{DynamicResource WarnText}" BorderBrush="{DynamicResource Warn}" Margin="0,0,8,0"/>
+            <Button Content="Tout validé" Command="{Binding AllDoneCommand}" Style="{StaticResource BigBtn}" Background="{DynamicResource Good}" Foreground="{DynamicResource GoodDark}" BorderBrush="{DynamicResource Good}" Margin="0,0,8,0"/>
+            <Button Command="{Binding ZaapCommand}" Style="{StaticResource BigBtn}" Background="Transparent" Foreground="{DynamicResource Accent}" BorderBrush="{DynamicResource Accent}">
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCopy}" Stroke="{DynamicResource Accent}" Margin="0,0,8,0"/>
+                    <TextBlock Text="Zaap"/>
+                </StackPanel>
+            </Button>
+        </WrapPanel>
+
+        <!-- Légende -->
+        <WrapPanel Grid.Row="3" Margin="0,0,0,14">
+            <StackPanel Orientation="Horizontal" Margin="0,0,16,0"><Ellipse Width="10" Height="10" Fill="{DynamicResource Off}" Margin="0,0,6,0"/><TextBlock Text="À faire" Foreground="{DynamicResource Muted}" FontSize="12.5"/></StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,16,0"><Ellipse Width="10" Height="10" Fill="{DynamicResource Warn}" Margin="0,0,6,0"/><TextBlock Text="Ressource préparée" Foreground="{DynamicResource Muted}" FontSize="12.5"/></StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,16,0"><Ellipse Width="10" Height="10" Fill="{DynamicResource Good}" Margin="0,0,6,0"/><TextBlock Text="Validé" Foreground="{DynamicResource Muted}" FontSize="12.5"/></StackPanel>
+            <StackPanel Orientation="Horizontal"><Ellipse Width="10" Height="10" Fill="{DynamicResource Bad}" Margin="0,0,6,0"/><TextBlock Text="Manqué" Foreground="{DynamicResource Muted}" FontSize="12.5"/></StackPanel>
+        </WrapPanel>
+
+        <!-- Vue semaine -->
+        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsWeekView, Converter={StaticResource BoolVis}}">
+            <ItemsControl ItemsSource="{Binding Days}" ItemTemplate="{StaticResource AlmanaxDayCard}" Margin="0,0,10,0">
             </ItemsControl>
+        </ScrollViewer>
+
+        <!-- 7 prochains jours -->
+        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsUpcomingView, Converter={StaticResource BoolVis}}">
+            <StackPanel Margin="0,0,10,0">
+                <DockPanel Margin="0,0,0,10">
+                    <Button DockPanel.Dock="Right" Content="Copier la liste" Command="{Binding CopyUpcomingCommand}" Style="{StaticResource BigBtn}"/>
+                    <TextBlock Text="Les offrandes d'aujourd'hui et des 6 jours suivants, pour préparer tes ressources à l'avance." Foreground="{DynamicResource Muted}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                </DockPanel>
+                <ItemsControl ItemsSource="{Binding Upcoming}" ItemTemplate="{StaticResource AlmanaxDayCard}"/>
+            </StackPanel>
         </ScrollViewer>
 
         <!-- Vue calendrier -->

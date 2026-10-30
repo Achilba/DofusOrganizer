@@ -77,6 +77,13 @@ public class AchRow : ObservableObject
     }
 }
 
+/// <summary>Une suggestion « à finir en priorité » : un clic filtre la liste sur ce boss.</summary>
+public class AchSuggestion
+{
+    public string Text { get; init; } = "";
+    public RelayCommand Command { get; init; }
+}
+
 public partial class DungeonsViewModel
 {
     private readonly List<AchRow> _achAll = new();
@@ -125,8 +132,35 @@ public partial class DungeonsViewModel
             if (value == null || !Set(ref _achChar, value)) return;
             foreach (var r in _achAll) r.RefreshAll();
             Raise(nameof(AchCounter));
+            Raise(nameof(AchSuggestions)); Raise(nameof(HasAchSuggestions));
         }
     }
+
+    /// <summary>Les 3 boss les plus proches d'être terminés (déjà commencés), puis les plus bas en niveau si besoin.</summary>
+    public List<AchSuggestion> AchSuggestions
+    {
+        get
+        {
+            var list = new List<AchSuggestion>();
+            if (_achChar == null) return list;
+            var open = _achAll.Where(r => r.Total - r.Count > 0).ToList();
+            var picks = open.Where(r => r.Count > 0).OrderBy(r => r.Total - r.Count).ThenBy(r => r.LevelNum).Take(3).ToList();
+            if (picks.Count < 3)
+                picks.AddRange(open.Where(r => r.Count == 0).OrderBy(r => r.LevelNum).Take(3 - picks.Count));
+            foreach (var r in picks)
+            {
+                var row = r;
+                int miss = r.Total - r.Count;
+                list.Add(new AchSuggestion
+                {
+                    Text = r.Name + " · niv. " + r.Bracket + " · " + (miss > 1 ? "reste " + miss : "reste 1"),
+                    Command = new RelayCommand(() => Query = row.Name)
+                });
+            }
+            return list;
+        }
+    }
+    public bool HasAchSuggestions => AchSuggestions.Count > 0;
 
     public string AchCounter => _achAll.Sum(r => r.Count) + " / " + _achAll.Sum(r => r.Total) + " succès";
     public string AchShown => AchView.Count + " affichés";
@@ -186,6 +220,7 @@ public partial class DungeonsViewModel
         }
         _main.RequestSave();
         Raise(nameof(AchCounter));
+        Raise(nameof(AchSuggestions)); Raise(nameof(HasAchSuggestions));
         if (_achByKey.TryGetValue(boss, out var row)) row.RaiseOthers();
     }
 
@@ -257,5 +292,6 @@ public partial class DungeonsViewModel
         foreach (var d in items) AchView.Add(d);
         Raise(nameof(AchShown));
         Raise(nameof(AchCounter));
+        Raise(nameof(AchSuggestions)); Raise(nameof(HasAchSuggestions));
     }
 }

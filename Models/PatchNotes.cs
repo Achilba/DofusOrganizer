@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.9";
+    public const string Current = "0.12.10";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.10", "30/10/2026", new[]
+        {
+            "NOUVEAU — Donjons : « À finir en priorité » propose les 3 boss les plus proches d'être terminés pour le personnage choisi ; un clic filtre la liste sur ce boss.",
+            "NOUVEAU — Almanax : bouton « 7 prochains jours » (aujourd'hui et les 6 suivants, d'une semaine à l'autre) avec « Copier la liste » pour préparer les ressources.",
+        }),
         new("0.12.9", "30/10/2026", new[]
         {
             "NOUVEAU — Paramètres > Sauvegardes : copie automatique chaque jour dans le dossier choisi avec « Copier ailleurs » (14 copies gardées).",

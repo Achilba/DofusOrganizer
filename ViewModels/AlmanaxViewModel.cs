@@ -68,6 +68,12 @@ public class AlmanaxViewModel : ObservableObject
     private bool _monthView;
 
     public ObservableCollection<AlmanaxDay> Days { get; } = new();
+    public ObservableCollection<AlmanaxDay> Upcoming { get; } = new();
+    private bool _upcoming;
+    public RelayCommand ToggleUpcomingCommand { get; }
+    public RelayCommand CopyUpcomingCommand { get; }
+    public bool IsUpcomingView => _upcoming;
+    public string UpcomingButtonText => _upcoming ? "Retour à la semaine" : "7 prochains jours";
     public ObservableCollection<AlmanaxWeekRow> MonthRows { get; } = new();
 
     public RelayCommand PrevCommand { get; }
@@ -91,8 +97,10 @@ public class AlmanaxViewModel : ObservableObject
 
         PrevCommand = new RelayCommand(() => Move(-1));
         NextCommand = new RelayCommand(() => Move(+1));
-        TodayCommand = new RelayCommand(() => { _week = MondayOf(DateTime.Today); _monthView = false; Refresh(); });
-        ToggleViewCommand = new RelayCommand(() => { _monthView = !_monthView; if (_monthView) _month = _week.AddDays(3).Month - 1; Refresh(); });
+        TodayCommand = new RelayCommand(() => { _week = MondayOf(DateTime.Today); _monthView = false; _upcoming = false; Refresh(); });
+        ToggleUpcomingCommand = new RelayCommand(() => { _upcoming = !_upcoming; _monthView = false; Refresh(); });
+        CopyUpcomingCommand = new RelayCommand(CopyUpcoming);
+        ToggleViewCommand = new RelayCommand(() => { _upcoming = false; _monthView = !_monthView; if (_monthView) _month = _week.AddDays(3).Month - 1; Refresh(); });
         PrevMonthCommand = new RelayCommand(() => { _month = Math.Max(0, _month - 1); Refresh(); });
         NextMonthCommand = new RelayCommand(() => { _month = Math.Min(11, _month + 1); Refresh(); });
         AllTodoCommand = new RelayCommand(() => ApplyWeek(d => true, "todo"));
@@ -103,7 +111,7 @@ public class AlmanaxViewModel : ObservableObject
     }
 
     public bool IsMonthView => _monthView;
-    public bool IsWeekView => !_monthView;
+    public bool IsWeekView => !_monthView && !_upcoming;
     public string ViewButtonText => _monthView ? "Retour à la semaine" : "Calendrier";
     public string WeekLabel { get; private set; }
     public string MonthTitle { get; private set; }
@@ -143,6 +151,7 @@ public class AlmanaxViewModel : ObservableObject
     {
         _week = MondayOf(DateTime.Today).AddDays(7);
         _monthView = false;
+        _upcoming = false;
         Refresh();
     }
 
@@ -207,6 +216,46 @@ public class AlmanaxViewModel : ObservableObject
         _ => (B("#161A21"), B("#2B313C"), B("#B4BAC6"), "À préparer")
     };
 
+    /// <summary>Construit la ligne d'un jour (semaine et liste des 7 prochains jours).</summary>
+    private AlmanaxDay MakeDay(DateTime d)
+    {
+        var kind = Kind(d);
+        var look = Look(kind);
+        var o = Offer(d);
+        var date = d;
+        var bonus = (d.Year == 2026 && AlmanaxData.Bonus2026.TryGetValue(d.ToString("dd/MM", CultureInfo.InvariantCulture), out var b))
+            ? b : "Modificateur indisponible pour cette date.";
+        bool isPrep = kind == "prep";
+
+        return new AlmanaxDay
+        {
+            DayName = DayNames[((int)d.DayOfWeek + 6) % 7],
+            DateText = d.Day + " " + Months[d.Month - 1],
+            Resource = o.Resource,
+            QtyText = o.Qty > 0 ? "×" + o.Qty : "",
+            TypeText = AlmanaxTypes.For(o.Resource),
+            TypeCategory = AlmanaxTypes.CategoryOf(AlmanaxTypes.For(o.Resource)),
+            HasQuest = !string.IsNullOrEmpty(o.Quest),
+            QuestText = "Quête : " + o.Quest + " ↗",
+            Bonus = bonus,
+            IsToday = d.Date == DateTime.Today,
+            Bg = look.bg,
+            Border = look.border,
+            ChipText = look.chip,
+            ChipBrush = look.fg,
+            ShowPrep = d >= DateTime.Today && kind != "done",
+            PrepLabel = isPrep ? "Annuler" : "Préparer la ressource",
+            IsPrep = isPrep,
+            ShowDone = (d.Date == DateTime.Today || kind == "missed") && kind != "done",
+            ShowUndo = kind == "done",
+            PrepCommand = new RelayCommand(() => { SetDay(date, isPrep ? "todo" : "prep"); _main.RequestSave(); Refresh(); }),
+            DoneCommand = new RelayCommand(() => { SetDay(date, "done"); _main.RequestSave(); Refresh(); }),
+            UndoCommand = new RelayCommand(() => { SetDay(date, "todo"); _main.RequestSave(); Refresh(); }),
+            CopyCommand = new RelayCommand(() => _main.CopyWithToast(o.Resource, "Copié  " + o.Resource)),
+            QuestCommand = new RelayCommand(() => OpenQuest(date))
+        };
+    }
+
     public void Refresh()
     {
         var year = DateTime.Today.Year;
@@ -224,43 +273,12 @@ public class AlmanaxViewModel : ObservableObject
         for (int i = 0; i < 7; i++)
         {
             var d = _week.AddDays(i);
-            var kind = Kind(d);
-            if (kind == "done") weekDone++;
-            var look = Look(kind);
-            var o = Offer(d);
-            var date = d;
-            var bonus = (d.Year == 2026 && AlmanaxData.Bonus2026.TryGetValue(d.ToString("dd/MM", CultureInfo.InvariantCulture), out var b))
-                ? b : "Modificateur indisponible pour cette date.";
-            bool isPrep = kind == "prep";
-
-            Days.Add(new AlmanaxDay
-            {
-                DayName = DayNames[i],
-                DateText = d.Day + " " + Months[d.Month - 1],
-                Resource = o.Resource,
-                QtyText = o.Qty > 0 ? "×" + o.Qty : "",
-                TypeText = AlmanaxTypes.For(o.Resource),
-                TypeCategory = AlmanaxTypes.CategoryOf(AlmanaxTypes.For(o.Resource)),
-                HasQuest = !string.IsNullOrEmpty(o.Quest),
-                QuestText = "Quête : " + o.Quest + " ↗",
-                Bonus = bonus,
-                IsToday = d.Date == DateTime.Today,
-                Bg = look.bg,
-                Border = look.border,
-                ChipText = look.chip,
-                ChipBrush = look.fg,
-                ShowPrep = d >= DateTime.Today && kind != "done",
-                PrepLabel = isPrep ? "Annuler" : "Préparer la ressource",
-                IsPrep = isPrep,
-                ShowDone = (d.Date == DateTime.Today || kind == "missed") && kind != "done",
-                ShowUndo = kind == "done",
-                PrepCommand = new RelayCommand(() => { SetDay(date, isPrep ? "todo" : "prep"); _main.RequestSave(); Refresh(); }),
-                DoneCommand = new RelayCommand(() => { SetDay(date, "done"); _main.RequestSave(); Refresh(); }),
-                UndoCommand = new RelayCommand(() => { SetDay(date, "todo"); _main.RequestSave(); Refresh(); }),
-                CopyCommand = new RelayCommand(() => _main.CopyWithToast(o.Resource, "Copié  " + o.Resource)),
-                QuestCommand = new RelayCommand(() => OpenQuest(date))
-            });
+            if (Kind(d) == "done") weekDone++;
+            Days.Add(MakeDay(d));
         }
+
+        Upcoming.Clear();
+        for (int i = 0; i < 7; i++) Upcoming.Add(MakeDay(DateTime.Today.AddDays(i)));
 
         int yearDone = _main.Data.AlmanaxDone.Count(k => k.StartsWith(year + "-"));
         int yearDays = DateTime.IsLeapYear(year) ? 366 : 365;
@@ -301,11 +319,18 @@ public class AlmanaxViewModel : ObservableObject
             });
         }
 
-        foreach (var p in new[] { nameof(IsMonthView), nameof(IsWeekView), nameof(ViewButtonText), nameof(WeekLabel), nameof(MonthTitle),
+        foreach (var p in new[] { nameof(IsMonthView), nameof(IsWeekView), nameof(IsUpcomingView), nameof(UpcomingButtonText), nameof(ViewButtonText), nameof(WeekLabel), nameof(MonthTitle),
                                   nameof(WeekCounter), nameof(YearCounter), nameof(TodaySummary), nameof(IsSunday),
                                   nameof(WeekShort), nameof(WeekPct), nameof(YearPct), nameof(NeedsReminder), nameof(YearLabel),
                                   nameof(CanPrev), nameof(CanNext), nameof(CanPrevMonth), nameof(CanNextMonth) })
             Raise(p);
+    }
+
+    /// <summary>Copie la liste des 7 prochaines offrandes (pratique pour préparer les ressources).</summary>
+    private void CopyUpcoming()
+    {
+        var lines = Upcoming.Select(u => u.DayName + " " + u.DateText + " : " + u.Resource + (string.IsNullOrEmpty(u.QtyText) ? "" : " " + u.QtyText));
+        _main.CopyWithToast(string.Join("\n", lines), "Liste copiée");
     }
 
     private void OpenQuest(DateTime d)

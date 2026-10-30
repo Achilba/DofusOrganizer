@@ -142,6 +142,20 @@
             <TextBlock Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Height="40" Margin="0,0,0,8" VerticalAlignment="Center" Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
                 <Run Text="{Binding AchCounter, Mode=OneWay}"/><Run Text=" · "/><Run Text="{Binding AchShown, Mode=OneWay}"/>
             </TextBlock>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8" Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
+                <StackPanel Orientation="Horizontal" Visibility="{Binding HasAchSuggestions, Converter={StaticResource BoolVis}}">
+                    <TextBlock Text="  À finir en priorité :" Foreground="{DynamicResource Muted}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ItemsControl ItemsSource="{Binding AchSuggestions}">
+                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Text}" Command="{Binding Command}" Height="32" MinHeight="0" Padding="12,0" FontSize="12.5" Margin="0,0,8,0"
+                                        ToolTip="Filtrer la liste sur ce boss"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
         </WrapPanel>
         <Border Grid.Row="2" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True"
                 Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}">
