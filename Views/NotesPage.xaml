@@ -81,7 +81,9 @@
 
         <StackPanel Grid.Row="6" Orientation="Horizontal">
             <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCheck}" Stroke="{DynamicResource GoodText}" StrokeThickness="2.5" Width="14" Height="14" Margin="0,0,8,0"/>
-            <TextBlock Text="Enregistré automatiquement à chaque frappe" Foreground="{DynamicResource GoodText}" FontSize="12"/>
+            <TextBlock Text="Enregistré automatiquement à chaque frappe" Foreground="{DynamicResource GoodText}" FontSize="12" VerticalAlignment="Center"/>
+            <Button Content="Note flottante" Command="{Binding FloatNoteCommand}" MinHeight="32" Padding="12,0" FontSize="12" Margin="20,0,0,0"
+                    ToolTip="Ouvre cette note dans une petite fenêtre toujours au premier plan (clique à nouveau pour la fermer)"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.10";
+    public const string Current = "0.12.11";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.11", "30/10/2026", new[]
+        {
+            "NOUVEAU — Personnages : « Comparer avec » met deux personnages côte à côte (niveau, alignement, métiers, succès de donjon, stuffs) et met en avant la meilleure valeur.",
+            "NOUVEAU — Notes : « Note flottante », une petite fenêtre toujours au premier plan avec la note choisie. Elle se souvient de sa taille et de sa place.",
+        }),
         new("0.12.10", "30/10/2026", new[]
         {
             "NOUVEAU — Donjons : « À finir en priorité » propose les 3 boss les plus proches d'être terminés pour le personnage choisi ; un clic filtre la liste sur ce boss.",

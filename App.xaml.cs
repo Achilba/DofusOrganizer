@@ -69,6 +69,13 @@ public partial class App : Application
         _main.Closed += (_, _) => Quit();
 
         _vm.PatchNotesRequested += ShowPatchNotes;
+        _vm.FloatNoteRequested += () =>
+        {
+            if (_noteFloat != null) { _noteFloat.Close(); return; }
+            _noteFloat = new NoteFloatWindow(_vm);
+            _noteFloat.Closed += (_, _) => _noteFloat = null;
+            _noteFloat.Show();
+        };
         _vm.WelcomeRequested += () =>
         {
             var wel = new WelcomeWindow();
@@ -106,6 +113,8 @@ public partial class App : Application
             ShowPatchNotes();
         }
     }
+
+    private NoteFloatWindow _noteFloat;
 
     private void ShowPatchNotes()
     {

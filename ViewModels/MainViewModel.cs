@@ -103,6 +103,8 @@ public class MainViewModel : ObservableObject
     public event Action<bool> MiniModeRequested; // true = afficher la mini-barre
     public event Action MiniSettingsChanged;
     public event Action UiScaleChanged;
+    public event Action FloatNoteRequested;
+    public RelayCommand FloatNoteCommand { get; private set; }
 
     public string[] ScaleChoices { get; } = { "90 %", "100 %", "110 %", "125 %" };
     public string ScaleChoice
@@ -386,6 +388,7 @@ public class MainViewModel : ObservableObject
         MoveDownCommand = new RelayCommand(p => Move(p as Character, +1));
         CopyAlmanaxZaapCommand = new RelayCommand(() => CopyZaap(ZaapData.All.First(z => z.Coord == "-5,-23")));
         OpenAlmanaxFromMiniCommand = new RelayCommand(() => { Page = "almanax"; MiniModeRequested?.Invoke(false); });
+        FloatNoteCommand = new RelayCommand(() => FloatNoteRequested?.Invoke());
         AccentPickCommand = new RelayCommand(p =>
         {
             Data.AccentColor = p as string ?? "";

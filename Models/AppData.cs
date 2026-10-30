@@ -366,6 +366,11 @@ public class AppData
     public bool WinMaximized { get; set; }
     /// <summary>Couleur d'accent personnalisée, « #RRGGBB » ; vide = couleur du thème.</summary>
     public string AccentColor { get; set; } = "";
+    /// <summary>Taille et place de la note flottante.</summary>
+    public double NoteWinLeft { get; set; }
+    public double NoteWinTop { get; set; }
+    public double NoteWinWidth { get; set; }
+    public double NoteWinHeight { get; set; }
     /// <summary>Cartes de la page d'accueil.</summary>
     public bool HomeHideChars { get; set; }
     public bool HomeHideShortcuts { get; set; }

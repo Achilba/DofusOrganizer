@@ -3,6 +3,16 @@ using DofusTeamOrganizer.Models;
 
 namespace DofusTeamOrganizer.ViewModels;
 
+/// <summary>Une ligne de la comparaison de deux personnages ; le meilleur côté est mis en avant.</summary>
+public class CompareRow
+{
+    public string Label { get; init; } = "";
+    public string A { get; init; } = "";
+    public string B { get; init; } = "";
+    public bool WinA { get; init; }
+    public bool WinB { get; init; }
+}
+
 public class CharactersViewModel : ObservableObject
 {
     private readonly MainViewModel _main;
@@ -24,6 +34,72 @@ public class CharactersViewModel : ObservableObject
     public string[] VersionFilters { get; } = new[] { "Toutes" }.Concat(GameLists.Versions).ToArray();
     public string[] TagChoices => GameLists.Tags;
     public string[] VersionChoices => GameLists.Versions;
+
+    // ───── Comparaison de deux personnages ─────
+    public const string NoCompare = "Aucun";
+    public ObservableCollection<string> CompareChoices { get; } = new();
+    public ObservableCollection<CompareRow> CompareRows { get; } = new();
+    private string _compareWith = NoCompare;
+    public string CompareWith
+    {
+        get => _compareWith;
+        set { if (value != null && Set(ref _compareWith, value)) BuildCompare(); }
+    }
+    public bool HasCompare { get; private set; }
+    public string CompareNameA => _selected?.Name ?? "";
+    public string CompareNameB => _compareWith;
+
+    private static int AchTotal() => DungeonAchData.All.Sum(b => b.Challenges.Length + (b.GroupLabel != null ? 1 : 0) + (b.Special ? 1 : 0));
+
+    private int AchDone(string name) => _main.Data.BossAch.TryGetValue(name, out var l) ? l.Count : 0;
+
+    private static CompareRow Num(string label, int a, int b, string textA, string textB, bool higherWins = true) => new()
+    {
+        Label = label, A = textA, B = textB,
+        WinA = a != b && (higherWins ? a > b : a < b),
+        WinB = a != b && (higherWins ? b > a : b < a),
+    };
+
+    /// <summary>Met à jour la liste des personnages comparables et le tableau.</summary>
+    public void RefreshCompare()
+    {
+        CompareChoices.Clear();
+        CompareChoices.Add(NoCompare);
+        foreach (var c in Characters.Where(c => c != _selected)) CompareChoices.Add(c.Name);
+        if (!CompareChoices.Contains(_compareWith)) _compareWith = NoCompare;
+        Raise(nameof(CompareWith));
+        BuildCompare();
+    }
+
+    private void BuildCompare()
+    {
+        CompareRows.Clear();
+        var a = _selected;
+        var b = Characters.FirstOrDefault(c => c != a && c.Name == _compareWith);
+        HasCompare = a != null && b != null;
+        if (HasCompare)
+        {
+            int total = AchTotal();
+            int da = AchDone(a.Name), db = AchDone(b.Name);
+            int ja = a.Jobs.Count, jb = b.Jobs.Count;
+            int ma = a.Jobs.Count(j => j.Level >= 200), mb = b.Jobs.Count(j => j.Level >= 200);
+            static string Best(Character c)
+            {
+                var top = c.Jobs.OrderByDescending(x => x.Level).FirstOrDefault();
+                return top == null ? "—" : top.Name + " " + top.Level;
+            }
+            CompareRows.Add(new CompareRow { Label = "Classe", A = a.ClassName, B = b.ClassName });
+            CompareRows.Add(Num("Niveau", a.CharLevel, b.CharLevel, a.LevelText, b.LevelText));
+            CompareRows.Add(new CompareRow { Label = "Alignement", A = a.OrderText, B = b.OrderText });
+            CompareRows.Add(Num("Niveau d'alignement", a.AlignLevel, b.AlignLevel, a.AlignLevel.ToString(), b.AlignLevel.ToString()));
+            CompareRows.Add(Num("Métiers", ja, jb, ja.ToString(), jb.ToString()));
+            CompareRows.Add(Num("Métiers niveau 200", ma, mb, ma.ToString(), mb.ToString()));
+            CompareRows.Add(new CompareRow { Label = "Meilleur métier", A = Best(a), B = Best(b) });
+            CompareRows.Add(Num("Succès de donjon", da, db, da + " / " + total, db + " / " + total));
+            CompareRows.Add(Num("Stuffs enregistrés", a.Stuffs.Count, b.Stuffs.Count, a.Stuffs.Count.ToString(), b.Stuffs.Count.ToString()));
+        }
+        Raise(nameof(HasCompare)); Raise(nameof(CompareNameA)); Raise(nameof(CompareNameB));
+    }
 
     public RelayCommand AddJobCommand { get; }
     public RelayCommand RemoveJobCommand { get; }
@@ -78,6 +154,7 @@ public class CharactersViewModel : ObservableObject
         {
             NameError = _main.RenameCharacter(_selected, value);
             Raise(nameof(EditName));
+            RefreshCompare();
         }
     }
 
@@ -94,6 +171,7 @@ public class CharactersViewModel : ObservableObject
             Raise(nameof(EditName));
             RefreshJobs();
             RefreshStuffs();
+            RefreshCompare();
         }
     }
 
@@ -108,6 +186,7 @@ public class CharactersViewModel : ObservableObject
         Raise(nameof(Characters));
         RefreshJobs();
         RefreshStuffs();
+        RefreshCompare();
     }
 
     // ───── Métiers ─────

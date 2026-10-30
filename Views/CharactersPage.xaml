@@ -41,11 +41,70 @@
                 </ComboBox.ItemTemplate>
                 
             </ComboBox>
-            <Button Content="Copier le résumé" Command="{Binding CopySummaryCommand}"/>
+            <Button Content="Copier le résumé" Command="{Binding CopySummaryCommand}" Margin="0,0,24,0"/>
+            <TextBlock Text="Comparer avec" Style="{StaticResource Lbl}" FontFamily="{StaticResource BodyXB}" Foreground="{DynamicResource Muted}" Margin="0,0,10,0"/>
+            <ComboBox Width="200" Height="44" ItemsSource="{Binding CompareChoices}" SelectedItem="{Binding CompareWith, Mode=TwoWay}"/>
         </StackPanel>
 
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="0,0,10,0">
+                <!-- Comparaison -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14" Visibility="{Binding HasCompare, Converter={StaticResource BoolVis}}">
+                    <StackPanel>
+                        <TextBlock Text="Comparaison" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="190"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="1" Text="{Binding CompareNameA}" FontFamily="{StaticResource BodyXB}" FontSize="15"/>
+                            <TextBlock Grid.Column="2" Text="{Binding CompareNameB}" FontFamily="{StaticResource BodyXB}" FontSize="15"/>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding CompareRows}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Padding="0,7">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="190"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Label}" Foreground="{DynamicResource Muted}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding A}" TextWrapping="Wrap">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding WinA}" Value="True">
+                                                                <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                                                                <Setter Property="FontFamily" Value="{StaticResource BodyXB}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Grid.Column="2" Text="{Binding B}" TextWrapping="Wrap">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding WinB}" Value="True">
+                                                                <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                                                                <Setter Property="FontFamily" Value="{StaticResource BodyXB}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="La valeur la plus haute est en couleur d'accent." Foreground="{DynamicResource Dim}" FontSize="12" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Border>
+
                 <!-- Détails -->
                 <Border Style="{StaticResource Card}">
                     <StackPanel>
