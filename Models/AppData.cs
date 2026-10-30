@@ -265,6 +265,8 @@ public class RunEntry
     public int Seconds { get; set; }
     public int Waves { get; set; }
     public DateTime At { get; set; }
+    /// <summary>Remarque libre (composition, stratégie…).</summary>
+    public string Note { get; set; } = "";
 }
 
 /// <summary>Une tâche récurrente (par personnage) : tous les jours à minuit, ou un jour fixe de la semaine à 3 h.</summary>

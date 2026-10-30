@@ -358,6 +358,12 @@
                     </Border>
                     <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
                         <StackPanel>
+                            <TextBlock Text="RUNS DEPUIS LE DERNIER DROP" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                            <TextBlock Text="{Binding StatSince}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
+                        <StackPanel>
                             <TextBlock Text="PLUS LONG ÉCART" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
                             <TextBlock Text="{Binding StatLongest}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="20"/>
                         </StackPanel>
@@ -395,6 +401,12 @@
                             <StackPanel Margin="0,0,10,0">
                                 <TextBlock Text="VAGUES" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="0,0,0,3"/>
                                 <TextBox Text="{Binding NewWaves, UpdateSourceTrigger=PropertyChanged}" Width="80">
+                                    <TextBox.InputBindings><KeyBinding Key="Return" Command="{Binding AddRunEntryCommand}"/></TextBox.InputBindings>
+                                </TextBox>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Text="NOTE (FACULTATIF)" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="0,0,0,3"/>
+                                <TextBox Text="{Binding NewNote, UpdateSourceTrigger=PropertyChanged}" Width="190" MaxLength="120" ToolTip="Composition, stratégie, remarque…">
                                     <TextBox.InputBindings><KeyBinding Key="Return" Command="{Binding AddRunEntryCommand}"/></TextBox.InputBindings>
                                 </TextBox>
                             </StackPanel>
@@ -473,7 +485,11 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/><ColumnDefinition Width="70"/><ColumnDefinition Width="90"/><ColumnDefinition Width="90"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding Type}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Type}" FontFamily="{StaticResource BodyXB}"/>
+                                        <TextBlock Text="{Binding Note}" Foreground="{DynamicResource Dim}" FontSize="12" TextTrimming="CharacterEllipsis"
+                                                   Visibility="{Binding Note, Converter={StaticResource NotEmptyVis}}"/>
+                                    </StackPanel>
                                     <TextBlock Grid.Column="1" Text="{Binding Time}" Foreground="{DynamicResource Accent}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     <TextBlock Grid.Column="2" Text="{Binding Waves}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     <TextBlock Grid.Column="3" Text="{Binding Since}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/>

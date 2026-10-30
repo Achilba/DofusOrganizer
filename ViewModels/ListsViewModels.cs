@@ -160,6 +160,7 @@ public class RunLogRow
     public string Time { get; init; } = "—";
     public string Waves { get; init; } = "—";
     public string Since { get; init; } = "";
+    public string Note { get; init; } = "";
     public RelayCommand DeleteCommand { get; init; }
     public RelayCommand EditCommand { get; init; }
 }
@@ -259,6 +260,8 @@ public class SongesViewModel : ObservableObject
     public string NewTime { get => _newTime; set { if (Set(ref _newTime, value ?? "")) RunFormMessage = ""; } }
     private string _newWaves = "";
     public string NewWaves { get => _newWaves; set { if (Set(ref _newWaves, value ?? "")) RunFormMessage = ""; } }
+    private string _newNote = "";
+    public string NewNote { get => _newNote; set { if (Set(ref _newNote, value ?? "")) RunFormMessage = ""; } }
     private string _runFormMessage = "";
     public string RunFormMessage { get => _runFormMessage; private set => Set(ref _runFormMessage, value); }
     public bool HasRuns { get; private set; }
@@ -295,19 +298,23 @@ public class SongesViewModel : ObservableObject
         var log = _main.Data.RunLog ??= new();
         if (_editing != null)
         {
-            _editing.Type = NewType; _editing.Seconds = secs; _editing.Waves = waves;
+            _editing.Type = NewType; _editing.Seconds = secs; _editing.Waves = waves; _editing.Note = NewNote.Trim();
             _editing = null;
             RunFormMessage = "Run modifiée.";
         }
         else
         {
-            log.Add(new RunEntry { Type = NewType, Seconds = secs, Waves = waves, At = DateTime.Now });
+            // Record : plus rapide que toutes les runs chronométrées précédentes du même type
+            var before = log.Where(r => r.Type == NewType && r.Seconds > 0).ToList();
+            bool record = secs > 0 && before.Count > 0 && secs < before.Min(r => r.Seconds);
+            log.Add(new RunEntry { Type = NewType, Seconds = secs, Waves = waves, At = DateTime.Now, Note = NewNote.Trim() });
             if (log.Count > 500) log.RemoveRange(0, log.Count - 500);
-            RunFormMessage = "Run ajoutée.";
+            RunFormMessage = record ? "Nouveau record pour " + NewType + " : " + FormatDuration(secs) + " (avant : " + FormatDuration(before.Min(r => r.Seconds)) + ")." : "Run ajoutée.";
+            if (record) _main.ShowToast("Nouveau record " + NewType + " : " + FormatDuration(secs));
         }
         _main.RequestSave();
         string msg = RunFormMessage;
-        NewTime = ""; NewWaves = "";
+        NewTime = ""; NewWaves = ""; NewNote = "";
         RunFormMessage = msg;
         Raise(nameof(IsEditingRun)); Raise(nameof(SubmitLabel));
         RefreshStats();
@@ -319,6 +326,7 @@ public class SongesViewModel : ObservableObject
         NewType = r.Type;
         NewTime = r.Seconds > 0 ? FormatDuration(r.Seconds) : "";
         NewWaves = r.Waves > 0 ? r.Waves.ToString() : "";
+        NewNote = r.Note ?? "";
         RunFormMessage = "Modification en cours : change les valeurs puis clique sur Enregistrer.";
         Raise(nameof(IsEditingRun)); Raise(nameof(SubmitLabel));
     }
@@ -326,7 +334,7 @@ public class SongesViewModel : ObservableObject
     private void CancelEdit()
     {
         _editing = null;
-        NewTime = ""; NewWaves = "";
+        NewTime = ""; NewWaves = ""; NewNote = "";
         RunFormMessage = "";
         Raise(nameof(IsEditingRun)); Raise(nameof(SubmitLabel));
     }
@@ -353,8 +361,8 @@ public class SongesViewModel : ObservableObject
     }
 
     private void ExportRuns() =>
-        ExportCsv("runs-songes", "Date;Type;Temps;Secondes;Vagues",
-            (_main.Data.RunLog ?? new()).Select(r => string.Join(";", r.At.ToString("yyyy-MM-dd HH:mm"), Csv(r.Type), FormatDuration(r.Seconds), r.Seconds, r.Waves)));
+        ExportCsv("runs-songes", "Date;Type;Temps;Secondes;Vagues;Note",
+            (_main.Data.RunLog ?? new()).Select(r => string.Join(";", r.At.ToString("yyyy-MM-dd HH:mm"), Csv(r.Type), FormatDuration(r.Seconds), r.Seconds, r.Waves, Csv(r.Note))));
 
     private void ExportDrops() =>
         ExportCsv("drops-songes", "Date;Légende;Run;Nom du run;Total de runs",
@@ -391,6 +399,7 @@ public class SongesViewModel : ObservableObject
                 Time = FormatDuration(r.Seconds),
                 Waves = r.Waves > 0 ? r.Waves + " vagues" : "—",
                 Since = StratViewModel.Elapsed(r.At),
+                Note = r.Note ?? "",
                 EditCommand = new RelayCommand(() => StartEdit(entry)),
                 DeleteCommand = new RelayCommand(() =>
                 {
@@ -510,6 +519,7 @@ public class SongesViewModel : ObservableObject
     public string StatAverage { get; private set; } = "—";
     public string StatLastGap { get; private set; } = "—";
     public string StatLongest { get; private set; } = "—";
+    public string StatSince { get; private set; } = "—";
     public string StatToday { get; private set; } = "0";
     public string StatWeek { get; private set; } = "0";
     public bool HasHistory { get; private set; }
@@ -529,13 +539,20 @@ public class SongesViewModel : ObservableObject
         int longest = -1;
         for (int i = 1; i < n; i++) longest = Math.Max(longest, hist[i].Total - hist[i - 1].Total);
         StatLongest = longest < 0 ? "—" : Plural(longest, "run", "runs");
+        // Série en cours : runs comptés depuis le dernier drop, comparés à la moyenne
+        if (n > 0)
+        {
+            int since = Math.Max(0, d.RunsTotal - hist[n - 1].Total);
+            StatSince = since + (d.RunsTotal > 0 ? " (moy. " + Math.Round((double)d.RunsTotal / n).ToString("0") + ")" : "");
+        }
+        else StatSince = "—";
         StatToday = hist.Count(h => h.At.Date == DateTime.Today).ToString();
         StatWeek = hist.Count(h => h.At >= DateTime.Today.AddDays(-6)).ToString();
         RefreshRuns();
         RecentDrops.Clear();
         foreach (var h in Enumerable.Reverse(hist).Take(12))
             RecentDrops.Add(new DropRow { Name = h.Name, Since = StratViewModel.Elapsed(h.At), Run = h.Run > 0 ? "run n° " + h.Run : "" });
-        foreach (var p in new[] { nameof(StatTotal), nameof(StatRuns), nameof(StatAverage), nameof(StatLastGap), nameof(StatLongest), nameof(StatToday), nameof(StatWeek), nameof(HasHistory) }) Raise(p);
+        foreach (var p in new[] { nameof(StatTotal), nameof(StatRuns), nameof(StatAverage), nameof(StatLastGap), nameof(StatLongest), nameof(StatSince), nameof(StatToday), nameof(StatWeek), nameof(HasHistory) }) Raise(p);
     }
 
     public int Total => Animal.Sum(a => a.Qty) + Classic.Sum(c => c.Qty);

@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.7";
+    public const string Current = "0.12.8";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.8", "30/10/2026", new[]
+        {
+            "NOUVEAU — Songes > Stats : « Runs depuis le dernier drop » comparé à ta moyenne ; message « Nouveau record » quand une run bat ton meilleur temps du même type ; note facultative sur chaque run (aussi dans l'export CSV).",
+        }),
         new("0.12.7", "30/10/2026", new[]
         {
             "NOUVEAU — Paramètres > Mode Mini : choisis les éléments de la barre (touche étoile, Invitations, Zaap, Almanax).",
