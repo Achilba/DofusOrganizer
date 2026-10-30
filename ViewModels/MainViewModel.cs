@@ -250,6 +250,9 @@ public class MainViewModel : ObservableObject
     public RelayCommand OpenFolderCommand { get; }
     public RelayCommand UndoCommand { get; }
     public RelayCommand CopyErrorLogCommand { get; }
+    public RelayCommand OpenRepoCommand { get; }
+    public RelayCommand CopySupportInfoCommand { get; }
+    public string DataFolderText => Storage.Dir;
     public RelayCommand PatchNotesCommand { get; }
     public RelayCommand PrepareNextWeekCommand { get; }
     public RelayCommand RetrySaveCommand { get; }
@@ -287,7 +290,7 @@ public class MainViewModel : ObservableObject
             if (_update != null)
             {
                 UpdateText = "Version " + _update.Version + " disponible.";
-                if (silent && _notifiedVersion != _update.Version && !Data.StartInMini)
+                if (silent && _notifiedVersion != _update.Version && !Data.StartInMini && !Data.QuietMode)
                 {
                     _notifiedVersion = _update.Version;
                     ShowToast("Mise à jour " + _update.Version + " disponible (Paramètres)");
@@ -381,6 +384,30 @@ public class MainViewModel : ObservableObject
         MoveDownCommand = new RelayCommand(p => Move(p as Character, +1));
         CopyAlmanaxZaapCommand = new RelayCommand(() => CopyZaap(ZaapData.All.First(z => z.Coord == "-5,-23")));
         OpenAlmanaxFromMiniCommand = new RelayCommand(() => { Page = "almanax"; MiniModeRequested?.Invoke(false); });
+        OpenRepoCommand = new RelayCommand(() =>
+        {
+            try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://github.com/" + Updater.Owner + "/" + Updater.Repo + "/releases") { UseShellExecute = true }); }
+            catch { ShowToast("Impossible d'ouvrir le navigateur"); }
+        });
+        CopySupportInfoCommand = new RelayCommand(() =>
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("DOFUS Team Organizer " + PatchNotes.Current);
+            sb.AppendLine("Windows : " + Environment.OSVersion.VersionString + " · .NET " + Environment.Version);
+            sb.AppendLine("Dossier de données : " + Storage.Dir);
+            sb.AppendLine("Personnages : " + Characters.Count + " · thème : " + Data.Theme + " · taille du texte : " + (int)Math.Round(Data.UiScale * 100) + " %");
+            try
+            {
+                if (File.Exists(Storage.ErrorLogPath))
+                {
+                    var lines = File.ReadAllLines(Storage.ErrorLogPath);
+                    sb.AppendLine("--- Dernières lignes du journal d'erreurs ---");
+                    foreach (var l in lines.Skip(Math.Max(0, lines.Length - 40))) sb.AppendLine(l);
+                }
+            }
+            catch { }
+            ShowToast(CopyText(sb.ToString()) ? "Infos de support copiées" : "Copie impossible");
+        });
         CopyErrorLogCommand = new RelayCommand(() =>
         {
             var text = File.Exists(Storage.ErrorLogPath) ? File.ReadAllText(Storage.ErrorLogPath) : "";
@@ -588,9 +615,28 @@ public class MainViewModel : ObservableObject
     public bool MiniCompact
     {
         get => Data.MiniCompact;
-        set { if (Data.MiniCompact != value) { Data.MiniCompact = value; Raise(); Raise(nameof(MiniFull)); RequestSave(); MiniSettingsChanged?.Invoke(); } }
+        set { if (Data.MiniCompact != value) { Data.MiniCompact = value; Raise(); Raise(nameof(MiniFull)); Raise(nameof(ShowMiniZaap)); Raise(nameof(ShowMiniAlmanax)); Raise(nameof(ShowMiniSeparator)); RequestSave(); MiniSettingsChanged?.Invoke(); } }
     }
     public bool MiniFull => !Data.MiniCompact;
+
+    // Éléments de la barre Mini
+    public bool MiniShowSwap { get => Data.MiniShowSwap; set { if (Data.MiniShowSwap != value) { Data.MiniShowSwap = value; Raise(); RequestSave(); } } }
+    public bool MiniShowInvites { get => Data.MiniShowInvites; set { if (Data.MiniShowInvites != value) { Data.MiniShowInvites = value; Raise(); RequestSave(); } } }
+    public bool MiniShowZaap
+    {
+        get => Data.MiniShowZaap;
+        set { if (Data.MiniShowZaap != value) { Data.MiniShowZaap = value; Raise(); Raise(nameof(ShowMiniZaap)); Raise(nameof(ShowMiniSeparator)); RequestSave(); } }
+    }
+    public bool MiniShowAlmanax
+    {
+        get => Data.MiniShowAlmanax;
+        set { if (Data.MiniShowAlmanax != value) { Data.MiniShowAlmanax = value; Raise(); Raise(nameof(ShowMiniAlmanax)); Raise(nameof(ShowMiniSeparator)); RequestSave(); } }
+    }
+    public bool ShowMiniZaap => MiniFull && Data.MiniShowZaap;
+    public bool ShowMiniAlmanax => MiniFull && Data.MiniShowAlmanax;
+    public bool ShowMiniSeparator => MiniFull && (Data.MiniShowZaap || Data.MiniShowAlmanax);
+
+    public bool QuietMode { get => Data.QuietMode; set { if (Data.QuietMode != value) { Data.QuietMode = value; Raise(); RequestSave(); } } }
     public RelayCommand ToggleCompactCommand { get; private set; }
 
     public RelayCommand MoveUpCommand { get; private set; }
@@ -913,7 +959,8 @@ public class MainViewModel : ObservableObject
         Data = d;
         foreach (var p in new[] { nameof(Data), nameof(SwapEnabled), nameof(MiniAlwaysOnTop), nameof(MiniOpacity), nameof(AutoBackup),
                                   nameof(LastBackup), nameof(NoteText), nameof(MainCounter), nameof(SpecialCounter), nameof(Characters),
-                                  nameof(RememberMiniPosition), nameof(MiniCompact), nameof(MiniFull), nameof(MiniOpacityText), nameof(ScaleChoice) })
+                                  nameof(RememberMiniPosition), nameof(MiniCompact), nameof(MiniFull), nameof(MiniOpacityText), nameof(ScaleChoice),
+                                  nameof(MiniShowSwap), nameof(MiniShowInvites), nameof(MiniShowZaap), nameof(MiniShowAlmanax), nameof(ShowMiniZaap), nameof(ShowMiniAlmanax), nameof(ShowMiniSeparator), nameof(QuietMode) })
             Raise(p);
         BuildThemeRows();
         ThemeCatalog.Apply(Data.Theme);

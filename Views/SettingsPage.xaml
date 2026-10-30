@@ -84,7 +84,21 @@
                     </StackPanel>
                     <CheckBox Style="{StaticResource Switch}" Content="Retenir la position de la barre d'un lancement à l'autre" IsChecked="{Binding RememberMiniPosition}" Margin="0,0,0,12"/>
                     <CheckBox Style="{StaticResource Switch}" Content="Toujours au premier plan : la barre Mini n'est jamais masquée par DOFUS" IsChecked="{Binding MiniAlwaysOnTop}" Margin="0,0,0,12"/>
-                    <TextBlock Text="À vérifier sur ton PC avec DOFUS en mode fenêtré." Foreground="{DynamicResource Dim}" FontSize="12"/>
+                    <TextBlock Text="À vérifier sur ton PC avec DOFUS en mode fenêtré." Foreground="{DynamicResource Dim}" FontSize="12" Margin="0,0,0,14"/>
+                    <TextBlock Text="Éléments affichés dans la barre" FontFamily="{StaticResource BodyXB}" Margin="0,0,0,8"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Touche étoile (passer au personnage suivant)" IsChecked="{Binding MiniShowSwap}" Margin="0,0,0,8"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Bouton Invitations" IsChecked="{Binding MiniShowInvites}" Margin="0,0,0,8"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Zaap (barre complète)" IsChecked="{Binding MiniShowZaap}" Margin="0,0,0,8"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Almanax (barre complète)" IsChecked="{Binding MiniShowAlmanax}" Margin="0,0,0,4"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Mode discret -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Mode discret" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Ne pas afficher les messages automatiques" IsChecked="{Binding QuietMode}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Coupe les messages « Mise à jour disponible » et « remise à zéro » des tâches. Les confirmations de tes propres actions (Copié, Données exportées…) restent affichées. La pastille de mise à jour reste visible." Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
@@ -295,6 +309,24 @@
                         <TextBlock Text="{Binding VersionText}" VerticalAlignment="Center" Margin="0,0,14,0"/>
                         <Button Content="Notes de version" Command="{Binding PatchNotesCommand}"/>
                     </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- À propos -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="À propos" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="DOFUS Team Organizer" FontFamily="{StaticResource BodyXB}"/>
+                    <TextBlock Text="{Binding VersionText}" Style="{StaticResource MutedText}" Margin="0,2,0,10"/>
+                    <TextBlock Text="Dossier de données" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
+                    <TextBlock Text="{Binding DataFolderText}" Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,2,0,12"/>
+                    <WrapPanel>
+                        <Button Content="Page des versions (GitHub)" Command="{Binding OpenRepoCommand}" Margin="0,0,10,8"/>
+                        <Button Content="Notes de version" Command="{Binding PatchNotesCommand}" Margin="0,0,10,8"/>
+                        <Button Content="Ouvrir le dossier de données" Command="{Binding OpenFolderCommand}" Margin="0,0,10,8"/>
+                        <Button Content="Copier les infos pour le support" Command="{Binding CopySupportInfoCommand}" Margin="0,0,10,8"
+                                ToolTip="Version, Windows, dossier et dernières lignes du journal d'erreurs : à me coller en cas de bug"/>
+                    </WrapPanel>
                 </StackPanel>
             </Border>
         </StackPanel>

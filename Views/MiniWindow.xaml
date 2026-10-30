@@ -62,6 +62,7 @@
 
             <!-- Touche * -->
             <ToggleButton Grid.Column="2" IsChecked="{Binding SwapEnabled, Mode=TwoWay}" Height="32" Cursor="Hand" Margin="0,0,8,0"
+                          Visibility="{Binding MiniShowSwap, Converter={StaticResource BoolVis}}"
                           ToolTip="Touche étoile : passer au personnage suivant">
                 <ToggleButton.Template>
                     <ControlTemplate TargetType="ToggleButton">
@@ -92,6 +93,7 @@
 
             <!-- Invitations -->
             <Button Grid.Column="4" Command="{Binding CopyInvitesCommand}" Height="32" MinHeight="0" Padding="12,0" Margin="0" FontSize="13"
+                    Visibility="{Binding MiniShowInvites, Converter={StaticResource BoolVis}}"
                     Background="{DynamicResource Accent}" Foreground="{DynamicResource AccentText}" BorderBrush="{DynamicResource Accent}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Invitations"/>
@@ -100,7 +102,7 @@
 
             <!-- Zaap -->
             <v:ZaapPicker Grid.Column="5" VerticalAlignment="Center" Margin="8,0,8,0" BoxHeight="32"
-                          Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}"/>
+                          Visibility="{Binding ShowMiniZaap, Converter={StaticResource BoolVis}}"/>
 
             <!-- Copié -->
             <Border Grid.Column="6" Height="32" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="8"
@@ -112,11 +114,11 @@
             </Border>
 
             <Border Grid.Column="7" Width="1" Height="20" Background="{DynamicResource Line}" Margin="0,0,8,0"
-                    Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}"/>
+                    Visibility="{Binding ShowMiniSeparator, Converter={StaticResource BoolVis}}"/>
 
             <!-- Almanax -->
             <Button Grid.Column="8" Command="{Binding OpenAlmanaxFromMiniCommand}" Height="32" MinHeight="0" Padding="12,0" Margin="0,0,8,0" FontSize="13" ToolTip="Almanax du jour à valider"
-                    Visibility="{Binding MiniFull, Converter={StaticResource BoolVis}}">
+                    Visibility="{Binding ShowMiniAlmanax, Converter={StaticResource BoolVis}}">
                 <Grid>
                     <StackPanel Orientation="Horizontal">
                         <Path Style="{StaticResource Icon}" Data="{StaticResource IcoCalendar}" Stroke="{DynamicResource Text}" Width="14" Height="14" Margin="0,0,7,0"/>

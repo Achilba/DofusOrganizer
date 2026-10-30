@@ -343,6 +343,13 @@ public class AppData
     public bool AutoBackup { get; set; } = true;
     public bool RememberMiniPosition { get; set; } = true;
     public bool MiniCompact { get; set; } = false;
+    /// <summary>Éléments affichés dans la barre Mini (0.12.7).</summary>
+    public bool MiniShowSwap { get; set; } = true;
+    public bool MiniShowInvites { get; set; } = true;
+    public bool MiniShowZaap { get; set; } = true;
+    public bool MiniShowAlmanax { get; set; } = true;
+    /// <summary>Mode discret : pas de message automatique (mise à jour disponible, remise à zéro des tâches).</summary>
+    public bool QuietMode { get; set; }
     public string LastBackup { get; set; } = "";
     /// <summary>Dernier dossier choisi pour « Copier ailleurs ».</summary>
     public string ExternalBackupDir { get; set; } = "";

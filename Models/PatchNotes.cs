@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.6";
+    public const string Current = "0.12.7";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.7", "30/10/2026", new[]
+        {
+            "NOUVEAU — Paramètres > Mode Mini : choisis les éléments de la barre (touche étoile, Invitations, Zaap, Almanax).",
+            "NOUVEAU — Paramètres > Mode discret : coupe les messages automatiques (mise à jour disponible, remise à zéro des tâches). L'appli n'a pas d'animations à couper.",
+            "NOUVEAU — Paramètres > À propos : version, dossier de données, page des versions et bouton « Copier les infos pour le support ».",
+        }),
         new("0.12.6", "30/10/2026", new[]
         {
             "NOUVEAU — Songes > Stats : courbe de progression par type de run, modification d'une run saisie (crayon), validation avec Entrée, filtre de période (aujourd'hui, 7 jours, 30 jours, tout) et export CSV des runs et des drops.",

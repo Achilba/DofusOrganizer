@@ -123,7 +123,7 @@ public class RoutineViewModel : ObservableObject
             Data.RoutinePeriod[d.Id] = key;
             Data.RoutineDone.RemoveAll(s => s.StartsWith(d.Id + "|", StringComparison.Ordinal));
             changed = true;
-            if (d.Notify) _main.ShowToast(d.Name + " : remise à zéro");
+            if (d.Notify && !_main.Data.QuietMode) _main.ShowToast(d.Name + " : remise à zéro");
         }
         if (changed) { Refresh(); _main.RequestSave(); }
     }
