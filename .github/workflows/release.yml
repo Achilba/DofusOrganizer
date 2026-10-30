@@ -30,6 +30,10 @@ jobs:
           $v = $xml.Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
           "version=$v" >> $env:GITHUB_OUTPUT
 
+      - name: Contrôler les fichiers XAML
+        shell: pwsh
+        run: python tools/check_xaml.py
+
       - name: Compiler
         shell: pwsh
         run: |
