@@ -161,6 +161,7 @@ public class RunLogRow
     public string Waves { get; init; } = "—";
     public string Since { get; init; } = "";
     public RelayCommand DeleteCommand { get; init; }
+    public RelayCommand EditCommand { get; init; }
 }
 
 /// <summary>Résumé par type de run : nombre, temps moyen, meilleur temps, vagues moyennes.</summary>
@@ -186,6 +187,9 @@ public class SongesViewModel : ObservableObject
         _main = main;
         Strat = new StratViewModel(main);
         AddRunEntryCommand = new RelayCommand(AddRunEntry);
+        CancelEditCommand = new RelayCommand(CancelEdit);
+        ExportRunsCommand = new RelayCommand(ExportRuns);
+        ExportDropsCommand = new RelayCommand(ExportDrops);
         MiniSongeCommand = new RelayCommand(() => _main.RequestSongeMini());
         Reload();
         // Les durées affichées (« depuis 2 h 14 », « dernier run il y a 21 min ») se mettent à jour toutes seules
@@ -204,6 +208,50 @@ public class SongesViewModel : ObservableObject
     public ObservableCollection<RunLogRow> RecentRuns { get; } = new();
     public ObservableCollection<RunTypeStat> RunTypeStats { get; } = new();
     public RelayCommand AddRunEntryCommand { get; private set; }
+    public RelayCommand CancelEditCommand { get; private set; }
+    public RelayCommand ExportRunsCommand { get; private set; }
+    public RelayCommand ExportDropsCommand { get; private set; }
+    private RunEntry _editing;
+    public bool IsEditingRun => _editing != null;
+    public string SubmitLabel => _editing == null ? "Ajouter" : "Enregistrer";
+
+    // Période des statistiques
+    public string[] Periods { get; } = { "Aujourd'hui", "7 jours", "30 jours", "Tout" };
+    public string Period
+    {
+        get => Array.IndexOf(Periods, _main.Data.StatsPeriod) >= 0 ? _main.Data.StatsPeriod : "Tout";
+        set
+        {
+            if (value == null || value == Period) return;
+            _main.Data.StatsPeriod = value;
+            _main.RequestSave();
+            Raise();
+            RefreshStats();
+        }
+    }
+
+    private List<RunEntry> InPeriod(IEnumerable<RunEntry> log)
+    {
+        DateTime from = Period switch
+        {
+            "Aujourd'hui" => DateTime.Today,
+            "7 jours" => DateTime.Today.AddDays(-6),
+            "30 jours" => DateTime.Today.AddDays(-29),
+            _ => DateTime.MinValue,
+        };
+        return log.Where(r => r.At >= from).ToList();
+    }
+
+    // Courbe de progression d'un type de run (plus haut = plus rapide)
+    private string _chartType = "";
+    public string ChartType
+    {
+        get => _chartType;
+        set { if (value != null && Set(ref _chartType, value)) RefreshRuns(); }
+    }
+    public System.Windows.Media.PointCollection ChartPoints { get; private set; } = new();
+    public bool HasChart { get; private set; }
+    public string ChartInfo { get; private set; } = "";
 
     private string _newType = "Rêve 1";
     public string NewType { get => _newType; set { if (value != null) Set(ref _newType, value); } }
@@ -245,17 +293,77 @@ public class SongesViewModel : ObservableObject
         { RunFormMessage = "Le nombre de vagues doit être un nombre entier."; return; }
         if (secs == 0 && waves == 0) { RunFormMessage = "Indique au moins la durée ou le nombre de vagues."; return; }
         var log = _main.Data.RunLog ??= new();
-        log.Add(new RunEntry { Type = NewType, Seconds = secs, Waves = waves, At = DateTime.Now });
-        if (log.Count > 500) log.RemoveRange(0, log.Count - 500);
+        if (_editing != null)
+        {
+            _editing.Type = NewType; _editing.Seconds = secs; _editing.Waves = waves;
+            _editing = null;
+            RunFormMessage = "Run modifiée.";
+        }
+        else
+        {
+            log.Add(new RunEntry { Type = NewType, Seconds = secs, Waves = waves, At = DateTime.Now });
+            if (log.Count > 500) log.RemoveRange(0, log.Count - 500);
+            RunFormMessage = "Run ajoutée.";
+        }
         _main.RequestSave();
+        string msg = RunFormMessage;
         NewTime = ""; NewWaves = "";
-        RunFormMessage = "Run ajoutée.";
+        RunFormMessage = msg;
+        Raise(nameof(IsEditingRun)); Raise(nameof(SubmitLabel));
         RefreshStats();
     }
 
+    private void StartEdit(RunEntry r)
+    {
+        _editing = r;
+        NewType = r.Type;
+        NewTime = r.Seconds > 0 ? FormatDuration(r.Seconds) : "";
+        NewWaves = r.Waves > 0 ? r.Waves.ToString() : "";
+        RunFormMessage = "Modification en cours : change les valeurs puis clique sur Enregistrer.";
+        Raise(nameof(IsEditingRun)); Raise(nameof(SubmitLabel));
+    }
+
+    private void CancelEdit()
+    {
+        _editing = null;
+        NewTime = ""; NewWaves = "";
+        RunFormMessage = "";
+        Raise(nameof(IsEditingRun)); Raise(nameof(SubmitLabel));
+    }
+
+    // ---- Export CSV (séparateur « ; » pour Excel en français) ----
+    private static string Csv(string v) => "\"" + (v ?? "").Replace("\"", "\"\"") + "\"";
+
+    private void ExportCsv(string baseName, string header, IEnumerable<string> lines)
+    {
+        var dlg = new Microsoft.Win32.SaveFileDialog
+        {
+            FileName = baseName + "-" + DateTime.Now.ToString("yyyyMMdd") + ".csv",
+            Filter = "Fichier CSV (*.csv)|*.csv"
+        };
+        if (dlg.ShowDialog() != true) return;
+        try
+        {
+            var all = new List<string> { header };
+            all.AddRange(lines);
+            System.IO.File.WriteAllLines(dlg.FileName, all, new System.Text.UTF8Encoding(true));
+            _main.ShowToast("Fichier CSV exporté");
+        }
+        catch (Exception ex) { RunFormMessage = "Export impossible : " + ex.Message; }
+    }
+
+    private void ExportRuns() =>
+        ExportCsv("runs-songes", "Date;Type;Temps;Secondes;Vagues",
+            (_main.Data.RunLog ?? new()).Select(r => string.Join(";", r.At.ToString("yyyy-MM-dd HH:mm"), Csv(r.Type), FormatDuration(r.Seconds), r.Seconds, r.Waves)));
+
+    private void ExportDrops() =>
+        ExportCsv("drops-songes", "Date;Légende;Run;Nom du run;Total de runs",
+            (_main.Data.DropHistory ?? new()).Select(h => string.Join(";", h.At.ToString("yyyy-MM-dd HH:mm"), Csv(h.Name), h.Run, Csv(h.RunName), h.Total)));
+
     private void RefreshRuns()
     {
-        var log = _main.Data.RunLog ?? new();
+        var all = _main.Data.RunLog ?? new();
+        var log = InPeriod(all);
         HasRuns = log.Count > 0;
         RunTypeStats.Clear();
         foreach (var type in RunTypes)
@@ -283,14 +391,41 @@ public class SongesViewModel : ObservableObject
                 Time = FormatDuration(r.Seconds),
                 Waves = r.Waves > 0 ? r.Waves + " vagues" : "—",
                 Since = StratViewModel.Elapsed(r.At),
+                EditCommand = new RelayCommand(() => StartEdit(entry)),
                 DeleteCommand = new RelayCommand(() =>
                 {
+                    if (_editing == entry) CancelEdit();
                     _main.Data.RunLog.Remove(entry);
                     _main.RequestSave();
                     RefreshStats();
                 }),
             });
         }
+        // Courbe : par défaut le type de la dernière run saisie
+        if (string.IsNullOrEmpty(_chartType) || Array.IndexOf(RunTypes, _chartType) < 0)
+        {
+            _chartType = all.Count > 0 ? all[^1].Type : RunTypes[0];
+            Raise(nameof(ChartType));
+        }
+        var series = log.Where(r => r.Type == _chartType && r.Seconds > 0).TakeLast(30).ToList();
+        var pts = new System.Windows.Media.PointCollection();
+        if (series.Count >= 2)
+        {
+            int min = series.Min(r => r.Seconds), max = series.Max(r => r.Seconds);
+            for (int i = 0; i < series.Count; i++)
+            {
+                double y = max == min ? 50 : 100.0 * (series[i].Seconds - min) / (max - min); // plus rapide = plus haut
+                pts.Add(new System.Windows.Point(i * 1000.0 / (series.Count - 1), y));
+            }
+            ChartInfo = series.Count + " runs · meilleur " + FormatDuration(min) + " · dernier " + FormatDuration(series[^1].Seconds) + " · plus la courbe est haute, plus c'est rapide";
+        }
+        else
+        {
+            ChartInfo = "Il faut au moins 2 runs chronométrées de ce type sur la période pour tracer la courbe.";
+        }
+        ChartPoints = pts;
+        HasChart = series.Count >= 2;
+        Raise(nameof(ChartPoints)); Raise(nameof(HasChart)); Raise(nameof(ChartInfo));
         Raise(nameof(HasRuns));
     }
     public string Mode

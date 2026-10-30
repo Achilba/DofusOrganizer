@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.5";
+    public const string Current = "0.12.6";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.6", "30/10/2026", new[]
+        {
+            "NOUVEAU — Songes > Stats : courbe de progression par type de run, modification d'une run saisie (crayon), validation avec Entrée, filtre de période (aujourd'hui, 7 jours, 30 jours, tout) et export CSV des runs et des drops.",
+            "AMÉLIORÉ — Chaque publication est désormais contrôlée automatiquement (ressources et gestionnaires XAML) avant la compilation, pour éviter un plantage au lancement comme en 0.12.4.",
+        }),
         new("0.12.5", "28/10/2026", new[]
         {
             "CORRIGÉ — L'appli ne se lançait plus depuis la 0.12.4 (style de bouton manquant dans la page Songes).",

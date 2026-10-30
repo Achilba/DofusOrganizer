@@ -298,6 +298,8 @@ public class AppData
     public List<DropInfo> DropHistory { get; set; } = new();
     /// <summary>Runs saisies dans les statistiques (les 500 dernières).</summary>
     public List<RunEntry> RunLog { get; set; } = new();
+    /// <summary>Période affichée dans les statistiques : Aujourd'hui, 7 jours, 30 jours ou Tout.</summary>
+    public string StatsPeriod { get; set; } = "Tout";
     /// <summary>Vue de la page Songes : « Strat » ou « Drops ».</summary>
     public string SongesMode { get; set; } = "Strat";
 

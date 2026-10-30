@@ -319,6 +319,18 @@
         <!-- Vue Stats -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsStats, Converter={StaticResource BoolVis}}">
             <StackPanel Margin="0,0,0,12">
+                <DockPanel Margin="0,0,0,10">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button Content="Exporter les runs (CSV)" Command="{Binding ExportRunsCommand}" Margin="0,0,8,0" ToolTip="Ouvre-les ensuite dans Excel"/>
+                        <Button Content="Exporter les drops (CSV)" Command="{Binding ExportDropsCommand}"/>
+                    </StackPanel>
+                    <TextBlock Text="Période des runs" Foreground="{DynamicResource Muted}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <ListBox ItemsSource="{Binding Periods}" SelectedItem="{Binding Period, Mode=TwoWay}"
+                             ItemContainerStyle="{StaticResource Chip}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource Text}"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ListBox.ItemsPanel>
+                    </ListBox>
+                </DockPanel>
                 <WrapPanel>
                     <Border Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,8,8">
                         <StackPanel>
@@ -376,16 +388,35 @@
                             </StackPanel>
                             <StackPanel Margin="0,0,10,0">
                                 <TextBlock Text="TEMPS (MIN:S)" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="0,0,0,3"/>
-                                <TextBox Text="{Binding NewTime, UpdateSourceTrigger=PropertyChanged}" Width="110" ToolTip="Par exemple 3:45"/>
+                                <TextBox Text="{Binding NewTime, UpdateSourceTrigger=PropertyChanged}" Width="110" ToolTip="Par exemple 3:45">
+                                    <TextBox.InputBindings><KeyBinding Key="Return" Command="{Binding AddRunEntryCommand}"/></TextBox.InputBindings>
+                                </TextBox>
                             </StackPanel>
                             <StackPanel Margin="0,0,10,0">
                                 <TextBlock Text="VAGUES" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="0,0,0,3"/>
-                                <TextBox Text="{Binding NewWaves, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+                                <TextBox Text="{Binding NewWaves, UpdateSourceTrigger=PropertyChanged}" Width="80">
+                                    <TextBox.InputBindings><KeyBinding Key="Return" Command="{Binding AddRunEntryCommand}"/></TextBox.InputBindings>
+                                </TextBox>
                             </StackPanel>
-                            <Button Content="Ajouter" Command="{Binding AddRunEntryCommand}" VerticalAlignment="Bottom" Style="{StaticResource Big}"
+                            <Button Content="{Binding SubmitLabel}" Command="{Binding AddRunEntryCommand}" VerticalAlignment="Bottom" Style="{StaticResource Big}"
                                     Background="{DynamicResource Accent}" Foreground="{DynamicResource AccentText}" BorderBrush="{DynamicResource Accent}"/>
+                            <Button Content="Annuler" Command="{Binding CancelEditCommand}" VerticalAlignment="Bottom" Style="{StaticResource Big}" Margin="8,0,0,0"
+                                    Visibility="{Binding IsEditingRun, Converter={StaticResource BoolVis}}"/>
                         </StackPanel>
                         <TextBlock Text="{Binding RunFormMessage}" Foreground="{DynamicResource Muted}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <DockPanel Margin="0,0,0,8">
+                    <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding RunTypes}" SelectedItem="{Binding ChartType, Mode=TwoWay}" Width="150"/>
+                    <TextBlock Text="Progression" FontFamily="{StaticResource BodyXB}" FontSize="15" VerticalAlignment="Center"/>
+                </DockPanel>
+                <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" Padding="14,12" Margin="0,0,0,12">
+                    <StackPanel>
+                        <Polyline Points="{Binding ChartPoints}" Stretch="Fill" Height="110" Stroke="{DynamicResource Accent}" StrokeThickness="2.5"
+                                  StrokeLineJoin="Round" Margin="0,4,0,8"
+                                  Visibility="{Binding HasChart, Converter={StaticResource BoolVis}}"/>
+                        <TextBlock Text="{Binding ChartInfo}" Foreground="{DynamicResource Muted}" FontSize="12" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
 
@@ -418,7 +449,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <TextBlock Text="Aucune run saisie pour l'instant." Foreground="{DynamicResource Dim}" Margin="10,6,10,8">
+                        <TextBlock Text="Aucune run saisie sur cette période." Foreground="{DynamicResource Dim}" Margin="10,6,10,8">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -440,13 +471,14 @@
                             <DataTemplate>
                                 <Grid Margin="10,4">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/><ColumnDefinition Width="70"/><ColumnDefinition Width="90"/><ColumnDefinition Width="90"/><ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/><ColumnDefinition Width="70"/><ColumnDefinition Width="90"/><ColumnDefinition Width="90"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding Type}" FontFamily="{StaticResource BodyXB}" VerticalAlignment="Center"/>
                                     <TextBlock Grid.Column="1" Text="{Binding Time}" Foreground="{DynamicResource Accent}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     <TextBlock Grid.Column="2" Text="{Binding Waves}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     <TextBlock Grid.Column="3" Text="{Binding Since}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="4" Content="✕" Command="{Binding DeleteCommand}" Width="28" Height="26" Padding="0" Margin="10,0,0,0" ToolTip="Supprimer cette run"/>
+                                    <Button Grid.Column="4" Content="✎" Command="{Binding EditCommand}" Width="28" Height="26" Padding="0" Margin="10,0,0,0" ToolTip="Modifier cette run"/>
+                                    <Button Grid.Column="5" Content="✕" Command="{Binding DeleteCommand}" Width="28" Height="26" Padding="0" Margin="6,0,0,0" ToolTip="Supprimer cette run"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
