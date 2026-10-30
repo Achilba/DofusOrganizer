@@ -59,6 +59,8 @@
                         <Button Content="Copier ailleurs" Command="{Binding CopyBackupCommand}" Style="{StaticResource Big}" Margin="0,0,8,0" ToolTip="Copie tes données dans un autre dossier (autre disque, clé USB, cloud)"/>
                         <Button Content="Ouvrir le dossier" Command="{Binding OpenFolderCommand}" Style="{StaticResource Big}"/>
                     </StackPanel>
+                    <CheckBox Style="{StaticResource Switch}" Content="Copier automatiquement chaque jour dans le dossier choisi · les 14 dernières copies sont gardées" IsChecked="{Binding AutoExternalCopy}" Margin="0,14,0,6"/>
+                    <TextBlock Text="{Binding ExternalCopyText}" Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
@@ -111,6 +113,18 @@
                 </StackPanel>
             </Border>
 
+            <!-- Page d'accueil -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Page d'accueil" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Choisis les cartes affichées sur l'accueil. Les personnages à afficher se règlent plus bas, dans « Personnages et fonctions »." Style="{StaticResource MutedText}" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Cartes des personnages" IsChecked="{Binding HomeShowChars}" Margin="0,0,0,8"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Carte Raccourcis" IsChecked="{Binding HomeShowShortcuts}" Margin="0,0,0,8"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Carte Invitations et Zaaps" IsChecked="{Binding HomeShowInvites}" Margin="0,0,0,8"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Inverser la place de Raccourcis et d'Invitations et Zaaps" IsChecked="{Binding HomeSwapBottom}"/>
+                </StackPanel>
+            </Border>
+
             <!-- Apparence -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackPanel>
@@ -147,6 +161,22 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <TextBlock Text="Couleur d'accent" FontFamily="{StaticResource BodyXB}" Margin="0,8,0,4"/>
+                    <TextBlock Text="{Binding AccentText}" Style="{StaticResource MutedText}" Margin="0,0,0,8"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <ItemsControl ItemsSource="{Binding AccentSwatches}">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Width="34" Height="34" MinHeight="0" Padding="0" Margin="0,0,8,0" Background="{Binding}" BorderBrush="{DynamicResource Line2}"
+                                            Command="{Binding DataContext.AccentPickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                            ToolTip="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Button Content="Couleur du thème" Command="{Binding AccentPickCommand}" CommandParameter="" Height="34" MinHeight="0" Padding="12,0"/>
+                    </StackPanel>
+
                     <TextBlock Text="Taille du texte" FontFamily="{StaticResource BodyXB}" Margin="0,8,0,4"/>
                     <TextBlock Text="Agrandit ou réduit toute la fenêtre principale. Sur un petit écran, garde 100 % ou moins." Style="{StaticResource MutedText}" Margin="0,0,0,8"/>
                     <ListBox ItemsSource="{Binding ScaleChoices}" SelectedItem="{Binding ScaleChoice, Mode=TwoWay}"

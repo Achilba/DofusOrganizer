@@ -355,6 +355,22 @@ public class AppData
     public string LastBackup { get; set; } = "";
     /// <summary>Dernier dossier choisi pour « Copier ailleurs ».</summary>
     public string ExternalBackupDir { get; set; } = "";
+    /// <summary>Copie automatique quotidienne dans le dossier ExternalBackupDir.</summary>
+    public bool AutoExternalCopy { get; set; }
+    public string LastExternalCopy { get; set; } = "";
+    /// <summary>Taille et place de la fenêtre principale (0 = jamais enregistrées).</summary>
+    public double WinLeft { get; set; }
+    public double WinTop { get; set; }
+    public double WinWidth { get; set; }
+    public double WinHeight { get; set; }
+    public bool WinMaximized { get; set; }
+    /// <summary>Couleur d'accent personnalisée, « #RRGGBB » ; vide = couleur du thème.</summary>
+    public string AccentColor { get; set; } = "";
+    /// <summary>Cartes de la page d'accueil.</summary>
+    public bool HomeHideChars { get; set; }
+    public bool HomeHideShortcuts { get; set; }
+    public bool HomeHideInvites { get; set; }
+    public bool HomeSwapBottom { get; set; }
     public string LastSeenVersion { get; set; } = "";
     /// <summary>Thème de couleurs (clé de ThemeCatalog).</summary>
     public string Theme { get; set; } = "classique";

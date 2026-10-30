@@ -57,6 +57,7 @@ public partial class App : Application
         _hotkeys = new HotkeyService();
         _vm = new MainViewModel(_storage, data, warning, _hotkeys);
         _vm.SaveNow();
+        _vm.ExternalBackupIfDue();
 
         _main = new MainWindow { DataContext = _vm };
         _mini = new MiniWindow { DataContext = _vm };
@@ -81,7 +82,7 @@ public partial class App : Application
         _ = _vm.CheckUpdateAsync(silent: true);
         // Revérifie toutes les 5 minutes tant que l'appli est ouverte (la pastille « Paramètres » apparaît alors toute seule)
         var updateTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
-        updateTimer.Tick += (_, _) => _ = _vm.CheckUpdateAsync(silent: true);
+        updateTimer.Tick += (_, _) => { _ = _vm.CheckUpdateAsync(silent: true); _vm.ExternalBackupIfDue(); };
         updateTimer.Start();
 
         // Premier lancement : écran de bienvenue (les notes de version sont alors inutiles)

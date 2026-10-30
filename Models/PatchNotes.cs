@@ -5,11 +5,18 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.8";
+    public const string Current = "0.12.9";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.9", "30/10/2026", new[]
+        {
+            "NOUVEAU — Paramètres > Sauvegardes : copie automatique chaque jour dans le dossier choisi avec « Copier ailleurs » (14 copies gardées).",
+            "NOUVEAU — La fenêtre principale se souvient de sa taille, de sa place et de son état agrandi.",
+            "NOUVEAU — Paramètres > Apparence : couleur d'accent personnalisée (10 couleurs, ou celle du thème).",
+            "NOUVEAU — Paramètres > Page d'accueil : afficher ou masquer les cartes Personnages, Raccourcis et Invitations et Zaaps, et inverser les deux dernières.",
+        }),
         new("0.12.8", "30/10/2026", new[]
         {
             "NOUVEAU — Songes > Stats : « Runs depuis le dernier drop » comparé à ta moyenne ; message « Nouveau record » quand une run bat ton meilleur temps du même type ; note facultative sur chaque run (aussi dans l'export CSV).",

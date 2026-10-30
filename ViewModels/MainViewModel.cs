@@ -212,7 +212,7 @@ public class MainViewModel : ObservableObject
     {
         var def = ThemeCatalog.Get(key);
         Data.Theme = def.Key;
-        ThemeCatalog.Apply(def.Key);
+        ApplyTheme();
         foreach (var r in ThemeRows) r.Selected = r.Key == def.Key;
         RequestSave();
     }
@@ -251,6 +251,8 @@ public class MainViewModel : ObservableObject
     public RelayCommand UndoCommand { get; }
     public RelayCommand CopyErrorLogCommand { get; }
     public RelayCommand OpenRepoCommand { get; }
+    public RelayCommand AccentPickCommand { get; }
+    public string[] AccentSwatches { get; } = { "#F2B544", "#FF7A2F", "#F0544F", "#E86AA6", "#B57BFF", "#5FA8FF", "#35D0E0", "#2FD0B8", "#5FD97A", "#C7D94B" };
     public RelayCommand CopySupportInfoCommand { get; }
     public string DataFolderText => Storage.Dir;
     public RelayCommand PatchNotesCommand { get; }
@@ -343,7 +345,7 @@ public class MainViewModel : ObservableObject
         _loadWarning = warning;
 
         // Thème de couleurs appliqué avant l'ouverture de toute fenêtre ; démarrage Windows : met le chemin à jour si l'appli a bougé
-        ThemeCatalog.Apply(Data.Theme);
+        ApplyTheme();
         ThemeClickCommand = new RelayCommand(p => SetTheme(p as string));
         BuildThemeRows();
         AutoStart.Refresh();
@@ -384,6 +386,13 @@ public class MainViewModel : ObservableObject
         MoveDownCommand = new RelayCommand(p => Move(p as Character, +1));
         CopyAlmanaxZaapCommand = new RelayCommand(() => CopyZaap(ZaapData.All.First(z => z.Coord == "-5,-23")));
         OpenAlmanaxFromMiniCommand = new RelayCommand(() => { Page = "almanax"; MiniModeRequested?.Invoke(false); });
+        AccentPickCommand = new RelayCommand(p =>
+        {
+            Data.AccentColor = p as string ?? "";
+            ApplyTheme();
+            Raise(nameof(AccentText));
+            RequestSave();
+        });
         OpenRepoCommand = new RelayCommand(() =>
         {
             try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://github.com/" + Updater.Owner + "/" + Updater.Repo + "/releases") { UseShellExecute = true }); }
@@ -635,6 +644,52 @@ public class MainViewModel : ObservableObject
     public bool ShowMiniZaap => MiniFull && Data.MiniShowZaap;
     public bool ShowMiniAlmanax => MiniFull && Data.MiniShowAlmanax;
     public bool ShowMiniSeparator => MiniFull && (Data.MiniShowZaap || Data.MiniShowAlmanax);
+
+    /// <summary>Applique le thème choisi et, si elle existe, la couleur d'accent personnalisée.</summary>
+    private void ApplyTheme()
+    {
+        ThemeCatalog.AccentOverride = Data.AccentColor ?? "";
+        ThemeCatalog.Apply(Data.Theme);
+    }
+
+    public string AccentText => string.IsNullOrEmpty(Data.AccentColor) ? "Couleur d'accent : celle du thème" : "Couleur d'accent personnalisée : " + Data.AccentColor;
+
+    // Copie automatique vers un dossier
+    public bool AutoExternalCopy
+    {
+        get => Data.AutoExternalCopy;
+        set
+        {
+            if (Data.AutoExternalCopy == value) return;
+            if (value && (string.IsNullOrEmpty(Data.ExternalBackupDir) || !System.IO.Directory.Exists(Data.ExternalBackupDir)))
+            {
+                ShowToast("Choisis d'abord un dossier avec « Copier ailleurs »");
+                Raise();
+                return;
+            }
+            Data.AutoExternalCopy = value;
+            Raise();
+            ExternalBackupIfDue();
+        }
+    }
+
+    public string ExternalCopyText =>
+        string.IsNullOrEmpty(Data.ExternalBackupDir) ? "Aucun dossier choisi : utilise d'abord « Copier ailleurs »."
+        : "Dossier : " + Data.ExternalBackupDir + " · dernière copie automatique : " + (string.IsNullOrEmpty(Data.LastExternalCopy) ? "aucune" : Data.LastExternalCopy);
+
+    /// <summary>Fait la copie du jour si elle est activée et pas encore faite.</summary>
+    public void ExternalBackupIfDue()
+    {
+        Storage.ExternalDaily(Data);
+        Raise(nameof(ExternalCopyText));
+        RequestSave();
+    }
+
+    // Cartes de la page d'accueil
+    public bool HomeShowChars { get => !Data.HomeHideChars; set { if (Data.HomeHideChars == value) { Data.HomeHideChars = !value; Raise(); RequestSave(); } } }
+    public bool HomeShowShortcuts { get => !Data.HomeHideShortcuts; set { if (Data.HomeHideShortcuts == value) { Data.HomeHideShortcuts = !value; Raise(); RequestSave(); } } }
+    public bool HomeShowInvites { get => !Data.HomeHideInvites; set { if (Data.HomeHideInvites == value) { Data.HomeHideInvites = !value; Raise(); RequestSave(); } } }
+    public bool HomeSwapBottom { get => Data.HomeSwapBottom; set { if (Data.HomeSwapBottom != value) { Data.HomeSwapBottom = value; Raise(); RequestSave(); } } }
 
     public bool QuietMode { get => Data.QuietMode; set { if (Data.QuietMode != value) { Data.QuietMode = value; Raise(); RequestSave(); } } }
     public RelayCommand ToggleCompactCommand { get; private set; }
@@ -938,6 +993,7 @@ public class MainViewModel : ObservableObject
         {
             Storage.CopyTo(dlg.FolderName, Data);
             Data.ExternalBackupDir = dlg.FolderName;
+            Raise(nameof(ExternalCopyText));
             RequestSave();
             ShowToast("Sauvegarde copiée");
         }
@@ -960,10 +1016,11 @@ public class MainViewModel : ObservableObject
         foreach (var p in new[] { nameof(Data), nameof(SwapEnabled), nameof(MiniAlwaysOnTop), nameof(MiniOpacity), nameof(AutoBackup),
                                   nameof(LastBackup), nameof(NoteText), nameof(MainCounter), nameof(SpecialCounter), nameof(Characters),
                                   nameof(RememberMiniPosition), nameof(MiniCompact), nameof(MiniFull), nameof(MiniOpacityText), nameof(ScaleChoice),
-                                  nameof(MiniShowSwap), nameof(MiniShowInvites), nameof(MiniShowZaap), nameof(MiniShowAlmanax), nameof(ShowMiniZaap), nameof(ShowMiniAlmanax), nameof(ShowMiniSeparator), nameof(QuietMode) })
+                                  nameof(MiniShowSwap), nameof(MiniShowInvites), nameof(MiniShowZaap), nameof(MiniShowAlmanax), nameof(ShowMiniZaap), nameof(ShowMiniAlmanax), nameof(ShowMiniSeparator), nameof(QuietMode),
+                                  nameof(AccentText), nameof(AutoExternalCopy), nameof(ExternalCopyText), nameof(HomeShowChars), nameof(HomeShowShortcuts), nameof(HomeShowInvites), nameof(HomeSwapBottom) })
             Raise(p);
         BuildThemeRows();
-        ThemeCatalog.Apply(Data.Theme);
+        ApplyTheme();
         BuildLists();
         UpdateOrder();
         CharactersPage.Reload();

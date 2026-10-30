@@ -56,7 +56,25 @@ public static class ThemeCatalog
             brush.Freeze();
             app.Resources[kv.Key] = brush;
         }
+        // Couleur d'accent personnalisée : remplace seulement l'accent (et le texte posé dessus)
+        if (!string.IsNullOrEmpty(AccentOverride))
+        {
+            try
+            {
+                var acc = C(AccentOverride);
+                double lum = (0.299 * acc.R + 0.587 * acc.G + 0.114 * acc.B) / 255.0;
+                var onAcc = lum > 0.55 ? C("#14110A") : C("#FFFFFF");
+                void Put(string k, Color c) { var b = new SolidColorBrush(c); b.Freeze(); app.Resources[k] = b; }
+                Put("Accent", acc);
+                Put("AccentText", onAcc);
+                Put("AccentSoft", Mix(theme.Colors["Panel"], acc, 0.14));
+            }
+            catch { /* couleur illisible : on garde celle du thème */ }
+        }
     }
+
+    /// <summary>« #RRGGBB » choisi par l'utilisateur, ou vide pour la couleur du thème.</summary>
+    public static string AccentOverride { get; set; } = "";
 
     private static Color C(string hex) => (Color)ColorConverter.ConvertFromString(hex);
 

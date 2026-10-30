@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*" MinHeight="190"/>
+            <RowDefinition x:Name="BottomRow" Height="1*" MinHeight="190"/>
         </Grid.RowDefinitions>
 
             <!-- Titre, boutons Almanax et Mini, pastille des connectés -->
@@ -77,7 +77,7 @@
             </WrapPanel>
 
             <!-- Personnages -->
-            <ItemsControl Grid.Row="2" ItemsSource="{Binding HomeCharacters}" Margin="0,0,-12,0">
+            <ItemsControl x:Name="CharsList" Grid.Row="2" ItemsSource="{Binding HomeCharacters}" Margin="0,0,-12,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate><UniformGrid Columns="3"/></ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
@@ -190,14 +190,14 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <Grid Grid.Row="3">
+            <Grid x:Name="BottomGrid" Grid.Row="3">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6*" MinWidth="300"/>
-                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition x:Name="BottomCol0" Width="6*" MinWidth="300"/>
+                    <ColumnDefinition x:Name="BottomCol1" Width="5*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Raccourcis -->
-                <Border Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0,0,12,0" VerticalAlignment="Stretch">
+                <Border x:Name="ShortcutsCard" Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0,0,12,0" VerticalAlignment="Stretch">
                     <StackPanel TextElement.FontSize="14">
                         <TextBlock Text="Raccourcis" Style="{StaticResource H2}" FontSize="16" Margin="0,0,0,10"/>
                         <UniformGrid Columns="2">
@@ -248,7 +248,7 @@
                 </Border>
 
                 <!-- Invitations & Zaaps -->
-                <Border Grid.Column="1" Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0" VerticalAlignment="Stretch">
+                <Border x:Name="InvitesCard" Grid.Column="1" Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0" VerticalAlignment="Stretch">
                     <StackPanel>
                         <DockPanel Margin="0,0,0,12">
                             <Button DockPanel.Dock="Right" Style="{StaticResource Big}" Background="{DynamicResource Accent}" Foreground="{DynamicResource AccentText}"

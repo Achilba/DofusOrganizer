@@ -100,6 +100,24 @@ public class Storage
         catch { /* une sauvegarde ratée ne doit jamais empêcher de lancer l'appli */ }
     }
 
+    /// <summary>Copie automatique : une fois par jour dans le dossier choisi, les 14 plus récentes sont gardées.</summary>
+    public void ExternalDaily(AppData data)
+    {
+        if (!data.AutoExternalCopy || string.IsNullOrEmpty(data.ExternalBackupDir)) return;
+        try
+        {
+            if (!Directory.Exists(data.ExternalBackupDir)) { data.LastExternalCopy = "dossier introuvable"; return; }
+            var dest = Path.Combine(data.ExternalBackupDir, "DofusTeamOrganizer-auto-" + DateTime.Now.ToString("yyyyMMdd") + ".json");
+            if (File.Exists(dest)) return;
+            Save(data);
+            File.Copy(FilePath, dest, false);
+            data.LastExternalCopy = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            foreach (var old in Directory.GetFiles(data.ExternalBackupDir, "DofusTeamOrganizer-auto-*.json").OrderByDescending(f => f).Skip(14))
+                File.Delete(old);
+        }
+        catch (Exception ex) { data.LastExternalCopy = "échec : " + ex.Message; }
+    }
+
     public void ExportTo(string path, AppData data)
     {
         Save(data);
