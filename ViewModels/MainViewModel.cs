@@ -131,6 +131,8 @@ public class MainViewModel : ObservableObject
     public ObservableCollection<ZaapEntry> Favorites { get; } = new();
     public ObservableCollection<DofusItem> MainDofus { get; } = new();
     public ObservableCollection<DofusItem> SpecialDofus { get; } = new();
+    /// <summary>Quêtes liées aux Dofus (étapes comme 4/6, Réunification 6/6).</summary>
+    public ObservableCollection<DofusItem> QuestDofus { get; } = new();
     public ObservableCollection<string> NoteKeys { get; } = new();
     public ObservableCollection<NavItem> NavItems { get; } = new();
     /// <summary>Onglets du haut de la barre latérale (tous sauf Paramètres).</summary>
@@ -604,6 +606,7 @@ public class MainViewModel : ObservableObject
     public string SpecialCounter => SpecialDofus.Count(d => d.Done) + "/" + SpecialDofus.Count;
     public double SpecialPct => SpecialDofus.Count == 0 ? 0 : 100.0 * SpecialDofus.Count(d => d.Done) / SpecialDofus.Count;
     public string SpecialCounterSpaced => SpecialDofus.Count(d => d.Done) + " / " + SpecialDofus.Count;
+    public string QuestCounterSpaced => QuestDofus.Count(d => d.Done) + " / " + QuestDofus.Count;
 
     private bool _specOpen = true;
     public bool SpecOpen { get => _specOpen; set => Set(ref _specOpen, value); }
@@ -717,6 +720,7 @@ public class MainViewModel : ObservableObject
 
         MainDofus.Clear();
         SpecialDofus.Clear();
+        QuestDofus.Clear();
         var main = new (string, string, string)[]
         {
             ("Argenté", "#C9CED6", null), ("Cawotte", "#E8A24C", null), ("Dokoko", "#EDE6D3", null), ("Veilleurs", "#8C9BB5", null),
@@ -733,9 +737,10 @@ public class MainViewModel : ObservableObject
             ("Dofoozbz", "#5BC0DE"), ("Kaliptus", "#4FA36A"), ("Dotruche", "#B9B3A5")
         };
         foreach (var (n, c) in spec) SpecialDofus.Add(NewDofus(n, c, true, null));
+        foreach (var (n, c) in new[] { ("Quête 4/6", "#7FA8E8"), ("Réunification 6/6", "#E0B84C") }) QuestDofus.Add(NewDofus(n, c, true, null));
 
         BuildNoteKeys();
-        Raise(nameof(MainCounter)); Raise(nameof(MainPct)); Raise(nameof(SpecialCounter)); Raise(nameof(SpecialPct)); Raise(nameof(SpecialCounterSpaced));
+        Raise(nameof(MainCounter)); Raise(nameof(MainPct)); Raise(nameof(SpecialCounter)); Raise(nameof(SpecialPct)); Raise(nameof(SpecialCounterSpaced)); Raise(nameof(QuestCounterSpaced));
     }
 
     private void BuildNoteKeys()
@@ -755,7 +760,7 @@ public class MainViewModel : ObservableObject
         else Data.DofusDone.Remove(item.Name);
         if (item.Started) { if (!Data.DofusStarted.Contains(item.Name)) Data.DofusStarted.Add(item.Name); }
         else Data.DofusStarted.Remove(item.Name);
-        Raise(nameof(MainCounter)); Raise(nameof(MainPct)); Raise(nameof(SpecialCounter)); Raise(nameof(SpecialPct)); Raise(nameof(SpecialCounterSpaced));
+        Raise(nameof(MainCounter)); Raise(nameof(MainPct)); Raise(nameof(SpecialCounter)); Raise(nameof(SpecialPct)); Raise(nameof(SpecialCounterSpaced)); Raise(nameof(QuestCounterSpaced));
         RequestSave();
     }
 

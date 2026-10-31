@@ -126,6 +126,17 @@
                           Visibility="{Binding SpecOpen, Converter={StaticResource BoolVis}}">
                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
             </ItemsControl>
+
+            <!-- Quêtes des Dofus : étapes comme 4/6 et Réunification 6/6 -->
+            <Border Height="44" Margin="0,0,0,12" Padding="14,0" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="8">
+                <DockPanel LastChildFill="False" VerticalAlignment="Center">
+                    <TextBlock DockPanel.Dock="Left" Text="Quêtes des Dofus" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding QuestCounterSpaced}" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="14"/>
+                </DockPanel>
+            </Border>
+            <ItemsControl ItemsSource="{Binding QuestDofus}" ItemTemplate="{StaticResource EggTile}" Margin="0,0,-12,0">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            </ItemsControl>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

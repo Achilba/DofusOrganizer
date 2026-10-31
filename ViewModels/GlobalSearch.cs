@@ -149,7 +149,7 @@ public class GlobalSearch : ObservableObject
     private void AddDofus(List<SearchHit> found, string q)
     {
         var list = new List<SearchHit>();
-        foreach (var d in _main.MainDofus.Concat(_main.SpecialDofus))
+        foreach (var d in _main.MainDofus.Concat(_main.SpecialDofus).Concat(_main.QuestDofus))
         {
             int r = Rank(Norm("dofus " + d.Name), q);
             if (r < 0) continue;
