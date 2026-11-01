@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.13";
+    public const string Current = "0.12.14";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.14", "01/11/2026", new[]
+        {
+            "CHANGÉ — La liste des Zaaps (barre Mini et accueil) met en premier les Zaaps favoris de l'accueil, puis les autres.",
+        }),
         new("0.12.13", "01/11/2026", new[]
         {
             "CHANGÉ — Les métiers sont affichés par ordre alphabétique partout (accueil, page Personnages, liste d'ajout, résumé copié).",

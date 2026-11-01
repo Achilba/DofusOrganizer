@@ -39,7 +39,13 @@ public partial class ZaapPicker : UserControl
     private void Refresh()
     {
         var q = Norm(Box.Text);
-        var items = ZaapData.All.Where(z => q.Length == 0 || Norm(z.Label).Contains(q) || Norm(z.Coord).Contains(q)).ToList();
+        var found = ZaapData.All.Where(z => q.Length == 0 || Norm(z.Label).Contains(q) || Norm(z.Coord).Contains(q)).ToList();
+        // Les favoris de l'accueil (Bonta, Brâkmar…) passent en tête de liste, dans leur ordre ; le reste suit
+        var favs = (DataContext as MainViewModel)?.Favorites;
+        var items = favs == null || favs.Count == 0
+            ? found
+            : favs.Where(f => found.Any(z => z.Coord == f.Coord)).Select(f => found.First(z => z.Coord == f.Coord))
+                  .Concat(found.Where(z => favs.All(f => f.Coord != z.Coord))).ToList();
         ZList.ItemsSource = items;
         NoMatch.Visibility = items.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         Hint.Visibility = Box.Text.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
