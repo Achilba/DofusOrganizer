@@ -241,6 +241,7 @@ public class MainViewModel : ObservableObject
     public DungeonsViewModel Dungeons { get; private set; }
     public SongesViewModel Songes { get; private set; }
     public AlmanaxViewModel Almanax { get; private set; }
+    public ZaapsViewModel Zaaps { get; private set; }
 
     public RelayCommand NavigateCommand { get; }
     public RelayCommand CopyInvitesCommand { get; }
@@ -354,7 +355,7 @@ public class MainViewModel : ObservableObject
         BuildThemeRows();
         AutoStart.Refresh();
 
-        foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"), ("almanax", "Almanax", "IcoCalendar"),
+        foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"), ("almanax", "Almanax", "IcoCalendar"), ("zaaps", "Zaaps", "IcoStar"),
                                             ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"), ("routines", "Tâches", "IcoRoutines"),
                                             ("notes", "Notes", "IcoNotes"), ("settings", "Paramètres", "IcoSettings") })
             NavItems.Add(new NavItem(k, l, Application.Current.TryFindResource(ico) as Geometry));
@@ -446,6 +447,7 @@ public class MainViewModel : ObservableObject
         Dungeons = new DungeonsViewModel(this);
         Songes = new SongesViewModel(this);
         Almanax = new AlmanaxViewModel(this);
+        Zaaps = new ZaapsViewModel(this);
         Routines = new RoutineViewModel(this);
         Search = new GlobalSearch(this);
         RebuildTasks();
@@ -711,12 +713,8 @@ public class MainViewModel : ObservableObject
 
     private void BuildLists()
     {
-        Favorites.Clear();
-        foreach (var coord in Data.FavoriteZaaps)
-        {
-            var z = ZaapData.All.FirstOrDefault(a => a.Coord == coord);
-            if (z != null) Favorites.Add(z);
-        }
+        if (!Data.ZaapFavReset) { Data.FavoriteZaaps.Clear(); Data.ZaapFavReset = true; RequestSave(); }
+        RebuildFavorites();
 
         MainDofus.Clear();
         SpecialDofus.Clear();
@@ -741,6 +739,25 @@ public class MainViewModel : ObservableObject
 
         BuildNoteKeys();
         Raise(nameof(MainCounter)); Raise(nameof(MainPct)); Raise(nameof(SpecialCounter)); Raise(nameof(SpecialPct)); Raise(nameof(SpecialCounterSpaced)); Raise(nameof(QuestCounterSpaced));
+    }
+
+    /// <summary>Favoris en ordre alphabétique (ils passent en tête de la liste des Zaaps de la barre Mini).</summary>
+    private void RebuildFavorites()
+    {
+        Favorites.Clear();
+        var list = Data.FavoriteZaaps.Select(c => ZaapData.All.FirstOrDefault(a => a.Coord == c)).Where(z => z != null)
+            .OrderBy(z => z.Label, StringComparer.CurrentCulture);
+        foreach (var z in list) Favorites.Add(z);
+    }
+
+    public bool IsZaapFavorite(string coord) => Data.FavoriteZaaps.Contains(coord);
+
+    public void SetZaapFavorite(string coord, bool fav)
+    {
+        if (fav) { if (!Data.FavoriteZaaps.Contains(coord)) Data.FavoriteZaaps.Add(coord); }
+        else Data.FavoriteZaaps.Remove(coord);
+        RebuildFavorites();
+        RequestSave();
     }
 
     private void BuildNoteKeys()
@@ -1035,6 +1052,7 @@ public class MainViewModel : ObservableObject
         Dungeons.Reload();
         Songes.Reload();
         Almanax.Reload();
+        Zaaps.Reload();
         Routines.Reload();
         Hotkeys.Apply(GetShortcut);
         MiniSettingsChanged?.Invoke();

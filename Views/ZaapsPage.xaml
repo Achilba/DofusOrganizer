@@ -1,0 +1,76 @@
+<UserControl x:Class="DofusTeamOrganizer.Views.ZaapsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="0,0,0,14">
+            <TextBlock Text="Zaaps" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="Coche un Zaap pour le mettre en favori : il passe en haut de la liste de la barre Mini, par ordre alphabétique" Style="{StaticResource PageSub}"/>
+        </StackPanel>
+
+        <WrapPanel Grid.Row="1" Margin="0,0,0,10">
+            <Grid Width="320" Margin="0,0,14,8">
+                <TextBox x:Name="SearchBox" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" ToolTip="Nom, région ou coordonnées" Padding="10,0,34,0"/>
+                <Button Content="✕" Command="{Binding ClearQueryCommand}" ToolTip="Vider la recherche" Width="26" Height="26" Padding="0" MinHeight="0"
+                        HorizontalAlignment="Right" Margin="0,0,7,0" Cursor="Hand" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource Muted}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=SearchBox}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+            <TextBlock Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" Height="40" VerticalAlignment="Center">
+                <Run Text="{Binding Counter, Mode=OneWay}"/><Run Text=" · "/><Run Text="{Binding Shown, Mode=OneWay}"/>
+            </TextBlock>
+        </WrapPanel>
+
+        <Border Grid.Row="2" Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="10" ClipToBounds="True">
+            <Grid>
+                <TextBlock Text="Aucun Zaap ne correspond." Foreground="{DynamicResource Dim}" Margin="16,14"
+                           Visibility="{Binding HasNoMatch, Converter={StaticResource BoolVis}}"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding View}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource Field}" BorderThickness="0,0,0,1" MinHeight="46" Padding="14,4">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="24"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox IsChecked="{Binding IsFavorite, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="Favori"/>
+                                        <Path Grid.Column="1" Style="{StaticResource Icon}" Data="{StaticResource IcoStar}" Fill="{DynamicResource Accent}" Stroke="{DynamicResource Accent}"
+                                              StrokeThickness="0" Width="14" Height="14" VerticalAlignment="Center"
+                                              Visibility="{Binding IsFavorite, Converter={StaticResource BoolVis}}"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Label}" FontSize="14" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding Coord}" Foreground="{DynamicResource Muted}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,14,0"/>
+                                        <Button Grid.Column="4" Content="Copier" Command="{Binding CopyCommand}" MinHeight="32" Padding="12,0" FontSize="12.5"
+                                                ToolTip="Copie la commande /zaap"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="3" Margin="0,10,0,0" Style="{StaticResource MutedText}" FontSize="12"
+                   Text="Les favoris s'affichent avec une étoile dans la liste des Zaaps de la barre Mini."/>
+    </Grid>
+</UserControl>

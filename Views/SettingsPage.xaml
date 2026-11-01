@@ -120,8 +120,8 @@
                     <TextBlock Text="Choisis les cartes affichées sur l'accueil. Les personnages à afficher se règlent plus bas, dans « Personnages et fonctions »." Style="{StaticResource MutedText}" Margin="0,0,0,12" TextWrapping="Wrap"/>
                     <CheckBox Style="{StaticResource Switch}" Content="Cartes des personnages" IsChecked="{Binding HomeShowChars}" Margin="0,0,0,8"/>
                     <CheckBox Style="{StaticResource Switch}" Content="Carte Raccourcis" IsChecked="{Binding HomeShowShortcuts}" Margin="0,0,0,8"/>
-                    <CheckBox Style="{StaticResource Switch}" Content="Carte Invitations et Zaaps" IsChecked="{Binding HomeShowInvites}" Margin="0,0,0,8"/>
-                    <CheckBox Style="{StaticResource Switch}" Content="Inverser la place de Raccourcis et d'Invitations et Zaaps" IsChecked="{Binding HomeSwapBottom}"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Carte Invitations" IsChecked="{Binding HomeShowInvites}" Margin="0,0,0,8"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Inverser la place de Raccourcis et d'Invitations" IsChecked="{Binding HomeSwapBottom}"/>
                 </StackPanel>
             </Border>
 

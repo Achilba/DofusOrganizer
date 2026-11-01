@@ -17,18 +17,22 @@
                         <ItemsControl x:Name="ZList">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Click="Item_Click" Tag="{Binding}" Focusable="False" Background="Transparent"
+                                    <Button Click="Item_Click" Tag="{Binding Entry}" Focusable="False" Background="Transparent"
                                             BorderThickness="0" Padding="12,7" HorizontalContentAlignment="Left">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <Border x:Name="r" Background="Transparent" Padding="12,7">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="20"/>
                                                             <ColumnDefinition Width="*"/>
                                                             <ColumnDefinition Width="Auto"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis"/>
-                                                        <TextBlock Grid.Column="1" Text="{Binding Coord}" Foreground="{DynamicResource Dim}" Margin="12,0,0,0"/>
+                                                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoStar}" Fill="{DynamicResource Accent}" Stroke="{DynamicResource Accent}"
+                                                              StrokeThickness="0" Width="12" Height="12" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                              Visibility="{Binding Fav, Converter={StaticResource BoolVis}}"/>
+                                                        <TextBlock Grid.Column="1" Text="{Binding Label}" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Grid.Column="2" Text="{Binding Coord}" Foreground="{DynamicResource Dim}" Margin="12,0,0,0"/>
                                                     </Grid>
                                                 </Border>
                                                 <ControlTemplate.Triggers>

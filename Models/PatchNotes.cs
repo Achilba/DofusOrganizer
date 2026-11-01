@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.14";
+    public const string Current = "0.13.0";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.13.0", "01/11/2026", new[]
+        {
+            "NOUVEAU — Page « Zaaps » sous Almanax : tous les Zaaps, une recherche, et une case par Zaap pour le mettre en favori. Un bouton « Copier » donne la commande /zaap.",
+            "CHANGÉ — Les favoris passent en tête de la liste des Zaaps de la barre Mini, par ordre alphabétique, avec une étoile. La liste de favoris est maintenant vide au départ (les anciens favoris sont remis à zéro une fois).",
+            "CHANGÉ — L'accueil n'affiche plus les Zaaps : la carte s'appelle « Invitations ».",
+        }),
         new("0.12.14", "01/11/2026", new[]
         {
             "CHANGÉ — La liste des Zaaps (barre Mini et accueil) met en premier les Zaaps favoris de l'accueil, puis les autres.",

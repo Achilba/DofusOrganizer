@@ -260,35 +260,8 @@
                                     </Border>
                                 </StackPanel>
                             </Button>
-                            <TextBlock Text="Invitations &amp; Zaaps" Style="{StaticResource H2}" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="Invitations" Style="{StaticResource H2}" FontSize="16" VerticalAlignment="Center"/>
                         </DockPanel>
-                        <v:ZaapPicker Margin="0,0,0,10"/>
-                        <ItemsControl ItemsSource="{Binding Favorites}" Margin="0,0,0,4">
-                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Button Margin="0,0,8,8" Height="38" Padding="12,0" FontSize="14" ToolTip="{Binding Command}"
-                                            Command="{Binding DataContext.CopyZaapCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                            CommandParameter="{Binding}">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border x:Name="b" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="22" Padding="16,0">
-                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                        <Path Style="{StaticResource Icon}" Data="{StaticResource IcoStar}" Fill="{DynamicResource Accent}" Stroke="{DynamicResource Accent}" StrokeThickness="0" Width="12" Height="12" Margin="0,0,6,0"/>
-                                                        <TextBlock Text="{Binding ShortName}" Foreground="{DynamicResource Text}"/>
-                                                    </StackPanel>
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource Accent}"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
                     </StackPanel>
                 </Border>
             </Grid>

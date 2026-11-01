@@ -68,5 +68,5 @@ public static class ZaapData
     };
 
     // Favoris par défaut (coordonnées)
-    public static readonly string[] DefaultFavorites = { "-31,-56", "-26,37", "-5,-23", "-20,-20", "-27,-36" };
+    public static readonly string[] DefaultFavorites = { };
 }

@@ -8,6 +8,13 @@ using DofusTeamOrganizer.ViewModels;
 
 namespace DofusTeamOrganizer.Views;
 
+/// <summary>Une ligne de la liste déroulante : le Zaap et s'il est favori.</summary>
+public record ZaapRow(ZaapEntry Entry, bool Fav)
+{
+    public string Label => Entry.Label;
+    public string Coord => Entry.Coord;
+}
+
 public partial class ZaapPicker : UserControl
 {
     public ZaapPicker()
@@ -40,12 +47,11 @@ public partial class ZaapPicker : UserControl
     {
         var q = Norm(Box.Text);
         var found = ZaapData.All.Where(z => q.Length == 0 || Norm(z.Label).Contains(q) || Norm(z.Coord).Contains(q)).ToList();
-        // Les favoris de l'accueil (Bonta, Brâkmar…) passent en tête de liste, dans leur ordre ; le reste suit
-        var favs = (DataContext as MainViewModel)?.Favorites;
-        var items = favs == null || favs.Count == 0
-            ? found
-            : favs.Where(f => found.Any(z => z.Coord == f.Coord)).Select(f => found.First(z => z.Coord == f.Coord))
-                  .Concat(found.Where(z => favs.All(f => f.Coord != z.Coord))).ToList();
+        // Les Zaaps favoris (page Zaaps) passent en tête, par ordre alphabétique, avec une étoile ; le reste suit
+        var favCoords = new HashSet<string>((DataContext as MainViewModel)?.Favorites.Select(f => f.Coord) ?? Enumerable.Empty<string>());
+        var items = found.Where(z => favCoords.Contains(z.Coord)).OrderBy(z => z.Label, StringComparer.CurrentCulture)
+            .Select(z => new ZaapRow(z, true))
+            .Concat(found.Where(z => !favCoords.Contains(z.Coord)).Select(z => new ZaapRow(z, false))).ToList();
         ZList.ItemsSource = items;
         NoMatch.Visibility = items.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         Hint.Visibility = Box.Text.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -68,10 +74,10 @@ public partial class ZaapPicker : UserControl
     private void Box_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Escape) { Pop.IsOpen = false; return; }
-        if (e.Key == Key.Enter && ZList.ItemsSource is IEnumerable<ZaapEntry> items)
+        if (e.Key == Key.Enter && ZList.ItemsSource is IEnumerable<ZaapRow> items)
         {
             var first = items.FirstOrDefault();
-            if (first != null) Pick(first);
+            if (first != null) Pick(first.Entry);
             e.Handled = true;
         }
     }

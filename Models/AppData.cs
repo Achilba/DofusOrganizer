@@ -381,6 +381,8 @@ public class AppData
     public string Theme { get; set; } = "classique";
 
     public List<string> FavoriteZaaps { get; set; } = new(ZaapData.DefaultFavorites);
+    /// <summary>Les favoris par défaut ont été vidés une fois (0.13.0) : la liste est maintenant gérée dans la page Zaaps.</summary>
+    public bool ZaapFavReset { get; set; }
     public List<string> DofusDone { get; set; } = new();
     /// <summary>Dofus au statut « Démarré » (ni à faire, ni terminé).</summary>
     public List<string> DofusStarted { get; set; } = new();
