@@ -117,8 +117,8 @@ public class Character : TrackedObject
     /// <summary>Sous-titre de l'alignement : ordre et niveau d'alignement.</summary>
     [JsonIgnore] public string OrderText => _faction == "Neutre" || string.IsNullOrEmpty(_faction) ? "Aucune faction"
         : (string.IsNullOrEmpty(_order) || _order == "Aucun" ? "Sans ordre" : _order) + " · niveau " + _alignLevel;
-    /// <summary>Métiers du personnage, du plus haut niveau au plus bas.</summary>
-    [JsonIgnore] public JobChip[] JobChips => Jobs.OrderByDescending(j => j.Level).ThenBy(j => j.Name).Select(j => new JobChip(j.Name, j.Level, j.Level >= 200)).ToArray();
+    /// <summary>Métiers du personnage, par ordre alphabétique.</summary>
+    [JsonIgnore] public JobChip[] JobChips => Jobs.OrderBy(j => j.Name, StringComparer.CurrentCulture).Select(j => new JobChip(j.Name, j.Level, j.Level >= 200)).ToArray();
     [JsonIgnore] public bool HasJobs => Jobs.Count > 0;
     private int _routinesLeft;
     [JsonIgnore] public bool HasRoutines => _routinesLeft > 0;

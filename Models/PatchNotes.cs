@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.12.12";
+    public const string Current = "0.12.13";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.12.13", "01/11/2026", new[]
+        {
+            "CHANGÉ — Les métiers sont affichés par ordre alphabétique partout (accueil, page Personnages, liste d'ajout, résumé copié).",
+            "NOUVEAU — Almanax : un clic sur le « i » copie le modificateur du jour.",
+        }),
         new("0.12.12", "31/10/2026", new[]
         {
             "NOUVEAU — Dofus : catégorie « Quêtes des Dofus » avec « Quête 4/6 » et « Réunification 6/6 », suivies comme les Dofus (À faire, En cours, Terminé) avec leur compteur.",

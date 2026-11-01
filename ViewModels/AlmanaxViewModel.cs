@@ -36,6 +36,7 @@ public class AlmanaxDay
     public RelayCommand UndoCommand { get; set; }
     public RelayCommand CopyCommand { get; set; }
     public RelayCommand QuestCommand { get; set; }
+    public RelayCommand CopyBonusCommand { get; set; }
 }
 
 public class AlmanaxCell
@@ -252,7 +253,8 @@ public class AlmanaxViewModel : ObservableObject
             DoneCommand = new RelayCommand(() => { SetDay(date, "done"); _main.RequestSave(); Refresh(); }),
             UndoCommand = new RelayCommand(() => { SetDay(date, "todo"); _main.RequestSave(); Refresh(); }),
             CopyCommand = new RelayCommand(() => _main.CopyWithToast(o.Resource, "Copié  " + o.Resource)),
-            QuestCommand = new RelayCommand(() => OpenQuest(date))
+            QuestCommand = new RelayCommand(() => OpenQuest(date)),
+            CopyBonusCommand = new RelayCommand(() => _main.CopyWithToast(bonus, "Modificateur copié"))
         };
     }
 

@@ -178,6 +178,7 @@ public class CharactersViewModel : ObservableObject
     /// <summary>Appelé au démarrage et après un import de données.</summary>
     public void Reload()
     {
+        foreach (var ch in Characters) SortJobs(ch);
         var i = Math.Min(Math.Max(0, _main.Data.SelectedCharacter), Math.Max(0, Characters.Count - 1));
         _selected = Characters.Count > 0 ? Characters[i] : null;
         Raise(nameof(Selected));
@@ -193,11 +194,24 @@ public class CharactersViewModel : ObservableObject
 
     public string NewJob { get => _newJob; set => Set(ref _newJob, value); }
 
+    /// <summary>Range les métiers d'un personnage par ordre alphabétique (sans recréer la liste).</summary>
+    private static void SortJobs(Character c)
+    {
+        if (c == null) return;
+        var sorted = c.Jobs.OrderBy(j => j.Name, StringComparer.CurrentCulture).ToList();
+        for (int i = 0; i < sorted.Count; i++)
+        {
+            int cur = c.Jobs.IndexOf(sorted[i]);
+            if (cur != i) c.Jobs.Move(cur, i);
+        }
+    }
+
     private void RefreshJobs()
     {
         AvailableJobs.Clear();
+        SortJobs(_selected);
         if (_selected == null) return;
-        foreach (var j in GameLists.Jobs.Where(n => _selected.Jobs.All(x => x.Name != n))) AvailableJobs.Add(j);
+        foreach (var j in GameLists.Jobs.Where(n => _selected.Jobs.All(x => x.Name != n)).OrderBy(n => n, StringComparer.CurrentCulture)) AvailableJobs.Add(j);
         _newJob = AvailableJobs.FirstOrDefault();
         Raise(nameof(NewJob));
         Raise(nameof(NoJobs));
@@ -298,7 +312,7 @@ public class CharactersViewModel : ObservableObject
         if (c == null) return;
         var text = c.Name + " — " + c.ClassName + " " + c.LevelText
                    + " — Alignement : " + c.Faction + (c.Order != "Aucun" ? ", " + c.Order : "") + ", niv. " + c.AlignLevel
-                   + (c.Jobs.Count > 0 ? " — Métiers : " + string.Join(", ", c.Jobs.Select(j => j.Name + " " + j.Level)) : "");
+                   + (c.Jobs.Count > 0 ? " — Métiers : " + string.Join(", ", c.Jobs.OrderBy(j => j.Name, StringComparer.CurrentCulture).Select(j => j.Name + " " + j.Level)) : "");
         _main.CopyWithToast(text, "Résumé copié");
     }
 }

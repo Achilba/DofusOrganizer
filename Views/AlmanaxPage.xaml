@@ -66,12 +66,16 @@
                                             </TextBlock>
                                         </Border>
                                         <Border Width="18" Height="18" CornerRadius="9" BorderBrush="{DynamicResource Muted}" BorderThickness="1.5" VerticalAlignment="Center" Margin="0,2,10,2"
-                                                Background="Transparent" ToolTipService.InitialShowDelay="100" ToolTipService.ShowDuration="30000">
+                                                Background="Transparent" Cursor="Hand" ToolTipService.InitialShowDelay="100" ToolTipService.ShowDuration="30000">
+                                            <Border.InputBindings>
+                                                <MouseBinding MouseAction="LeftClick" Command="{Binding CopyBonusCommand}"/>
+                                            </Border.InputBindings>
                                             <TextBlock Text="i" FontSize="11" FontFamily="{StaticResource BodyXB}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource Muted}"/>
                                             <Border.ToolTip>
                                                 <StackPanel MaxWidth="300">
                                                     <TextBlock Text="MODIFICATEUR DU JOUR" Foreground="{DynamicResource Accent}" FontFamily="{StaticResource BodyXB}" FontSize="11" Margin="0,0,0,4"/>
                                                     <TextBlock Text="{Binding Bonus}" TextWrapping="Wrap" FontSize="12"/>
+                                                    <TextBlock Text="Clique pour copier" Foreground="{DynamicResource Dim}" FontSize="11" Margin="0,6,0,0"/>
                                                 </StackPanel>
                                             </Border.ToolTip>
                                         </Border>
