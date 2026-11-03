@@ -383,6 +383,10 @@ public class AppData
     public List<string> FavoriteZaaps { get; set; } = new(ZaapData.DefaultFavorites);
     /// <summary>Les favoris par défaut ont été vidés une fois (0.13.0) : la liste est maintenant gérée dans la page Zaaps.</summary>
     public bool ZaapFavReset { get; set; }
+    /// <summary>Page Forgemagie : niveau de l'objet, mode d'affichage (0 = SC, 1 = SN, 2 = EC) et lignes saisies.</summary>
+    public int ForgeLevel { get; set; } = 200;
+    public int ForgeMode { get; set; }
+    public List<ForgeLineData> ForgeLines { get; set; } = new();
     public List<string> DofusDone { get; set; } = new();
     /// <summary>Dofus au statut « Démarré » (ni à faire, ni terminé).</summary>
     public List<string> DofusStarted { get; set; } = new();

@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.13.0";
+    public const string Current = "0.14.0";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.0", "03/11/2026", new[]
+        {
+            "NOUVEAU — Page « Forgemagie » : saisis les lignes de ton objet (valeur, jets min et max) et la page donne, pour chaque rune (simple, Pa, Ra), la chance de succès critique, de succès neutre ou d'échec critique. Une ★ marque la meilleure rune de la ligne.",
+            "INFO — Le calcul est reconstitué à partir de la vidéo de DoFocus : il reste à l'essayer sur de vrais objets, et un écart de quelques points avec leur simulateur est possible. Rien n'est lu dans le jeu.",
+        }),
         new("0.13.0", "01/11/2026", new[]
         {
             "NOUVEAU — Page « Zaaps » sous Almanax : tous les Zaaps, une recherche, et une case par Zaap pour le mettre en favori. Un bouton « Copier » donne la commande /zaap.",

@@ -242,6 +242,7 @@ public class MainViewModel : ObservableObject
     public SongesViewModel Songes { get; private set; }
     public AlmanaxViewModel Almanax { get; private set; }
     public ZaapsViewModel Zaaps { get; private set; }
+    public ForgeViewModel Forge { get; private set; }
 
     public RelayCommand NavigateCommand { get; }
     public RelayCommand CopyInvitesCommand { get; }
@@ -355,7 +356,7 @@ public class MainViewModel : ObservableObject
         BuildThemeRows();
         AutoStart.Refresh();
 
-        foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"), ("almanax", "Almanax", "IcoCalendar"), ("zaaps", "Zaaps", "IcoStar"),
+        foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"), ("almanax", "Almanax", "IcoCalendar"), ("zaaps", "Zaaps", "IcoStar"), ("forge", "Forgemagie", "IcoCompress"),
                                             ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"), ("routines", "Tâches", "IcoRoutines"),
                                             ("notes", "Notes", "IcoNotes"), ("settings", "Paramètres", "IcoSettings") })
             NavItems.Add(new NavItem(k, l, Application.Current.TryFindResource(ico) as Geometry));
@@ -448,6 +449,7 @@ public class MainViewModel : ObservableObject
         Songes = new SongesViewModel(this);
         Almanax = new AlmanaxViewModel(this);
         Zaaps = new ZaapsViewModel(this);
+        Forge = new ForgeViewModel(this);
         Routines = new RoutineViewModel(this);
         Search = new GlobalSearch(this);
         RebuildTasks();
@@ -1053,6 +1055,7 @@ public class MainViewModel : ObservableObject
         Songes.Reload();
         Almanax.Reload();
         Zaaps.Reload();
+        Forge.Reload();
         Routines.Reload();
         Hotkeys.Apply(GetShortcut);
         MiniSettingsChanged?.Invoke();
