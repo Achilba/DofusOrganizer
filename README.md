@@ -58,7 +58,7 @@ Une fiche par personnage.
 - **Suivi dans les succès de donjons** : décoche pour un personnage dont tu ne suis pas les succès.
 
 ### Dofus
-Suivi de tes Dofus, en trois blocs : **Principaux**, **Particuliers** et **Quêtes des Dofus** (Quête 4/6 et Réunification 6/6). Chaque entrée passe par les statuts *À faire*, *En cours* et *Terminé*, avec un compteur par bloc.
+Les Dofus sont les œufs que les joueurs collectionnent dans le jeu (Émeraude, Pourpre, Turquoise, Ocre, Vulbis, Cawotte…). Cette page te dit lesquels tu as déjà, lesquels tu as commencés et lesquels il te reste à obtenir, sans rien noter à côté. Suivi de tes Dofus, en trois blocs : **Principaux** (les Dofus classiques), **Particuliers** (Dolmanax, Cacao, Kaliptus et autres Dofus spéciaux) et **Quêtes des Dofus** (Quête 4/6 et Réunification 6/6, deux étapes de la série de quêtes des Dofus). Chaque entrée passe par les statuts *À faire*, *En cours* et *Terminé*, avec un compteur par bloc.
 
 ### Almanax
 - **Aujourd'hui** : l'offrande du jour, le modificateur et le Zaap concerné. Un clic sur la ressource la copie dans le presse-papiers.
