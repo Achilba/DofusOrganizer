@@ -14,7 +14,9 @@ L'appli propose elle-même les mises à jour (Paramètres → Mises à jour).
 ## Tes données
 Elles sont dans `%AppData%\DofusTeamOrganizer` (fichier `data.json`, une sauvegarde par jour dans `Backups`). Paramètres → « Tout réinitialiser… » remet l'appli comme à la première installation.
 
-## Un problème ?
+## Un problème ou une idée ?
+Contacte **@Achilba** sur Discord pour tout bug ou toute suggestion.
+
 Paramètres → « Copier les infos pour le support », puis colle le texte dans une issue GitHub ou envoie-le à l'auteur.
 
 Les données du jeu (Almanax, Zaaps, donjons, quêtes) sont saisies à la main et peuvent être en retard sur une mise à jour de Dofus. Le projet est en version 0.x : des défauts sont normaux.

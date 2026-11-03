@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.3";
+    public const string Current = "0.14.4";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.4", "03/11/2026", new[]
+        {
+            "NOUVEAU — Paramètres > À propos : pour tout bug ou toute suggestion, contacter @Achilba sur Discord.",
+        }),
         new("0.14.3", "03/11/2026", new[]
         {
             "CHANGÉ — Accueil : la carte « Invitations » a maintenant la hauteur de son contenu au lieu de s'étirer sur toute la ligne.",
