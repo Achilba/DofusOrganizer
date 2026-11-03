@@ -248,9 +248,9 @@
                 </Border>
 
                 <!-- Invitations & Zaaps -->
-                <Border x:Name="InvitesCard" Grid.Column="1" Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0" VerticalAlignment="Stretch">
+                <Border x:Name="InvitesCard" Grid.Column="1" Style="{StaticResource Card}" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" CornerRadius="12" Margin="0" VerticalAlignment="Top">
                     <StackPanel>
-                        <DockPanel Margin="0,0,0,12">
+                        <DockPanel Margin="0,0,0,0">
                             <Button DockPanel.Dock="Right" Style="{StaticResource Big}" Background="{DynamicResource Accent}" Foreground="{DynamicResource AccentText}"
                                     BorderThickness="0" Command="{Binding CopyInvitesCommand}">
                                 <StackPanel Orientation="Horizontal">
