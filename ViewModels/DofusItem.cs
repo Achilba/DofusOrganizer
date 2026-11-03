@@ -56,7 +56,7 @@ public class DofusItem : ObservableObject
     /// <summary>Version où le Dofus arrive (ex. "3.8"), null s'il est déjà disponible.</summary>
     public string Future { get; }
     public bool Available => Future == null;
-    /// <summary>Niveau requis pour équiper le Dofus (source : DofusDB), 0 si inconnu.</summary>
+    /// <summary>Niveau requis pour équiper le Dofus 0 si inconnu.</summary>
     public int Level => Levels.TryGetValue(Name, out var l) ? l : 0;
     /// <summary>Sous le nom : version d'arrivée pour un Dofus à venir, sinon niveau d'équipement.</summary>
     public string Subtitle => Future != null ? Future : (Level > 0 ? "Niv. " + Level : "");

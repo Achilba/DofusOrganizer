@@ -7,7 +7,7 @@ public record BossAch(string Boss, int Level, string[] Challenges, string GroupL
 }
 
 /// <summary>
-/// Relevé sur DofusDB (api.dofusdb.fr/achievements, 25/10/2026) : les succès « Boss (Challenge) ».
+/// Relevé du 25/10/2026 : les succès « Boss (Challenge) ».
 /// Les noms de boss, de challenges et le niveau viennent de la base (champ « level » des succès).
 /// Le succès Spécial a un nom de challenge et une description (texte du jeu). Le « Slug » est l'adresse de la page du donjon sur dofusyelle.com, vérifiée page par page.
 /// </summary>

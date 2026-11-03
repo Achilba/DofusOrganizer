@@ -2,7 +2,7 @@ namespace DofusTeamOrganizer.Models;
 
 /// <summary>
 /// Type de chaque offrande de l'Almanax (« Ressource · Os », « Équipement · Anneau », « Consommable · Pain »…).
-/// Source : DofusDB (type de l'objet), vérifié offrande par offrande. Trois noms n'existent pas tels quels dans DofusDB
+/// Type de l'objet, vérifié offrande par offrande. Trois noms n'existent pas tels quels dans la base consultée
 /// (Botte trouée, Incisive de Verglisseur, Œil de Fédorme) : leur type vient d'un objet au nom voisin, donc à confirmer en jeu.
 /// </summary>
 public static class AlmanaxTypes

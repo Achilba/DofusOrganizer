@@ -12,7 +12,7 @@ public static class PatchNotes
     {
         new("0.14.6", "03/11/2026", new[]
         {
-            "NOUVEAU — Crédits des sources (DofusDB, Dofusyelle, Dofus pour les Noobs) dans Paramètres > À propos et dans le README.",
+            "NOUVEAU — Crédits des sources (Dofusyelle, Dofus pour les Noobs) dans Paramètres > À propos et dans le README.",
             "NOUVEAU — README : explication de la page Dofus pour les débutants.",
         }),
         new("0.14.5", "03/11/2026", new[]
@@ -267,7 +267,7 @@ public static class PatchNotes
         }),
         new("0.9.0", "25/10/2026", new[]
         {
-            "NOUVEAU — Donjons, vue Succès : un bouton « i » à côté de la case Spécial affiche le nom du challenge et sa description (texte du jeu, relevé sur DofusDB). Pour Malléfisk, Toxoliath et le Vénérable Endormi, la base ne donne pas le monstre à tuer en dernier : consulte la page du donjon.",
+            "NOUVEAU — Donjons, vue Succès : un bouton « i » à côté de la case Spécial affiche le nom du challenge et sa description (texte du jeu). Pour Malléfisk, Toxoliath et le Vénérable Endormi, la base ne donne pas le monstre à tuer en dernier : consulte la page du donjon.",
         }),
         new("0.8.9", "25/10/2026", new[]
         {
@@ -300,7 +300,7 @@ public static class PatchNotes
         }),
         new("0.8.2", "25/10/2026", new[]
         {
-            "CHANGÉ — Donjons : la colonne « Chall 3 » est retirée (seuls les deux premiers challenges de chaque boss sont affichés) la colonne « Manque aussi chez » indique « Tous » quand il manque encore quelque chose à tous les autres personnages, et la colonne Niveau affiche seulement le niveau du donjon (relevé sur DofusDB pour les 144 boss).",
+            "CHANGÉ — Donjons : la colonne « Chall 3 » est retirée (seuls les deux premiers challenges de chaque boss sont affichés) la colonne « Manque aussi chez » indique « Tous » quand il manque encore quelque chose à tous les autres personnages, et la colonne Niveau affiche seulement le niveau du donjon (relevé pour les 144 boss).",
         }),
         new("0.8.1", "25/10/2026", new[]
         {
@@ -308,7 +308,7 @@ public static class PatchNotes
         }),
         new("0.8.0", "25/10/2026", new[]
         {
-            "NOUVEAU — Donjons, vue Succès : la liste des 144 boss est maintenant remplie, avec le nom des challenges de chaque boss affiché au-dessus de sa case (jusqu'à 3 challenges), le succès Duo (ou Trio / Quatuor selon le boss) et le succès Spécial. Relevé sur DofusDB : 122 succès Duo et 130 succès Spécial, conformes au total annoncé par la base.",
+            "NOUVEAU — Donjons, vue Succès : la liste des 144 boss est maintenant remplie, avec le nom des challenges de chaque boss affiché au-dessus de sa case (jusqu'à 3 challenges), le succès Duo (ou Trio / Quatuor selon le boss) et le succès Spécial. Relevé : 122 succès Duo et 130 succès Spécial, conformes au total annoncé par la base.",
             "CHANGÉ — La vue Succès est maintenant organisée par boss (« Blops Royaux », « Gelées Royales »…) et non plus par donjon ; les lignes à ajouter à la main et la saisie des noms de challenges disparaissent. Les cases cochées en 0.7.x dans cette vue sont perdues (la vue Liste n'est pas touchée).",
                     }),
         new("0.7.1", "25/10/2026", new[]
@@ -322,7 +322,7 @@ public static class PatchNotes
         }),
         new("0.6.1", "25/10/2026", new[]
         {
-            "NOUVEAU — Almanax : le type de l'offrande est affiché à côté de la quantité (« Ressource · Os », « Équipement · Anneau », « Consommable · Pain »…), en couleur pour les équipements et les consommables. Source : DofusDB, vérifié sur les 366 offrandes (trois noms approchants sont à confirmer en jeu : Botte trouée, Incisive de Verglisseur, Œil de Fédorme).",
+            "NOUVEAU — Almanax : le type de l'offrande est affiché à côté de la quantité (« Ressource · Os », « Équipement · Anneau », « Consommable · Pain »…), en couleur pour les équipements et les consommables. Vérifié sur les 366 offrandes (trois noms approchants sont à confirmer en jeu : Botte trouée, Incisive de Verglisseur, Œil de Fédorme).",
         }),
         new("0.6.0", "25/10/2026", new[]
         {
@@ -383,7 +383,7 @@ public static class PatchNotes
         }),
         new("0.4.10", "23/10/2026", new[]
         {
-            "NOUVEAU — Dofus : le niveau d'équipement est affiché sous chaque Dofus (données DofusDB).",
+            "NOUVEAU — Dofus : le niveau d'équipement est affiché sous chaque Dofus.",
             "AMÉLIORÉ — Donjons : la bande « Annuler » après un clic est supprimée (il suffit de décocher).",
         }),
         new("0.4.9", "23/10/2026", new[]

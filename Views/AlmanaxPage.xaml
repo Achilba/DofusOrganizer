@@ -48,7 +48,7 @@
                                             <TextBlock Text="{Binding QtyText}" FontFamily="{StaticResource BodyXB}" FontSize="12"/>
                                         </Border>
                                         <Border Background="{DynamicResource KeyBg}" CornerRadius="6" Padding="8,2" Margin="0,2,10,2" VerticalAlignment="Center"
-                                                Visibility="{Binding HasType, Converter={StaticResource BoolVis}}" ToolTip="Type de l'objet à offrir (source : DofusDB)">
+                                                Visibility="{Binding HasType, Converter={StaticResource BoolVis}}" ToolTip="Type de l'objet à offrir">
                                             <TextBlock Text="{Binding TypeText}" FontFamily="{StaticResource BodyXB}" FontSize="12">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">

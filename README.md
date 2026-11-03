@@ -73,7 +73,7 @@ Tous les Zaaps du jeu avec une recherche (nom, région ou coordonnées).
 - **Pour copier :** sélectionne ton Zaap et il se copie automatiquement !
 
 ### Donjons
-Les succès de donjon par boss et par personnage, relevés sur DofusDB (challenges, Duo/Trio/Quatuor, Spécial).
+Les succès de donjon par boss et par personnage (challenges, Duo/Trio/Quatuor, Spécial).
 - Choisis le personnage en haut : les cases sont propres à chacun.
 - Recherche, tri, filtre par niveau, et option « Manquants seulement » pour ne voir que ce qu'il te reste.
 - Un lien ouvre la page du donjon sur Dofusyelle.
@@ -152,7 +152,6 @@ Les touches se changent dans *Paramètres → Raccourcis* : clique sur une touch
 *Version 0.x : des défauts sont normaux, merci de les signaler.*
 
 ## 9. Crédits
-- **DofusDB** (<https://dofusdb.fr>) : « Données issues de DofusDB. Utilisation soumise à la LPNC-IA 1.0. » Succès de donjon, types d'objets de l'Almanax et niveaux des Dofus.
 - **Dofusyelle** (<https://dofusyelle.com>) : pages des donjons, vers lesquelles l'appli renvoie.
 - **Dofus pour les Noobs** (<https://www.dofuspourlesnoobs.com>) : pages de référence de l'Almanax, vers lesquelles l'appli renvoie.
 - Les noms, textes et données du jeu appartiennent à **Ankama**. Cette appli est un outil non officiel, gratuit et sans publicité.

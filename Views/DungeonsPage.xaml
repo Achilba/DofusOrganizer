@@ -244,7 +244,7 @@
             </Grid>
         </Border>
         <TextBlock Grid.Row="3" Margin="0,10,0,0" Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"
-                   Text="Succès relevés sur DofusDB (144 boss : challenges, Duo/Trio/Quatuor, Spécial). Les cases sont propres à chaque personnage : choisis-le en haut."
+                   Text="Succès relevés pour 144 boss (challenges, Duo/Trio/Quatuor, Spécial). Les cases sont propres à chaque personnage : choisis-le en haut."
                    Visibility="{Binding AchMode, Converter={StaticResource BoolVis}}"/>
     </Grid>
 </UserControl>

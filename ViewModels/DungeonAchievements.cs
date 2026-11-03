@@ -5,7 +5,7 @@ using DofusTeamOrganizer.Models;
 namespace DofusTeamOrganizer.ViewModels;
 
 // ═════════ Donjons : succès par boss et par personnage ═════════
-// Pour chaque boss (relevé DofusDB) : jusqu'à 3 challenges (cases 0 à 2), le succès de groupe
+// Pour chaque boss (relevé) : jusqu'à 3 challenges (cases 0 à 2), le succès de groupe
 // Duo / Trio / Quatuor (case 3) et le succès Spécial (case 4). Cases cochées stockées par personnage.
 
 public class AchRow : ObservableObject
