@@ -34,7 +34,6 @@
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="28" Height="28" Margin="0,0,10,0" RenderOptions.BitmapScalingMode="HighQuality"/>
                             <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
@@ -133,7 +132,6 @@
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Source="{Binding Converter={StaticResource ClassIcon}}" Width="24" Height="24" Margin="0,0,10,0" RenderOptions.BitmapScalingMode="HighQuality"/>
                                             <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>

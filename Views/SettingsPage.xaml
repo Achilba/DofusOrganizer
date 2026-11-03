@@ -276,8 +276,6 @@
                                                 <Path Style="{StaticResource Icon}" Data="{StaticResource IcoGrip}" Stroke="#6B7280" StrokeThickness="3" Width="10" Height="18"/>
                                             </Border>
                                             <TextBlock DockPanel.Dock="Left" Text="{Binding Number}" Foreground="{DynamicResource Dim}" Width="20" VerticalAlignment="Center"/>
-                                            <Image DockPanel.Dock="Left" Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="26" Height="26" Margin="0,0,10,0"
-                                                   RenderOptions.BitmapScalingMode="HighQuality"/>
                                             <StackPanel VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Name, Mode=OneWay}" FontFamily="{StaticResource BodyXB}" TextTrimming="CharacterEllipsis"/>
                                                 <TextBlock Text="{Binding ClassName, Mode=OneWay}" Foreground="{DynamicResource Muted}" FontSize="11.5"/>

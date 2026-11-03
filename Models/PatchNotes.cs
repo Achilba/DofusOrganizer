@@ -12,7 +12,7 @@ public static class PatchNotes
     {
         new("0.14.7", "03/11/2026", new[]
         {
-            "CHANGÉ — Accueil : les cartes des personnages affichent de nouveau la première lettre du pseudo à la place de l'icône de classe.",
+            "CHANGÉ — Les icônes de classe sont retirées partout (Personnages, Paramètres, Songes). Les cartes de l'accueil affichent de nouveau la première lettre du pseudo.",
         }),
         new("0.14.6", "03/11/2026", new[]
         {

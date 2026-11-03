@@ -141,9 +141,6 @@
                                                             <DockPanel Margin="0,0,0,8">
                                                                 <Button DockPanel.Dock="Right" Content="✕" Width="28" Height="28" MinHeight="0" Padding="0" Margin="6,0,0,0" ToolTip="Retirer ce personnage"
                                                                         Command="{Binding DataContext.Strat.RemoveSlotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
-                                                                <Border DockPanel.Dock="Left" Width="40" Height="40" CornerRadius="10" Background="{DynamicResource Field}" Margin="0,0,10,0">
-                                                                    <Image Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="30" Height="30" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                                                </Border>
                                                                 <ComboBox ItemsSource="{Binding DataContext.Strat.CharNames, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                           SelectedItem="{Binding Char, Mode=TwoWay}" VerticalAlignment="Center"/>
                                                             </DockPanel>
@@ -185,9 +182,6 @@
                                 <DataTemplate>
                                     <Border Style="{StaticResource Card}" Margin="0,0,10,10" Padding="14">
                                         <DockPanel>
-                                            <Border DockPanel.Dock="Left" Width="56" Height="56" CornerRadius="14" Background="{DynamicResource Field}" Margin="0,0,14,0">
-                                                <Image Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="42" Height="42" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                            </Border>
                                             <StackPanel VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Ini, StringFormat='INI {0}'}" Foreground="#7CC4FF" FontFamily="{StaticResource BodyXB}" FontSize="13"/>
                                                 <TextBlock Text="{Binding Char}" FontFamily="{StaticResource BodyXB}" FontSize="19"/>
