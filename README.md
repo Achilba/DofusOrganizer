@@ -17,6 +17,7 @@ Un petit logiciel Windows pour t'organiser quand tu joues plusieurs personnages 
 6. [Paramètres](#6-paramètres)
 7. [Tes données et leur sécurité](#7-tes-données-et-leur-sécurité)
 8. [Questions fréquentes](#8-questions-fréquentes)
+9. [Crédits](#9-crédits)
 
 ---
 
@@ -149,3 +150,10 @@ Les touches se changent dans *Paramètres → Raccourcis* : clique sur une touch
 **Un bug, une idée, une donnée du jeu qui n'est plus à jour.** Contacte **@Achilba** sur Discord, avec le texte de « Copier les infos pour le support ».
 
 *Version 0.x : des défauts sont normaux, merci de les signaler.*
+
+## 9. Crédits
+- **DofusDB** (<https://dofusdb.fr>) : « Données issues de DofusDB. Utilisation soumise à la LPNC-IA 1.0. » Succès de donjon, types d'objets de l'Almanax et niveaux des Dofus.
+- **Dofusyelle** (<https://dofusyelle.com>) : pages des donjons, vers lesquelles l'appli renvoie.
+- **Dofus pour les Noobs** (<https://www.dofuspourlesnoobs.com>) : pages de référence de l'Almanax, vers lesquelles l'appli renvoie.
+- Les noms, textes et données du jeu appartiennent à **Ankama**. Cette appli est un outil non officiel, gratuit et sans publicité.
+

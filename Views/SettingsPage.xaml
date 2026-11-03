@@ -350,6 +350,8 @@
                     <TextBlock Text="{Binding VersionText}" Style="{StaticResource MutedText}" Margin="0,2,0,10"/>
                     <TextBlock Text="Outil non officiel, sans lien avec Ankama. Il ne lit pas le jeu et n'envoie aucune donnée : tout reste sur ton ordinateur."
                                Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                    <TextBlock Text="Sources des données : DofusDB (« Données issues de DofusDB. Utilisation soumise à la LPNC-IA 1.0. »), Dofusyelle (dofusyelle.com) et Dofus pour les Noobs (dofuspourlesnoobs.com). Les noms et données du jeu appartiennent à Ankama."
+                               Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,0,0,10"/>
                     <TextBlock Text="Un bug ou une suggestion ? Contacte @Achilba sur Discord."
                                Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,0,0,10"/>
                     <TextBlock Text="Dossier de données" Foreground="{DynamicResource Muted}" FontFamily="{StaticResource BodyXB}" FontSize="11"/>
