@@ -12,7 +12,7 @@ Petit logiciel Windows pour organiser une équipe de personnages dans Dofus : pe
 L'appli propose elle-même les mises à jour (Paramètres → Mises à jour).
 
 ## Tes données
-Elles sont dans `%AppData%\DofusTeamOrganizer` (fichier `data.json`, une sauvegarde par jour dans `Backups`). Paramètres → « Réinitialiser » remet l'appli comme à la première installation.
+Elles sont dans `%AppData%\DofusTeamOrganizer` (fichier `data.json`, une sauvegarde par jour dans `Backups`). Paramètres → « Tout réinitialiser… » remet l'appli comme à la première installation.
 
 ## Un problème ?
 Paramètres → « Copier les infos pour le support », puis colle le texte dans une issue GitHub ou envoie-le à l'auteur.
