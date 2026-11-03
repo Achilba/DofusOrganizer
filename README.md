@@ -28,9 +28,9 @@ Un petit logiciel Windows pour t'organiser quand tu joues plusieurs personnages 
 Les mises à jour sont proposées par l'appli elle-même (voir [Paramètres](#6-paramètres)).
 
 ## 2. Premiers pas en 5 minutes
-1. **Écran de bienvenue.** Au premier lancement, ajoute tes personnages : un nom (tel qu'il apparaît dans Dofus) et une classe suffisent, jusqu'à 8. Tu peux cliquer sur « Plus tard » et le faire ensuite dans la page *Personnages*.
+1. **Écran de bienvenue.** Au premier lancement, ajoute tes personnages : un nom (tel qu'il apparaît dans Dofus) et une classe suffisent. Tu peux cliquer sur « Plus tard » et le faire ensuite dans la page *Personnages*.
 2. **Complète tes personnages.** Page *Personnages* : niveau, alignement, métiers, liens de stuff.
-3. **Choisis ce qui s'affiche.** *Paramètres → Personnages et fonctions* : pour chaque personnage, tu coches les fonctions qui le concernent (Accueil, Succès DJ, Horaires, Songes, Notes).
+3. **Choisis ce qui s'affiche et l'ordre.** *Paramètres → Personnages et fonctions* : pour chaque personnage, tu coches les fonctions qui le concernent (Accueil, Succès DJ, Horaires, Songes, Notes). Tu y choisis aussi l'ordre dans lequel tu passes d'un personnage à l'autre quand tu bascules de fenêtre : glisse-dépose les lignes pour les ordonner, et l'interrupteur de droite décide si un personnage est visité par les raccourcis de changement de personnage.
 4. **Mets tes Zaaps favoris.** Page *Zaaps* : coche ceux que tu utilises le plus.
 5. **Essaie la barre Mini.** Bouton « Mode mini » de l'accueil : l'appli devient une petite barre à côté du jeu.
 
@@ -49,26 +49,26 @@ Le tableau de bord de ta « multicompte ».
 
 ### Personnages
 Une fiche par personnage.
-- **Détails** : nom, classe, niveau (au-delà de 200, le niveau s'affiche en Oméga : 260 devient « Oméga 60 »).
+- **Détails** : nom, classe, niveau.
 - **Alignement** : faction et ordre.
-- **Métiers** : ajoute les métiers de ton personnage et leur niveau, affichés dans l'ordre alphabétique.
-- **Stuffs** : donne un nom et colle le lien de ton stuff (site de ton choix). L'appli ne garde que le lien.
+- **Métiers** : ajoute les métiers de ton personnage et leur niveau.
+- **Stuffs** : donne un nom et colle le lien de ton stuff (site de ton choix).
 - **Comparaison** : compare deux personnages, la valeur la plus haute est mise en couleur.
 - **Copier le résumé** : copie un résumé du personnage à coller où tu veux.
 - **Suivi dans les succès de donjons** : décoche pour un personnage dont tu ne suis pas les succès.
 
 ### Dofus
-Suivi de tes Dofus, par catégorie : **Principaux**, **Particuliers** et **Quêtes des Dofus** (Quête 4/6 et Réunification 6/6). Chaque entrée passe par les statuts *À faire*, *En cours* et *Terminé*, avec un compteur.
+Suivi de tes Dofus, en trois blocs : **Principaux**, **Particuliers** et **Quêtes des Dofus** (Quête 4/6 et Réunification 6/6). Chaque entrée passe par les statuts *À faire*, *En cours* et *Terminé*, avec un compteur par bloc.
 
 ### Almanax
 - **Aujourd'hui** : l'offrande du jour, le modificateur et le Zaap concerné. Un clic sur le « i » copie le modificateur.
-- **Les 6 jours suivants** : pour préparer tes ressources à l'avance. « Copier la liste » copie ce qu'il faut réunir (quantités pour un personnage).
+- **Les 6 jours suivants** : pour préparer tes ressources à l'avance. « Copier la liste » copie ce qu'il faut réunir.
 - **Valider** : marque l'offrande comme faite. Un jour passé non validé apparaît en « Manqué », et tu peux le valider si tu l'avais fait sans l'enregistrer.
 - **Calendrier** : navigue de semaine en semaine ou de mois en mois, et « Aujourd'hui » te ramène à la date du jour.
 
 ### Zaaps
 Tous les Zaaps du jeu avec une recherche (nom, région ou coordonnées).
-- **Coche un Zaap pour le mettre en favori** : il passe en haut de la liste de la barre Mini, par ordre alphabétique, avec une étoile.
+- **Coche un Zaap pour le mettre en favori** : il passe en haut de la liste de la barre Mini, avec une étoile.
 - **Copier** : copie la commande `/zaap` correspondante.
 
 ### Donjons
@@ -78,13 +78,23 @@ Les succès de donjon par boss et par personnage, relevés sur DofusDB (challeng
 - Un lien ouvre la page du donjon sur Dofusyelle.
 
 ### Songes
-- **Strat** : tes équipes, stuffs et explications pour chaque type de run. Une ligne qui commence par « - [ ] » devient une case à cocher dans « Étapes à cocher ».
-- **Drops** : suivi de tes légendes.
-- **Stats** : ajoute le temps d'un run, son type (Rêve 1 à 3, Para 1 à 3, Cauchemar 1 à 3) et le nombre de vagues, avec un graphique, un filtre par période et un export CSV.
-- Un **mode mini Songe** réduit la page en une petite barre.
+La page a trois onglets en haut : **Strat**, **Drops** et **Stats**. Le bouton « Mode mini Songe » la réduit en une petite barre.
+
+**Strat** : prépare tes runs.
+- « + Run » crée un run (Paradoxe 1 Salle, Paradoxe 1 Boss, run vide) ou en importe un partagé par quelqu'un d'autre. Tu peux aussi le dupliquer, l'exporter dans un fichier ou le supprimer.
+- **Équipe et stuffs** : jusqu'à 4 personnages, avec leur stuff (choisi parmi ceux enregistrés dans *Personnages*). Glisse une carte, ou change son numéro **INI**, pour fixer l'ordre d'initiative.
+- **Stratégie** : ton texte pour le run. Une ligne qui commence par « - [ ] » devient une case à cocher dans « Étapes à cocher ».
+- **Copier la strat** copie l'équipe dans l'ordre INI et le texte, prêts à partager.
+
+**Drops** : suis tes légendes. Les légendes animales (4) et les légendes classiques (26) ont chacune un compteur. L'appli affiche le total, ton dernier drop et le nombre de runs depuis. Deux boutons exportent tes runs et tes drops en CSV, pour les ouvrir dans Excel.
+
+**Stats** : analyse tes runs.
+- **Ajouter une run** : son type (Rêve 1 à 3, Para 1 à 3, Cauchemar 1 à 3), son temps, son nombre de vagues et une note facultative. Tu peux modifier ou supprimer une run après coup.
+- **Période** : Aujourd'hui, 7 jours, 30 jours ou Tout.
+- Tu y trouves le nombre de runs, le temps moyen et le meilleur temps (par type de run), une courbe de progression, la moyenne de runs par légende, l'écart depuis le dernier drop et ton plus long écart.
 
 ### Tâches horaires
-Ce qu'il reste à faire pour chaque personnage, avec des cases qui se remettent à zéro toutes seules : chaque jour à minuit, ou le jour choisi à 3 h du matin. Ajoute tes propres tâches avec « Ajouter une tâche ». Cette page est séparée des cases à cocher des *Notes*.
+Ce qu'il reste à faire pour chaque personnage, avec une case par personnage. Deux listes : **Tous les jours** et **Une fois par semaine** (le jour que tu choisis). Les cases se remettent à zéro toutes seules, chaque jour à minuit ou le jour choisi à 3 h du matin. Ajoute tes propres tâches avec « Ajouter une tâche ». Cette page est séparée des cases à cocher des *Notes*.
 
 ### Notes
 Un bloc-notes commun et un par personnage, enregistré à chaque frappe, avec une recherche dans toutes les notes. Une ligne qui commence par « - [ ] » devient une case à cocher. Le bouton **Note flottante** ouvre la note en petite fenêtre toujours au premier plan (clique à nouveau pour la fermer).
@@ -107,7 +117,7 @@ Une petite barre toujours au premier plan (réglable) que tu poses à côté du 
 Les touches se changent dans *Paramètres → Raccourcis* : clique sur une touche, puis appuie sur la nouvelle (Échap pour annuler). Une lettre seule est refusée pour ne pas gêner l'écriture dans le jeu.
 
 ## 6. Paramètres
-- **Sauvegardes** : sauvegarde automatique chaque jour (7 copies gardées), export et import de tes données, copie automatique vers un autre dossier (disque, clé USB, cloud, 14 copies gardées).
+- **Sauvegardes** : sauvegarde automatique chaque jour, export et import de tes données, et copie automatique vers un autre dossier (disque, clé USB, cloud).
 - **Réinitialisation** : « Tout réinitialiser… » remet l'appli comme à la première installation (réglages, thème et données).
 - **Mode Mini** : opacité, position mémorisée, toujours au premier plan, éléments affichés dans la barre.
 - **Mode discret** : coupe les messages automatiques (mise à jour disponible, remise à zéro des tâches). Tes propres confirmations restent affichées.
@@ -116,8 +126,9 @@ Les touches se changent dans *Paramètres → Raccourcis* : clique sur une touch
 - **Apparence** : thème de couleurs, couleur d'accent, taille du texte.
 - **Raccourcis** : voir ci-dessus.
 - **Personnages et fonctions** : par personnage, les fonctions actives, l'ordre et la présence dans le changement de personnage.
-- **Mises à jour** : l'appli vérifie au lancement (et toutes les 5 minutes) s'il existe une nouvelle version. Une pastille rouge apparaît sur *Paramètres* et un bouton installe la mise à jour. Tes données ne sont jamais touchées. Les notes de version s'affichent une fois après chaque mise à jour.
-- **Diagnostic** et **À propos** : « Copier les infos pour le support » copie la version, ta version de Windows, le dossier de données et les dernières lignes du journal d'erreurs, à envoyer avec ton message de bug.
+- **Mises à jour** : l'appli vérifie s'il existe une nouvelle version. Une pastille rouge apparaît sur *Paramètres* et un bouton installe la mise à jour. Tes données ne sont jamais touchées. Les notes de version s'affichent une fois après chaque mise à jour.
+- **Listes de données** : rappelle que les Zaaps, donjons, Dofus et légendes sont intégrés à l'appli.
+- **Diagnostic** et **À propos** : « Copier les infos pour le support » copie les informations utiles pour comprendre un bug, à envoyer avec ton message.
 
 ## 7. Tes données et leur sécurité
 - Elles sont dans `%AppData%\DofusTeamOrganizer` (fichier `data.json`, une sauvegarde par jour dans `Backups`, journal d'erreurs dans `errors.log`).
