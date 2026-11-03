@@ -93,8 +93,8 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Border Width="44" Height="44" CornerRadius="12" Background="{Binding Color, Converter={StaticResource HexBrush}}" Margin="0,0,12,0" VerticalAlignment="Top">
-                                        <Image Source="{Binding ClassName, Converter={StaticResource ClassIcon}}" Width="34" Height="34"
-                                               RenderOptions.BitmapScalingMode="HighQuality" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Initial}" FontFamily="{StaticResource Display}" FontSize="21" Foreground="#12151A"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <WrapPanel>
