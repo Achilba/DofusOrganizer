@@ -61,15 +61,15 @@ Une fiche par personnage.
 Suivi de tes Dofus, en trois blocs : **Principaux**, **Particuliers** et **Quêtes des Dofus** (Quête 4/6 et Réunification 6/6). Chaque entrée passe par les statuts *À faire*, *En cours* et *Terminé*, avec un compteur par bloc.
 
 ### Almanax
-- **Aujourd'hui** : l'offrande du jour, le modificateur et le Zaap concerné. Un clic sur le « i » copie le modificateur.
-- **Les 6 jours suivants** : pour préparer tes ressources à l'avance. « Copier la liste » copie ce qu'il faut réunir.
+- **Aujourd'hui** : l'offrande du jour, le modificateur et le Zaap concerné. Un clic sur la ressource la copie dans le presse-papiers.
+- **Prépare ta semaine en avance** : les offrandes des jours suivants, pour réunir tes ressources avant. « Copier la liste » copie ce qu'il faut réunir.
 - **Valider** : marque l'offrande comme faite. Un jour passé non validé apparaît en « Manqué », et tu peux le valider si tu l'avais fait sans l'enregistrer.
 - **Calendrier** : navigue de semaine en semaine ou de mois en mois, et « Aujourd'hui » te ramène à la date du jour.
 
 ### Zaaps
 Tous les Zaaps du jeu avec une recherche (nom, région ou coordonnées).
 - **Coche un Zaap pour le mettre en favori** : il passe en haut de la liste de la barre Mini, avec une étoile.
-- **Copier** : copie la commande `/zaap` correspondante.
+- **Pour copier :** sélectionne ton Zaap et il se copie automatiquement !
 
 ### Donjons
 Les succès de donjon par boss et par personnage, relevés sur DofusDB (challenges, Duo/Trio/Quatuor, Spécial).
