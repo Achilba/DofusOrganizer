@@ -1,12 +1,15 @@
-DOFUS Team Organizer - version 0.1 (phase 1)
+DOFUS Team Organizer
 
-COMPILER
-1. Installe le SDK .NET 8 (gratuit) : https://dotnet.microsoft.com/download/dotnet/8.0
-2. Double-clique build.bat
-3. L'appli est dans le dossier "publish" : DofusTeamOrganizer.exe (un seul fichier, rien d'autre a installer)
+Outil non officiel, sans lien avec Ankama. Il ne lit pas le jeu et n'envoie aucune donnee.
 
-Si la compilation affiche des erreurs, copie-les-moi telles quelles : je n'ai pas pu compiler de mon cote.
+INSTALLER
+Telecharge DofusTeamOrganizer.exe sur la page des versions :
+https://github.com/Achilba/DofusOrganizer/releases/latest
+Si Windows affiche "Windows a protege votre ordinateur" : Informations complementaires > Executer quand meme.
 
 DONNEES
 %AppData%\DofusTeamOrganizer\data.json  (+ Backups\ : une copie par jour, 7 gardees)
 Journal d'erreurs : %AppData%\DofusTeamOrganizer\errors.log
+
+COMPILER (pour les curieux)
+Installe le SDK .NET 8, puis double-clique build.bat. Le resultat est dans le dossier "publish".

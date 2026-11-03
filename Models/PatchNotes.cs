@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.1";
+    public const string Current = "0.14.2";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.2", "03/11/2026", new[]
+        {
+            "CHANGÉ — Paramètres > À propos : rappel que l'outil est non officiel et que rien ne quitte ton ordinateur.",
+            "CHANGÉ — Nouveau README avec l'installation et l'avertissement de Windows (SmartScreen).",
+        }),
         new("0.14.1", "03/11/2026", new[]
         {
             "RETIRÉ — La page « Forgemagie » de la version 0.14.0 est supprimée de l'appli.",
