@@ -356,7 +356,7 @@ public class MainViewModel : ObservableObject
         AutoStart.Refresh();
 
         foreach (var (k, l, ico) in new[] { ("home", "Accueil", "IcoHome"), ("chars", "Personnages", "IcoChars"), ("dofus", "Dofus", "IcoDofus"), ("almanax", "Almanax", "IcoCalendar"), ("zaaps", "Zaaps", "IcoStar"),
-                                            ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"), ("routines", "Tâches", "IcoRoutines"),
+                                            ("dungeons", "Donjons", "IcoDungeon"), ("dreams", "Songes", "IcoMoon"), ("routines", "Tâches horaires", "IcoRoutines"),
                                             ("notes", "Notes", "IcoNotes"), ("settings", "Paramètres", "IcoSettings") })
             NavItems.Add(new NavItem(k, l, Application.Current.TryFindResource(ico) as Geometry));
         foreach (var n in NavItems) (n.Key == "settings" ? BottomNavItems : TopNavItems).Add(n);
@@ -436,7 +436,7 @@ public class MainViewModel : ObservableObject
         {
             new FeatureColumn(this, "Accueil", c => c.ShowHome, (c, v) => c.ShowHome = v),
             new FeatureColumn(this, "Succès DJ", c => c.AchTracked, (c, v) => c.AchTracked = v),
-            new FeatureColumn(this, "Tâches", c => c.ShowTasks, (c, v) => c.ShowTasks = v),
+            new FeatureColumn(this, "Horaires", c => c.ShowTasks, (c, v) => c.ShowTasks = v),
             new FeatureColumn(this, "Songes", c => c.ShowDreams, (c, v) => c.ShowDreams = v),
             new FeatureColumn(this, "Notes", c => c.ShowNotes, (c, v) => c.ShowNotes = v),
         };

@@ -285,7 +285,7 @@
                                         </DockPanel>
                                         <CheckBox Grid.Column="1" IsChecked="{Binding ShowHome}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Accueil"/>
                                         <CheckBox Grid.Column="2" IsChecked="{Binding AchTracked}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Succès DJ"/>
-                                        <CheckBox Grid.Column="3" IsChecked="{Binding ShowTasks}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Tâches"/>
+                                        <CheckBox Grid.Column="3" IsChecked="{Binding ShowTasks}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Tâches horaires"/>
                                         <CheckBox Grid.Column="4" IsChecked="{Binding ShowDreams}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Songes"/>
                                         <CheckBox Grid.Column="5" IsChecked="{Binding ShowNotes}" HorizontalAlignment="Center" Margin="0,0,-12,0" ToolTip="Notes"/>
                                         <CheckBox Grid.Column="6" Style="{StaticResource HotSwitch}" IsChecked="{Binding InSwap}" HorizontalAlignment="Center" ToolTip="Raccourcis : inclus dans « Personnage suivant / précédent »"/>

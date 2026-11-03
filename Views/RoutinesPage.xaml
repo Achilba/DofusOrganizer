@@ -39,7 +39,7 @@
         </Grid.RowDefinitions>
         <Grid Margin="0,0,0,14">
             <StackPanel HorizontalAlignment="Left">
-                <TextBlock Text="Tâches" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="Tâches horaires" Style="{StaticResource PageTitle}"/>
                 <TextBlock Text="Ce qu'il reste à faire, personnage par personnage · les remises à zéro sont automatiques" Style="{StaticResource PageSub}"/>
             </StackPanel>
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="{DynamicResource Field}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,10,0">

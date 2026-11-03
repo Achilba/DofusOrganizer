@@ -45,7 +45,7 @@ public class WelcomeWindow : Window
         head.Children.Add(new TextBlock { Text = "Bienvenue", FontSize = 28, FontFamily = F("Display"), Margin = new Thickness(0, 0, 0, 6) });
         head.Children.Add(new TextBlock
         {
-            Text = "Ajoute tes personnages pour commencer : un nom et une classe suffisent. Tu pourras tout modifier ensuite dans Personnages, et choisir les fonctions de chacun (Accueil, Tâches, Songes, Notes) dans Paramètres.",
+            Text = "Ajoute tes personnages pour commencer : un nom et une classe suffisent. Tu pourras tout modifier ensuite dans Personnages, et choisir les fonctions de chacun (Accueil, Tâches horaires, Songes, Notes) dans Paramètres.",
             TextWrapping = TextWrapping.Wrap,
             Foreground = B("Muted"),
             Margin = new Thickness(0, 0, 0, 14)
