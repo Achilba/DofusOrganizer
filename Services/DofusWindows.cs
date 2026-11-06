@@ -60,16 +60,18 @@ public static class DofusWindows
         return result;
     }
 
-    /// <summary>Pseudos lus dans les titres des fenêtres Dofus (« Pseudo - Dofus 3.x »). Rien n'est lu dans le jeu lui-même.</summary>
-    public static List<string> TitleNames()
+    /// <summary>Pseudo et classe lus dans les titres des fenêtres Dofus (« Pseudo - Classe - 3.x.x - Release »). Rien n'est lu dans le jeu lui-même.</summary>
+    public static List<(string Name, string Class)> TitleNames()
     {
-        var list = new List<string>();
+        var list = new List<(string Name, string Class)>();
         foreach (var (h, title) in VisibleWindows())
         {
-            var m = System.Text.RegularExpressions.Regex.Match(title, @"^(.+?)\s+-\s+Dofus\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var m = System.Text.RegularExpressions.Regex.Match(title, @"^(.+?)\s+-\s+([^-]+?)\s+-\s+\d+(\.\d+)+");
             if (!m.Success || !IsDofusProcess(h)) continue;
             var name = m.Groups[1].Value.Trim();
-            if (name.Length >= 2 && name.Length <= 40 && !list.Contains(name, StringComparer.OrdinalIgnoreCase)) list.Add(name);
+            if (name.Length < 2 || name.Length > 40 || list.Any(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase))) continue;
+            var cls = Models.GameLists.Classes.FirstOrDefault(c => string.Equals(c, m.Groups[2].Value.Trim(), StringComparison.OrdinalIgnoreCase)) ?? "";
+            list.Add((name, cls));
         }
         return list;
     }

@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.8";
+    public const string Current = "0.14.9";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.9", "06/11/2026", new[]
+        {
+            "CORRIGÉ — La détection des nouveaux comptes ne reconnaissait pas le titre des fenêtres Dofus (« Pseudo - Classe - version »). Elle lit maintenant le pseudo et la classe.",
+        }),
         new("0.14.8", "06/11/2026", new[]
         {
             "NOUVEAU — Quand une fenêtre Dofus avec un pseudo inconnu s'ouvre, l'appli propose d'ajouter le personnage (avec ou sans carte sur l'accueil). Réglable dans Paramètres > Nouveaux comptes.",

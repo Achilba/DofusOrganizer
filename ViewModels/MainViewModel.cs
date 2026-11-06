@@ -1202,10 +1202,12 @@ public class MainViewModel : ObservableObject
     {
         if (!Data.DetectNewAccounts || _askingAccount) return;
         var names = Characters.Select(c => c.Name).ToList();
-        var fresh = DofusWindows.TitleNames().FirstOrDefault(t =>
-            !names.Any(n => t.Contains(n, StringComparison.OrdinalIgnoreCase)) &&
-            !Data.IgnoredAccounts.Contains(t, StringComparer.OrdinalIgnoreCase));
-        if (fresh == null) return;
+        var hit = DofusWindows.TitleNames().FirstOrDefault(t =>
+            !names.Any(n => t.Name.Contains(n, StringComparison.OrdinalIgnoreCase)) &&
+            !Data.IgnoredAccounts.Contains(t.Name, StringComparer.OrdinalIgnoreCase));
+        if (hit.Name == null) return;
+        var fresh = hit.Name;
+        var cls = hit.Class;
 
         _askingAccount = true;
         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -1213,7 +1215,7 @@ public class MainViewModel : ObservableObject
             try
             {
                 var r = MessageBox.Show(
-                    "Nouvelle fenêtre Dofus détectée : " + fresh + "\n\n" +
+                    "Nouvelle fenêtre Dofus détectée : " + fresh + (cls != "" ? " (" + cls + ")" : "") + "\n\n" +
                     "Oui : l'ajouter, avec sa carte sur l'accueil\n" +
                     "Non : l'ajouter, sans carte sur l'accueil\n" +
                     "Annuler : ne plus me le proposer",
@@ -1221,6 +1223,7 @@ public class MainViewModel : ObservableObject
                 if (r == MessageBoxResult.Cancel) { Data.IgnoredAccounts.Add(fresh); RequestSave(); return; }
                 var c = AddCharacter();
                 c.Name = fresh;
+                if (cls != "") c.ClassName = cls;
                 c.ShowHome = r == MessageBoxResult.Yes;
                 RequestSave();
                 ShowToast(fresh + " ajouté");
