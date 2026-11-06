@@ -49,7 +49,7 @@ public static class DofusWindows
             IntPtr found = IntPtr.Zero;
             foreach (var (h, title) in windows)
             {
-                if (title.Contains(name, StringComparison.OrdinalIgnoreCase) && IsDofusProcess(h))
+                if (TitleMatches(title, name) && IsDofusProcess(h))
                 {
                     found = h;
                     break;
@@ -60,13 +60,24 @@ public static class DofusWindows
         return result;
     }
 
+    private static readonly System.Text.RegularExpressions.Regex TitleRx =
+        new(@"^(.+?)\s+-\s+([^-]+?)\s+-\s+\d+(\.\d+)+", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    /// <summary>Le titre correspond-il à ce pseudo ? Comparaison exacte quand le titre est « Pseudo - Classe - version », sinon le nom doit figurer dans le titre.</summary>
+    private static bool TitleMatches(string title, string name)
+    {
+        var m = TitleRx.Match(title);
+        if (m.Success) return string.Equals(m.Groups[1].Value.Trim(), name, StringComparison.OrdinalIgnoreCase);
+        return title.Contains(name, StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>Pseudo et classe lus dans les titres des fenêtres Dofus (« Pseudo - Classe - 3.x.x - Release »). Rien n'est lu dans le jeu lui-même.</summary>
     public static List<(string Name, string Class)> TitleNames()
     {
         var list = new List<(string Name, string Class)>();
         foreach (var (h, title) in VisibleWindows())
         {
-            var m = System.Text.RegularExpressions.Regex.Match(title, @"^(.+?)\s+-\s+([^-]+?)\s+-\s+\d+(\.\d+)+");
+            var m = TitleRx.Match(title);
             if (!m.Success || !IsDofusProcess(h)) continue;
             var name = m.Groups[1].Value.Trim();
             if (name.Length < 2 || name.Length > 40 || list.Any(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase))) continue;
@@ -85,7 +96,7 @@ public static class DofusWindows
         if (fg == IntPtr.Zero) return "";
         var title = Native.GetTitle(fg);
         foreach (var n in names)
-            if (title.Contains(n, StringComparison.OrdinalIgnoreCase)) return n;
+            if (TitleMatches(title, n)) return n;
         return "";
     }
 
