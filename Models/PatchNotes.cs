@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.11";
+    public const string Current = "0.14.12";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.12", "06/11/2026", new[]
+        {
+            "CHANGÉ — La fenêtre « Nouveau compte détecté » reprend le design de l'appli, avec un interrupteur pour afficher la carte sur l'accueil et trois choix : Ajouter, Plus tard (reproposé si la fenêtre Dofus est fermée puis rouverte) et Ne plus proposer.",
+        }),
         new("0.14.11", "06/11/2026", new[]
         {
             "CORRIGÉ — Détection des fenêtres Dofus : le pseudo est comparé exactement, pour ne plus confondre deux pseudos proches (swap, invitations, fenêtre active).",

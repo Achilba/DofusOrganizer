@@ -1197,13 +1197,19 @@ public class MainViewModel : ObservableObject
     private int _detectTick;
     private bool _askingAccount;
 
-    /// <summary>Une fenêtre Dofus avec un pseudo inconnu est ouverte : propose de l'ajouter (Oui avec carte, Non sans carte, Annuler = ignorer).</summary>
+    /// <summary>Comptes mis de côté avec « Plus tard » : reproposés quand leur fenêtre a été fermée puis rouverte.</summary>
+    private readonly HashSet<string> _laterAccounts = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Une fenêtre Dofus avec un pseudo inconnu est ouverte : propose de l'ajouter (Ajouter, Plus tard, Ne plus proposer).</summary>
     private void CheckNewAccount()
     {
         if (!Data.DetectNewAccounts || _askingAccount) return;
+        var open = DofusWindows.TitleNames();
+        _laterAccounts.RemoveWhere(n => !open.Any(t => string.Equals(t.Name, n, StringComparison.OrdinalIgnoreCase)));
         var names = Characters.Select(c => c.Name).ToList();
-        var hit = DofusWindows.TitleNames().FirstOrDefault(t =>
+        var hit = open.FirstOrDefault(t =>
             !names.Any(n => string.Equals(n, t.Name, StringComparison.OrdinalIgnoreCase)) &&
+            !_laterAccounts.Contains(t.Name) &&
             !Data.IgnoredAccounts.Contains(t.Name, StringComparer.OrdinalIgnoreCase));
         if (hit.Name == null) return;
         var fresh = hit.Name;
@@ -1214,19 +1220,25 @@ public class MainViewModel : ObservableObject
         {
             try
             {
-                var r = MessageBox.Show(
-                    "Nouvelle fenêtre Dofus détectée : " + fresh + (cls != "" ? " (" + cls + ")" : "") + "\n\n" +
-                    "Oui : l'ajouter, avec sa carte sur l'accueil\n" +
-                    "Non : l'ajouter, sans carte sur l'accueil\n" +
-                    "Annuler : ne plus me le proposer",
-                    "Nouveau compte", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-                if (r == MessageBoxResult.Cancel) { Data.IgnoredAccounts.Add(fresh); RequestSave(); return; }
-                var c = AddCharacter();
-                c.Name = fresh;
-                if (cls != "") c.ClassName = cls;
-                c.ShowHome = r == MessageBoxResult.Yes;
-                RequestSave();
-                ShowToast(fresh + " ajouté");
+                var win = new Views.NewAccountWindow(fresh, cls);
+                win.ShowDialog();
+                switch (win.Choice)
+                {
+                    case Views.NewAccountChoice.Never:
+                        Data.IgnoredAccounts.Add(fresh); RequestSave();
+                        break;
+                    case Views.NewAccountChoice.Later:
+                        _laterAccounts.Add(fresh);
+                        break;
+                    case Views.NewAccountChoice.Add:
+                        var c = AddCharacter();
+                        c.Name = fresh;
+                        if (cls != "") c.ClassName = cls;
+                        c.ShowHome = win.ShowCard;
+                        RequestSave();
+                        ShowToast(fresh + " ajouté");
+                        break;
+                }
             }
             catch (Exception ex) { Storage.LogError("Nouveau compte : " + ex); }
             finally { _askingAccount = false; }
