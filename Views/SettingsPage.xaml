@@ -104,6 +104,15 @@
                 </StackPanel>
             </Border>
 
+            <!-- Nouveaux comptes -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Nouveaux comptes" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Proposer d'ajouter un personnage quand une nouvelle fenêtre Dofus s'ouvre" IsChecked="{Binding DetectNewAccounts}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Le pseudo est lu dans le titre de la fenêtre (rien n'est lu dans le jeu). Tu choisis d'afficher ou non sa carte sur l'accueil. Réactiver cette option réaffiche les pseudos ignorés." Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
             <!-- Démarrage -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackPanel>

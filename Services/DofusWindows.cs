@@ -60,6 +60,20 @@ public static class DofusWindows
         return result;
     }
 
+    /// <summary>Pseudos lus dans les titres des fenêtres Dofus (« Pseudo - Dofus 3.x »). Rien n'est lu dans le jeu lui-même.</summary>
+    public static List<string> TitleNames()
+    {
+        var list = new List<string>();
+        foreach (var (h, title) in VisibleWindows())
+        {
+            var m = System.Text.RegularExpressions.Regex.Match(title, @"^(.+?)\s+-\s+Dofus\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if (!m.Success || !IsDofusProcess(h)) continue;
+            var name = m.Groups[1].Value.Trim();
+            if (name.Length >= 2 && name.Length <= 40 && !list.Contains(name, StringComparer.OrdinalIgnoreCase)) list.Add(name);
+        }
+        return list;
+    }
+
     public static IntPtr Find(string name) => FindAll(new[] { name })[name];
 
     /// <summary>Nom du personnage dont la fenêtre est au premier plan, ou "".</summary>

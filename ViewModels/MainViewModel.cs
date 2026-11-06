@@ -699,6 +699,17 @@ public class MainViewModel : ObservableObject
     public bool HomeShowInvites { get => !Data.HomeHideInvites; set { if (Data.HomeHideInvites == value) { Data.HomeHideInvites = !value; Raise(); RequestSave(); } } }
     public bool HomeSwapBottom { get => Data.HomeSwapBottom; set { if (Data.HomeSwapBottom != value) { Data.HomeSwapBottom = value; Raise(); RequestSave(); } } }
 
+    public bool DetectNewAccounts
+    {
+        get => Data.DetectNewAccounts;
+        set
+        {
+            if (Data.DetectNewAccounts == value) return;
+            Data.DetectNewAccounts = value;
+            if (value) Data.IgnoredAccounts.Clear();
+            Raise(); RequestSave();
+        }
+    }
     public bool QuietMode { get => Data.QuietMode; set { if (Data.QuietMode != value) { Data.QuietMode = value; Raise(); RequestSave(); } } }
     public RelayCommand ToggleCompactCommand { get; private set; }
 
@@ -1041,7 +1052,7 @@ public class MainViewModel : ObservableObject
         foreach (var p in new[] { nameof(Data), nameof(SwapEnabled), nameof(MiniAlwaysOnTop), nameof(MiniOpacity), nameof(AutoBackup),
                                   nameof(LastBackup), nameof(NoteText), nameof(MainCounter), nameof(SpecialCounter), nameof(Characters),
                                   nameof(RememberMiniPosition), nameof(MiniCompact), nameof(MiniFull), nameof(MiniOpacityText), nameof(ScaleChoice),
-                                  nameof(MiniShowSwap), nameof(MiniShowInvites), nameof(MiniShowZaap), nameof(MiniShowAlmanax), nameof(ShowMiniZaap), nameof(ShowMiniAlmanax), nameof(ShowMiniSeparator), nameof(QuietMode),
+                                  nameof(MiniShowSwap), nameof(MiniShowInvites), nameof(MiniShowZaap), nameof(MiniShowAlmanax), nameof(ShowMiniZaap), nameof(ShowMiniAlmanax), nameof(ShowMiniSeparator), nameof(QuietMode), nameof(DetectNewAccounts),
                                   nameof(AccentText), nameof(AutoExternalCopy), nameof(ExternalCopyText), nameof(HomeShowChars), nameof(HomeShowShortcuts), nameof(HomeShowInvites), nameof(HomeSwapBottom) })
             Raise(p);
         BuildThemeRows();
@@ -1175,11 +1186,48 @@ public class MainViewModel : ObservableObject
             if (_page == "settings") Raise(nameof(MemoryText));
 
             Hotkeys.SetContextual(DofusWindows.IsForegroundDofus(), Data.SwapEnabled);
+            if (++_detectTick % 4 == 0) CheckNewAccount();
 
             var active = DofusWindows.ActiveCharacter(Characters.Select(c => c.Name));
             if (active != "") _lastCharacter = active;
         }
         catch (Exception ex) { Storage.LogError("Poll : " + ex); }
+    }
+
+    private int _detectTick;
+    private bool _askingAccount;
+
+    /// <summary>Une fenêtre Dofus avec un pseudo inconnu est ouverte : propose de l'ajouter (Oui avec carte, Non sans carte, Annuler = ignorer).</summary>
+    private void CheckNewAccount()
+    {
+        if (!Data.DetectNewAccounts || _askingAccount) return;
+        var names = Characters.Select(c => c.Name).ToList();
+        var fresh = DofusWindows.TitleNames().FirstOrDefault(t =>
+            !names.Any(n => t.Contains(n, StringComparison.OrdinalIgnoreCase)) &&
+            !Data.IgnoredAccounts.Contains(t, StringComparer.OrdinalIgnoreCase));
+        if (fresh == null) return;
+
+        _askingAccount = true;
+        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            try
+            {
+                var r = MessageBox.Show(
+                    "Nouvelle fenêtre Dofus détectée : " + fresh + "\n\n" +
+                    "Oui : l'ajouter, avec sa carte sur l'accueil\n" +
+                    "Non : l'ajouter, sans carte sur l'accueil\n" +
+                    "Annuler : ne plus me le proposer",
+                    "Nouveau compte", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if (r == MessageBoxResult.Cancel) { Data.IgnoredAccounts.Add(fresh); RequestSave(); return; }
+                var c = AddCharacter();
+                c.Name = fresh;
+                c.ShowHome = r == MessageBoxResult.Yes;
+                RequestSave();
+                ShowToast(fresh + " ajouté");
+            }
+            catch (Exception ex) { Storage.LogError("Nouveau compte : " + ex); }
+            finally { _askingAccount = false; }
+        }));
     }
 
     private void OnHotkey(int id)

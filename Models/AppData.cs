@@ -325,6 +325,10 @@ public class AppData
 
     public int SelectedCharacter { get; set; } = 0;
     public bool SwapEnabled { get; set; } = true;
+    /// <summary>Propose d'ajouter un personnage quand une fenêtre Dofus avec un pseudo inconnu s'ouvre.</summary>
+    public bool DetectNewAccounts { get; set; } = true;
+    /// <summary>Pseudos pour lesquels l'utilisateur a répondu « Ignorer » (on ne les propose plus).</summary>
+    public List<string> IgnoredAccounts { get; set; } = new();
     public bool MiniAlwaysOnTop { get; set; } = true;
     public double MiniOpacity { get; set; } = 1.0;
     /// <summary>Taille du texte et des éléments de la fenêtre principale (1 = 100 %).</summary>
