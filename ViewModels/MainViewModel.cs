@@ -1203,7 +1203,7 @@ public class MainViewModel : ObservableObject
         if (!Data.DetectNewAccounts || _askingAccount) return;
         var names = Characters.Select(c => c.Name).ToList();
         var hit = DofusWindows.TitleNames().FirstOrDefault(t =>
-            !names.Any(n => t.Name.Contains(n, StringComparison.OrdinalIgnoreCase)) &&
+            !names.Any(n => string.Equals(n, t.Name, StringComparison.OrdinalIgnoreCase)) &&
             !Data.IgnoredAccounts.Contains(t.Name, StringComparer.OrdinalIgnoreCase));
         if (hit.Name == null) return;
         var fresh = hit.Name;

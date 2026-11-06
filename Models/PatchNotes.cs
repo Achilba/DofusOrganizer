@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.9";
+    public const string Current = "0.14.10";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.10", "06/11/2026", new[]
+        {
+            "CORRIGÉ — Nouveaux comptes : le pseudo est comparé exactement (un pseudo proche d'un personnage existant, comme « Achilbal » et « Achilba », est maintenant détecté).",
+        }),
         new("0.14.9", "06/11/2026", new[]
         {
             "CORRIGÉ — La détection des nouveaux comptes ne reconnaissait pas le titre des fenêtres Dofus (« Pseudo - Classe - version »). Elle lit maintenant le pseudo et la classe.",
