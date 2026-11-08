@@ -27,9 +27,9 @@ public partial class MiniWindow : Window
         var vm = Vm;
         if (vm == null) return;
         Topmost = vm.Data.MiniAlwaysOnTop;
-        if (vm.Data.MiniCompact)
+        if (!vm.ShowMiniZaap)
         {
-            // Barre compacte : la fenêtre s'ajuste exactement à son contenu (plus d'espace vide à droite)
+            // Barre compacte, ou sans le champ Zaap (masqué ou déporté) : la fenêtre s'ajuste exactement à son contenu (plus d'espace vide à droite)
             SizeToContent = SizeToContent.Width;
         }
         else

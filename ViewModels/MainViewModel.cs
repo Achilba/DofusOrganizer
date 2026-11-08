@@ -642,7 +642,7 @@ public class MainViewModel : ObservableObject
     public bool MiniShowZaap
     {
         get => Data.MiniShowZaap;
-        set { if (Data.MiniShowZaap != value) { Data.MiniShowZaap = value; Raise(); Raise(nameof(ShowMiniZaap)); Raise(nameof(ShowMiniSeparator)); RequestSave(); } }
+        set { if (Data.MiniShowZaap != value) { Data.MiniShowZaap = value; Raise(); Raise(nameof(ShowMiniZaap)); Raise(nameof(ShowMiniSeparator)); RequestSave(); MiniSettingsChanged?.Invoke(); } }
     }
     public bool MiniShowAlmanax
     {
@@ -652,6 +652,11 @@ public class MainViewModel : ObservableObject
     public bool ShowMiniZaap => MiniFull && Data.MiniShowZaap && !Data.DetachedZaap;
     /// <summary>Levé quand l'option « Zaap déporté » change : l'appli montre ou cache la fenêtre Zaaps.</summary>
     public event Action DetachedZaapChanged;
+    public bool ZaapKeepOpen
+    {
+        get => Data.ZaapKeepOpen;
+        set { if (Data.ZaapKeepOpen != value) { Data.ZaapKeepOpen = value; Raise(); RequestSave(); } }
+    }
     public bool DetachedZaap
     {
         get => Data.DetachedZaap;
@@ -661,6 +666,7 @@ public class MainViewModel : ObservableObject
             Data.DetachedZaap = value;
             Raise(); Raise(nameof(ShowMiniZaap)); Raise(nameof(ShowMiniSeparator));
             RequestSave();
+            MiniSettingsChanged?.Invoke();
             DetachedZaapChanged?.Invoke();
         }
     }
@@ -1066,7 +1072,7 @@ public class MainViewModel : ObservableObject
         foreach (var p in new[] { nameof(Data), nameof(SwapEnabled), nameof(MiniAlwaysOnTop), nameof(MiniOpacity), nameof(AutoBackup),
                                   nameof(LastBackup), nameof(NoteText), nameof(MainCounter), nameof(SpecialCounter), nameof(Characters),
                                   nameof(RememberMiniPosition), nameof(MiniCompact), nameof(MiniFull), nameof(MiniOpacityText), nameof(ScaleChoice),
-                                  nameof(MiniShowSwap), nameof(MiniShowInvites), nameof(MiniShowZaap), nameof(MiniShowAlmanax), nameof(ShowMiniZaap), nameof(ShowMiniAlmanax), nameof(ShowMiniSeparator), nameof(QuietMode), nameof(DetectNewAccounts), nameof(DetachedZaap), nameof(ShowMiniZaap),
+                                  nameof(MiniShowSwap), nameof(MiniShowInvites), nameof(MiniShowZaap), nameof(MiniShowAlmanax), nameof(ShowMiniZaap), nameof(ShowMiniAlmanax), nameof(ShowMiniSeparator), nameof(QuietMode), nameof(DetectNewAccounts), nameof(DetachedZaap), nameof(ZaapKeepOpen), nameof(ShowMiniZaap),
                                   nameof(AccentText), nameof(AutoExternalCopy), nameof(ExternalCopyText), nameof(HomeShowChars), nameof(HomeShowShortcuts), nameof(HomeShowInvites), nameof(HomeSwapBottom) })
             Raise(p);
         BuildThemeRows();

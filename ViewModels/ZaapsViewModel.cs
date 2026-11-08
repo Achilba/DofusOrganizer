@@ -50,6 +50,8 @@ public class ZaapsViewModel : ObservableObject
 
     /// <summary>Option « Zaap déporté » (la fenêtre Zaaps à part), réglée depuis cette page.</summary>
     public bool DetachedZaap { get => _main.DetachedZaap; set => _main.DetachedZaap = value; }
+    /// <summary>Garder la liste dépliée après le choix d'un Zaap dans la fenêtre à part.</summary>
+    public bool ZaapKeepOpen { get => _main.ZaapKeepOpen; set => _main.ZaapKeepOpen = value; }
 
     public ZaapsViewModel(MainViewModel main)
     {

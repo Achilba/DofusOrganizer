@@ -279,7 +279,7 @@ public class ZaapWindow : Window
         _quiet = true;
         _box.Text = "";
         _quiet = false;
-        Collapse();
+        if (_vm.Data.ZaapKeepOpen) Refresh(); else Collapse();
         Keyboard.ClearFocus();
     }
 

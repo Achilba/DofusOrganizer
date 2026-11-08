@@ -355,6 +355,8 @@ public class AppData
     public bool MiniShowZaap { get; set; } = true;
     /// <summary>Zaap déporté : le Zaap quitte la barre Mini et s'ouvre dans sa propre fenêtre.</summary>
     public bool DetachedZaap { get; set; }
+    /// <summary>Fenêtre Zaaps : garder la liste dépliée après le choix d'un Zaap (sinon elle se replie).</summary>
+    public bool ZaapKeepOpen { get; set; }
     /// <summary>Position de la fenêtre Zaaps, par configuration d'écrans.</summary>
     public Dictionary<string, double[]> ZaapWinPositions { get; set; } = new();
     public bool MiniShowAlmanax { get; set; } = true;
