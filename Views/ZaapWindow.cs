@@ -228,7 +228,11 @@ public class ZaapWindow : Window
         bool up = _vm.Data.ZaapUp;
         _root.Children.Clear();
         _listHost.BorderThickness = up ? new Thickness(0, 0, 0, 1) : new Thickness(0, 1, 0, 0);
-        if (up) { _root.Children.Add(_listHost); _root.Children.Add(_head); _root.Children.Add(_boxGrid); }
+        // Liste vers le haut : liste, recherche, puis l'entête (titre, flèche, fermer) tout en bas
+        _boxGrid.Margin = up ? new Thickness(10, 8, 10, 8) : new Thickness(10, 0, 10, 10);
+        _head.SetResourceReference(Border.BorderBrushProperty, "Line");
+        _head.BorderThickness = up ? new Thickness(0, 1, 0, 0) : new Thickness(0);
+        if (up) { _root.Children.Add(_listHost); _root.Children.Add(_boxGrid); _root.Children.Add(_head); }
         else { _root.Children.Add(_head); _root.Children.Add(_boxGrid); _root.Children.Add(_listHost); }
         SetChevron();
     }
