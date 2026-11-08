@@ -347,7 +347,7 @@ public class ZaapWindow : Window
             });
             SetChevron();
         }
-        else Refresh();
+        else Reanchor(Refresh); // la liste change de hauteur pendant la saisie : en mode « vers le haut », le bas reste fixe
     }
 
     private void Collapse()
@@ -516,7 +516,7 @@ public class ZaapWindow : Window
         _quiet = true;
         _box.Text = "";
         _quiet = false;
-        if (_vm.Data.ZaapKeepOpen) Refresh(); else Collapse();
+        if (_vm.Data.ZaapKeepOpen) Reanchor(Refresh); else Collapse();
         Keyboard.ClearFocus();
     }
 
