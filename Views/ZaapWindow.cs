@@ -362,7 +362,7 @@ public class ZaapWindow : Window
         g.Children.Add(tile);
 
         var txt = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-        var n = new TextBlock { Text = name, FontSize = 14, TextTrimming = TextTrimming.CharacterEllipsis };
+        var n = new TextBlock { Text = name, FontSize = 14, TextWrapping = TextWrapping.Wrap };
         n.SetResourceReference(TextBlock.FontFamilyProperty, "BodyXB");
         txt.Children.Add(n);
         if (zone != "") txt.Children.Add(Res(new TextBlock { Text = zone, FontSize = 12 }, TextBlock.ForegroundProperty, "Dim"));
@@ -425,7 +425,7 @@ public class ZaapWindow : Window
         }
         st.Children.Add(top);
 
-        var n = new TextBlock { Text = name, FontSize = nameSize, TextWrapping = TextWrapping.Wrap, TextTrimming = TextTrimming.CharacterEllipsis, MaxHeight = nameSize * 2.7, Margin = new Thickness(0, 6, 0, 0) };
+        var n = new TextBlock { Text = name, FontSize = nameSize, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 6, 0, 0) };
         n.SetResourceReference(TextBlock.FontFamilyProperty, "BodyXB");
         st.Children.Add(n);
         if (zone != "") st.Children.Add(Res(new TextBlock { Text = zone, FontSize = 11, TextTrimming = TextTrimming.CharacterEllipsis }, TextBlock.ForegroundProperty, "Dim"));

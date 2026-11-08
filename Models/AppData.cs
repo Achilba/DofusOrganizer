@@ -339,6 +339,10 @@ public class AppData
     public double? MiniTop { get; set; }
     /// <summary>Largeur choisie pour la barre Mini complète (tirer le bord droit).</summary>
     public double? MiniWidth { get; set; }
+    /// <summary>Taille (zoom) de la barre Mini quand elle n'a pas le champ Zaap (compacte, ou Zaap déporté ou masqué).</summary>
+    public double? MiniScale { get; set; }
+    /// <summary>Taille (zoom) de la barre Mini des Songes.</summary>
+    public double? SongeMiniScale { get; set; }
     /// <summary>Position de la barre Mini réservée aux songes.</summary>
     public double? SongeMiniLeft { get; set; }
     public double? SongeMiniTop { get; set; }

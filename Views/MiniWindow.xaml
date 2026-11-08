@@ -9,6 +9,9 @@
     <Grid>
     <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Height="44" Margin="0"
             MouseLeftButtonDown="Drag_MouseLeftButtonDown">
+        <Border.LayoutTransform>
+            <ScaleTransform x:Name="Zoom" ScaleX="1" ScaleY="1"/>
+        </Border.LayoutTransform>
         <Grid Margin="8,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -158,9 +161,9 @@
 
         </Grid>
     </Border>
-    <!-- Poignée de largeur (bord droit) : tirer pour étirer la barre, le champ Zaap s'allonge ou se raccourcit -->
-    <Thumb HorizontalAlignment="Right" Width="10" Height="44" Cursor="SizeWE" Focusable="False" FocusVisualStyle="{x:Null}"
-           ToolTip="Tirer pour ajuster la largeur" Visibility="{Binding ShowMiniZaap, Converter={StaticResource BoolVis}}"
+    <!-- Poignée de taille (bord droit) : avec le champ Zaap elle règle la largeur (le champ s'allonge), sinon elle agrandit ou réduit toute la barre -->
+    <Thumb HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="10" Cursor="SizeWE" Focusable="False" FocusVisualStyle="{x:Null}"
+           ToolTip="Tirer pour ajuster la taille de la barre"
            DragDelta="Resize_DragDelta" DragCompleted="Resize_DragCompleted">
         <Thumb.Template>
             <ControlTemplate TargetType="Thumb">

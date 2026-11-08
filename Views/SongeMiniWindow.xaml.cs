@@ -14,7 +14,7 @@ public partial class SongeMiniWindow : Window
     {
         InitializeComponent();
         // Même méthode que la barre Mini : taille fixe au départ, puis la fenêtre s'ajuste à son contenu une fois affichée
-        Loaded += (_, _) => { SizeToContent = SizeToContent.Width; Place(); };
+        Loaded += (_, _) => { ApplyScale(); SizeToContent = SizeToContent.WidthAndHeight; Place(); };
         IsVisibleChanged += (_, _) =>
         {
             if (!IsVisible || Vm == null) return;
@@ -25,6 +25,30 @@ public partial class SongeMiniWindow : Window
     }
 
     private MainViewModel Vm => DataContext as MainViewModel;
+
+    private const double MinScale = 0.7;
+    private const double MaxScale = 2.0;
+    private static double ClampScale(double s) => Math.Max(MinScale, Math.Min(MaxScale, s));
+
+    private void ApplyScale()
+    {
+        if (Vm == null) return;
+        Zoom.ScaleX = Zoom.ScaleY = ClampScale(Vm.Data.SongeMiniScale ?? 1);
+    }
+
+    private void Resize_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+    {
+        double natural = ActualWidth / Zoom.ScaleX;
+        if (natural < 50) return;
+        Zoom.ScaleX = Zoom.ScaleY = ClampScale((ActualWidth + e.HorizontalChange) / natural);
+    }
+
+    private void Resize_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+    {
+        if (Vm == null) return;
+        Vm.Data.SongeMiniScale = Zoom.ScaleX;
+        Vm.RequestSave();
+    }
 
     private void Place()
     {

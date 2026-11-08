@@ -31,12 +31,15 @@ public partial class MiniWindow : Window
         Topmost = vm.Data.MiniAlwaysOnTop;
         if (!vm.ShowMiniZaap)
         {
-            // Barre compacte, ou sans le champ Zaap (masqué ou déporté) : la fenêtre s'ajuste exactement à son contenu (plus d'espace vide à droite)
-            SizeToContent = SizeToContent.Width;
+            // Barre compacte, ou sans le champ Zaap (masqué ou déporté) : la fenêtre s'ajuste à son contenu, que la poignée agrandit ou réduit
+            Zoom.ScaleX = Zoom.ScaleY = ClampScale(vm.Data.MiniScale ?? 1);
+            SizeToContent = SizeToContent.WidthAndHeight;
         }
         else
         {
-            SizeToContent = SizeToContent.Manual;
+            // Barre complète avec le champ Zaap : la poignée règle la largeur
+            Zoom.ScaleX = Zoom.ScaleY = 1;
+            SizeToContent = SizeToContent.Height;
             Width = Math.Max(MinBarWidth, Math.Min(MaxBarWidth, vm.Data.MiniWidth ?? 800));
         }
         if (!_placed)
@@ -53,16 +56,29 @@ public partial class MiniWindow : Window
         Vm.RequestSave();
     }
 
+    private const double MinScale = 0.7;
+    private const double MaxScale = 2.0;
+    private static double ClampScale(double s) => Math.Max(MinScale, Math.Min(MaxScale, s));
+
     private void Resize_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
     {
-        if (SizeToContent != SizeToContent.Manual) return;
-        Width = Math.Max(MinBarWidth, Math.Min(MaxBarWidth, Width + e.HorizontalChange));
+        if (Vm == null) return;
+        if (Vm.ShowMiniZaap)
+        {
+            Width = Math.Max(MinBarWidth, Math.Min(MaxBarWidth, Width + e.HorizontalChange));
+            return;
+        }
+        // Sans champ Zaap : zoom proportionnel de toute la barre
+        double natural = ActualWidth / Zoom.ScaleX;
+        if (natural < 50) return;
+        Zoom.ScaleX = Zoom.ScaleY = ClampScale((ActualWidth + e.HorizontalChange) / natural);
     }
 
     private void Resize_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
     {
         if (Vm == null) return;
-        Vm.Data.MiniWidth = Width;
+        if (Vm.ShowMiniZaap) Vm.Data.MiniWidth = Width;
+        else Vm.Data.MiniScale = Zoom.ScaleX;
         Vm.RequestSave();
     }
 
