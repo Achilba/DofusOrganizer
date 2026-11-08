@@ -337,6 +337,8 @@ public class AppData
     public bool WelcomeDone { get; set; }
     public double? MiniLeft { get; set; }
     public double? MiniTop { get; set; }
+    /// <summary>Largeur choisie pour la barre Mini complète (tirer le bord droit).</summary>
+    public double? MiniWidth { get; set; }
     /// <summary>Position de la barre Mini réservée aux songes.</summary>
     public double? SongeMiniLeft { get; set; }
     public double? SongeMiniTop { get; set; }

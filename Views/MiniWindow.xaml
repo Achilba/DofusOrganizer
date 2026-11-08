@@ -6,6 +6,7 @@
         AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False" Topmost="True"
         Foreground="{DynamicResource Text}" FontFamily="{StaticResource Body}" WindowStartupLocation="Manual"
         Opacity="{Binding MiniOpacity}">
+    <Grid>
     <Border Background="{DynamicResource Side}" BorderBrush="{DynamicResource Line2}" BorderThickness="1" CornerRadius="12" Height="44" Margin="0"
             MouseLeftButtonDown="Drag_MouseLeftButtonDown">
         <Grid Margin="8,0">
@@ -157,4 +158,9 @@
 
         </Grid>
     </Border>
+    <!-- Poignée de largeur (bord droit) : tirer pour étirer la barre, le champ Zaap s'allonge ou se raccourcit -->
+    <Thumb HorizontalAlignment="Right" Width="8" Height="44" Background="Transparent" Cursor="SizeWE"
+           ToolTip="Tirer pour ajuster la largeur" Visibility="{Binding ShowMiniZaap, Converter={StaticResource BoolVis}}"
+           DragDelta="Resize_DragDelta" DragCompleted="Resize_DragCompleted"/>
+    </Grid>
 </Window>

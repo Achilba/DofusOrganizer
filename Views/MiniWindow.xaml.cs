@@ -8,6 +8,8 @@ namespace DofusTeamOrganizer.Views;
 public partial class MiniWindow : Window
 {
     private bool _placed;
+    private const double MinBarWidth = 520;
+    private const double MaxBarWidth = 1800;
 
     public MiniWindow()
     {
@@ -35,7 +37,7 @@ public partial class MiniWindow : Window
         else
         {
             SizeToContent = SizeToContent.Manual;
-            Width = 800;
+            Width = Math.Max(MinBarWidth, Math.Min(MaxBarWidth, vm.Data.MiniWidth ?? 800));
         }
         if (!_placed)
         {
@@ -48,6 +50,19 @@ public partial class MiniWindow : Window
     {
         if (!_placed || Vm == null || !IsVisible) return;
         MiniPlacement.Remember(this, Vm.Data);
+        Vm.RequestSave();
+    }
+
+    private void Resize_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+    {
+        if (SizeToContent != SizeToContent.Manual) return;
+        Width = Math.Max(MinBarWidth, Math.Min(MaxBarWidth, Width + e.HorizontalChange));
+    }
+
+    private void Resize_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+    {
+        if (Vm == null) return;
+        Vm.Data.MiniWidth = Width;
         Vm.RequestSave();
     }
 

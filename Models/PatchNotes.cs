@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.16";
+    public const string Current = "0.14.17";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.17", "08/11/2026", new[]
+        {
+            "NOUVEAU — Barre Mini : tire son bord droit pour ajuster sa largeur (le champ Zaap s'allonge ou se raccourcit). La largeur est mémorisée.",
+        }),
         new("0.14.16", "08/11/2026", new[]
         {
             "CORRIGÉ — Barres Mini : le message « COPIÉ » s'affiche maintenant en dessous du bouton Invitations, sans plus décaler le reste de la barre.",
