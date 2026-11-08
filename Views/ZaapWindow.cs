@@ -27,7 +27,7 @@ public class ZaapWindow : Window
     private bool _quiet;
     private ZaapEntry _first;
 
-    private static T Res<T>(T e, DependencyProperty p, string key) where T : DependencyObject
+    private static T Res<T>(T e, DependencyProperty p, string key) where T : FrameworkElement
     {
         e.SetResourceReference(p, key);
         return e;
