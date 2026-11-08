@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.26";
+    public const string Current = "0.14.27";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.27", "08/11/2026", new[]
+        {
+            "CORRIGÉ — Fenêtre Zaaps, liste vers le haut : tirer le bord du haut ne déplace plus le bas de la fenêtre (l'entête reste en place).",
+        }),
         new("0.14.26", "08/11/2026", new[]
         {
             "CHANGÉ — Fenêtre Zaaps : quand la liste se déroule vers le haut, l'entête (titre, flèche, fermer) passe en bas, sous la recherche.",

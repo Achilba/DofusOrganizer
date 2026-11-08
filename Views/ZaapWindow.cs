@@ -247,11 +247,22 @@ public class ZaapWindow : Window
     private void Reanchor(Action change, bool? anchorBottom = null)
     {
         double before = Measured();
+        double top0 = Top;
         change();
+        UpdateLayout(); // la fenêtre prend sa nouvelle hauteur tout de suite, avant qu'on touche à sa position
         double after = Measured();
-        if ((anchorBottom ?? _vm.Data.ZaapUp) && _placed)
-            Top = Math.Max(SystemParameters.VirtualScreenTop, Top - (after - before));
+        if (!((anchorBottom ?? _vm.Data.ZaapUp) && _placed)) return;
+        double target = Math.Max(SystemParameters.VirtualScreenTop, top0 - (after - before));
+        Top = target;
+        // Sécurité : si Windows a remis l'ancienne position pendant le redimensionnement, on la corrige (sauf si un réglage plus récent est passé)
+        int token = ++_anchorToken;
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            if (token == _anchorToken && Math.Abs(Top - target) > 0.5) Top = target;
+        }), System.Windows.Threading.DispatcherPriority.Loaded);
     }
+
+    private int _anchorToken;
 
     private void SetChevron()
     {
