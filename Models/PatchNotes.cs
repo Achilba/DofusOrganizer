@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.22";
+    public const string Current = "0.14.24";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.24", "08/11/2026", new[]
+        {
+            "NOUVEAU — Fenêtre Zaaps : liste déroulante dans la barre de titre pour choisir 1, 2 ou 3 Zaaps par ligne (même réglage que la page Zaaps).",
+            "CORRIGÉ — Mises à jour : la recherche attend 25 secondes (au lieu de 10) et réessaie une fois si GitHub est lent ou indisponible.",
+        }),
         new("0.14.22", "08/11/2026", new[]
         {
             "NOUVEAU — Barres Mini : la poignée du bord droit fonctionne dans tous les états (compacte, sans Zaap, et barre Mini des Songes). Avec le champ Zaap elle règle la largeur ; sans lui elle agrandit ou réduit toute la barre. La taille est mémorisée.",

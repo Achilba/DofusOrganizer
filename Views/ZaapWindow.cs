@@ -28,6 +28,7 @@ public class ZaapWindow : Window
     private Border _head;
     private Grid _boxGrid;
     private readonly Thumb _resize = new();
+    private ComboBox _colsBox;
     private bool _expanded;
     private bool _placed;
     private bool _quiet;
@@ -92,8 +93,22 @@ public class ZaapWindow : Window
         Res(_chevron, Shape.StrokeProperty, "Text");
         var toggle = new Button { Content = _chevron, Width = 30, Height = 28, MinHeight = 0, Padding = new Thickness(0), Margin = new Thickness(0, 0, 4, 0), ToolTip = "Afficher / replier la liste" };
         toggle.Click += (_, _) => { if (_expanded) Collapse(); else Expand(); };
-        Grid.SetColumn(toggle, 2);
-        hg.Children.Add(toggle);
+
+        // Liste déroulante : nombre de Zaaps par ligne (même réglage que la page Zaaps)
+        _colsBox = new ComboBox { Width = 112, Height = 28, MinHeight = 0, Margin = new Thickness(0, 0, 6, 0), ToolTip = "Zaaps par ligne" };
+        _colsBox.Items.Add("1 par ligne");
+        _colsBox.Items.Add("2 par ligne");
+        _colsBox.Items.Add("3 par ligne");
+        _colsBox.SelectedIndex = Cols - 1;
+        _colsBox.SelectionChanged += (_, _) =>
+        {
+            if (_colsBox.SelectedIndex >= 0 && _colsBox.SelectedIndex + 1 != _vm.ZaapCols) _vm.ZaapCols = _colsBox.SelectedIndex + 1;
+        };
+        var tools = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        tools.Children.Add(_colsBox);
+        tools.Children.Add(toggle);
+        Grid.SetColumn(tools, 2);
+        hg.Children.Add(tools);
 
         var close = new Button { Content = "✕", Width = 30, Height = 28, MinHeight = 0, Padding = new Thickness(0), ToolTip = "Remettre le Zaap dans la barre Mini" };
         close.Click += (_, _) => _vm.DetachedZaap = false;
@@ -166,7 +181,12 @@ public class ZaapWindow : Window
         Layout();
         _vm.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(MainViewModel.ZaapCols)) { if (_expanded) Reanchor(Refresh); return; }
+            if (e.PropertyName == nameof(MainViewModel.ZaapCols))
+            {
+                if (_colsBox.SelectedIndex != Cols - 1) _colsBox.SelectedIndex = Cols - 1;
+                if (_expanded) Reanchor(Refresh);
+                return;
+            }
             if (e.PropertyName != nameof(MainViewModel.ZaapUp)) return;
             Dispatcher.BeginInvoke(new Action(() => { Collapse(); Layout(); }));
         };

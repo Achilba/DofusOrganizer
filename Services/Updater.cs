@@ -60,8 +60,16 @@ public class Updater
     public async Task<UpdateInfo> CheckAsync(string currentVersion)
     {
         using var http = NewClient();
-        http.Timeout = TimeSpan.FromSeconds(10);
-        var json = await http.GetStringAsync($"https://api.github.com/repos/{Owner}/{Repo}/releases/latest");
+        http.Timeout = TimeSpan.FromSeconds(25);
+        var url = $"https://api.github.com/repos/{Owner}/{Repo}/releases/latest";
+        string json;
+        try { json = await http.GetStringAsync(url); }
+        catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
+        {
+            // GitHub lent ou indisponible (timeout, erreur 5xx) : un deuxième essai après une courte pause
+            await Task.Delay(2000);
+            json = await http.GetStringAsync(url);
+        }
         using var doc = JsonDocument.Parse(json);
         var root = doc.RootElement;
         var tag = root.GetProperty("tag_name").GetString();
