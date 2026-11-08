@@ -14,7 +14,16 @@
             <TextBlock Text="Coche un Zaap pour le mettre en favori : il passe en haut de la liste de la barre Mini, par ordre alphabétique" Style="{StaticResource PageSub}"/>
             <CheckBox Style="{StaticResource Switch}" Content="Zaap déporté : le Zaap quitte la barre Mini et s'ouvre dans une petite fenêtre à part" IsChecked="{Binding DetachedZaap}" Margin="0,12,0,0"/>
             <CheckBox Style="{StaticResource Switch}" Content="Garder la liste dépliée après le choix d'un Zaap" IsChecked="{Binding ZaapKeepOpen}" Margin="0,8,0,0"/>
-            <TextBlock Text="La fenêtre se déplace comme les autres barres et retient sa place. Sa flèche déplie ou replie la liste, qui se replie seule dès qu'un Zaap est choisi (sauf si tu gardes la liste dépliée)." Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0"/>
+            <CheckBox Style="{StaticResource Switch}" Content="Dérouler la liste vers le haut (sinon vers le bas)" IsChecked="{Binding ZaapUp}" Margin="0,8,0,0"/>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <TextBlock Text="Zaaps par ligne dans la fenêtre" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <ComboBox SelectedIndex="{Binding ZaapColsIndex}" Width="130" Height="32">
+                    <ComboBoxItem Content="1 par ligne"/>
+                    <ComboBoxItem Content="2 par ligne"/>
+                    <ComboBoxItem Content="3 par ligne"/>
+                </ComboBox>
+            </StackPanel>
+            <TextBlock Text="La fenêtre se déplace comme les autres barres et retient sa place. Sa flèche déplie ou replie la liste, qui se replie seule dès qu'un Zaap est choisi (sauf si tu gardes la liste dépliée). Tire le bord de la liste pour ajuster sa hauteur." Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0"/>
         </StackPanel>
 
         <WrapPanel Grid.Row="1" Margin="0,0,0,10">

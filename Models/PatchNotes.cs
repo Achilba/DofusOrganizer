@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.17";
+    public const string Current = "0.14.20";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.20", "08/11/2026", new[]
+        {
+            "NOUVEAU — Fenêtre Zaaps : les Zaaps s'affichent par 2 (ou 3, ou 1) par ligne, avec des cellules plus compactes, sans changer la largeur de la fenêtre. Réglable dans la page Zaaps.",
+            "NOUVEAU — Fenêtre Zaaps : option pour dérouler la liste vers le haut ou vers le bas, et poignée au bord de la liste pour ajuster sa hauteur (mémorisée).",
+            "CORRIGÉ — Barre Mini : plus de bord blanc sur la poignée de largeur. Seul un petit trait doré apparaît quand la souris passe dessus.",
+        }),
         new("0.14.17", "08/11/2026", new[]
         {
             "NOUVEAU — Barre Mini : tire son bord droit pour ajuster sa largeur (le champ Zaap s'allonge ou se raccourcit). La largeur est mémorisée.",

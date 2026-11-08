@@ -159,8 +159,25 @@
         </Grid>
     </Border>
     <!-- Poignée de largeur (bord droit) : tirer pour étirer la barre, le champ Zaap s'allonge ou se raccourcit -->
-    <Thumb HorizontalAlignment="Right" Width="8" Height="44" Background="Transparent" Cursor="SizeWE"
+    <Thumb HorizontalAlignment="Right" Width="10" Height="44" Cursor="SizeWE" Focusable="False" FocusVisualStyle="{x:Null}"
            ToolTip="Tirer pour ajuster la largeur" Visibility="{Binding ShowMiniZaap, Converter={StaticResource BoolVis}}"
-           DragDelta="Resize_DragDelta" DragCompleted="Resize_DragCompleted"/>
+           DragDelta="Resize_DragDelta" DragCompleted="Resize_DragCompleted">
+        <Thumb.Template>
+            <ControlTemplate TargetType="Thumb">
+                <Grid Background="Transparent">
+                    <Border x:Name="bar" Width="3" Height="18" CornerRadius="2" Background="{DynamicResource Accent}" Opacity="0"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,3,0"/>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="bar" Property="Opacity" Value="0.9"/>
+                    </Trigger>
+                    <Trigger Property="IsDragging" Value="True">
+                        <Setter TargetName="bar" Property="Opacity" Value="0.9"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Thumb.Template>
+    </Thumb>
     </Grid>
 </Window>

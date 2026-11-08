@@ -652,6 +652,16 @@ public class MainViewModel : ObservableObject
     public bool ShowMiniZaap => MiniFull && Data.MiniShowZaap && !Data.DetachedZaap;
     /// <summary>Levé quand l'option « Zaap déporté » change : l'appli montre ou cache la fenêtre Zaaps.</summary>
     public event Action DetachedZaapChanged;
+    public int ZaapCols
+    {
+        get => Math.Max(1, Math.Min(3, Data.ZaapCols ?? 2));
+        set { var v = Math.Max(1, Math.Min(3, value)); if (ZaapCols != v) { Data.ZaapCols = v; Raise(); RequestSave(); } }
+    }
+    public bool ZaapUp
+    {
+        get => Data.ZaapUp;
+        set { if (Data.ZaapUp != value) { Data.ZaapUp = value; Raise(); RequestSave(); } }
+    }
     public bool ZaapKeepOpen
     {
         get => Data.ZaapKeepOpen;

@@ -359,6 +359,12 @@ public class AppData
     public bool DetachedZaap { get; set; }
     /// <summary>Fenêtre Zaaps : garder la liste dépliée après le choix d'un Zaap (sinon elle se replie).</summary>
     public bool ZaapKeepOpen { get; set; }
+    /// <summary>Fenêtre Zaaps : la liste se déroule vers le haut (sinon vers le bas).</summary>
+    public bool ZaapUp { get; set; }
+    /// <summary>Fenêtre Zaaps : nombre de Zaaps par ligne (1 à 3, 2 par défaut).</summary>
+    public int? ZaapCols { get; set; }
+    /// <summary>Hauteur maximale de la liste de la fenêtre Zaaps (tirer le bord).</summary>
+    public double? ZaapListHeight { get; set; }
     /// <summary>Position de la fenêtre Zaaps, par configuration d'écrans.</summary>
     public Dictionary<string, double[]> ZaapWinPositions { get; set; } = new();
     public bool MiniShowAlmanax { get; set; } = true;

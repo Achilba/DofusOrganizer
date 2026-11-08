@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Path = System.Windows.Shapes.Path;
@@ -19,9 +20,14 @@ public class ZaapWindow : Window
     private readonly MainViewModel _vm;
     private readonly TextBox _box = new();
     private readonly TextBlock _hint = new();
-    private readonly StackPanel _list = new();
+    private readonly WrapPanel _list = new();
     private readonly Border _listHost = new();
+    private readonly ScrollViewer _listScroll = new();
     private readonly Path _chevron = new();
+    private StackPanel _root;
+    private Border _head;
+    private Grid _boxGrid;
+    private readonly Thumb _resize = new();
     private bool _expanded;
     private bool _placed;
     private bool _quiet;
@@ -54,8 +60,8 @@ public class ZaapWindow : Window
         var frame = new Border { CornerRadius = new CornerRadius(12), BorderThickness = new Thickness(1) };
         Res(frame, Border.BackgroundProperty, "Side");
         Res(frame, Border.BorderBrushProperty, "Line2");
-        var root = new StackPanel();
-        frame.Child = root;
+        _root = new StackPanel { VerticalAlignment = VerticalAlignment.Top };
+        frame.Child = _root;
 
         // ── Barre de titre : poignée, « Zaaps », flèche (déplier / replier), fermer
         var head = new Border { Height = 40, Background = Brushes.Transparent, Padding = new Thickness(10, 0, 6, 0) };
@@ -94,7 +100,7 @@ public class ZaapWindow : Window
         Grid.SetColumn(close, 3);
         hg.Children.Add(close);
         head.Child = hg;
-        root.Children.Add(head);
+        _head = head;
 
         // ── Recherche
         var boxGrid = new Grid { Margin = new Thickness(10, 0, 10, 10) };
@@ -112,14 +118,58 @@ public class ZaapWindow : Window
         Res(_hint, TextBlock.ForegroundProperty, "Dim");
         boxGrid.Children.Add(_box);
         boxGrid.Children.Add(_hint);
-        root.Children.Add(boxGrid);
+        _boxGrid = boxGrid;
 
         // ── Liste (repliée au départ)
         _listHost.Visibility = Visibility.Collapsed;
-        _listHost.BorderThickness = new Thickness(0, 1, 0, 0);
         Res(_listHost, Border.BorderBrushProperty, "Line");
-        _listHost.Child = new ScrollViewer { Content = _list, MaxHeight = 330, VerticalScrollBarVisibility = ScrollBarVisibility.Auto, Padding = new Thickness(10, 8, 10, 10) };
-        root.Children.Add(_listHost);
+        _listScroll.Content = _list;
+        _listScroll.MaxHeight = ListHeight();
+        _listScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+        _listScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+        _list.Width = Inner;
+        _listScroll.Padding = new Thickness(10, 8, 10, 10);
+        _listHost.Child = _listScroll;
+
+        // Poignée de hauteur : au bord du bas (liste vers le bas) ou du haut (liste vers le haut)
+        _resize.Height = 12; _resize.Cursor = Cursors.SizeNS; _resize.Focusable = false; _resize.FocusVisualStyle = null;
+        _resize.ToolTip = "Tirer pour ajuster la hauteur de la liste";
+        _resize.Visibility = Visibility.Collapsed;
+        var grab = new FrameworkElementFactory(typeof(Grid));
+        grab.SetValue(Panel.BackgroundProperty, Brushes.Transparent);
+        var mark = new FrameworkElementFactory(typeof(Border));
+        mark.Name = "mark";
+        mark.SetValue(WidthProperty, 40.0);
+        mark.SetValue(HeightProperty, 3.0);
+        mark.SetValue(Border.CornerRadiusProperty, new CornerRadius(2));
+        mark.SetResourceReference(Border.BackgroundProperty, "Accent");
+        mark.SetValue(OpacityProperty, 0.0);
+        mark.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
+        grab.AppendChild(mark);
+        var tpl = new ControlTemplate(typeof(Thumb)) { VisualTree = grab };
+        var hover = new Trigger { Property = UIElement.IsMouseOverProperty, Value = true };
+        hover.Setters.Add(new Setter(OpacityProperty, 0.9, "mark"));
+        var drag = new Trigger { Property = Thumb.IsDraggingProperty, Value = true };
+        drag.Setters.Add(new Setter(OpacityProperty, 0.9, "mark"));
+        tpl.Triggers.Add(hover);
+        tpl.Triggers.Add(drag);
+        _resize.Template = tpl;
+        _resize.DragDelta += (_, e) =>
+        {
+            // Liste vers le haut : la poignée est en haut, tirer vers le haut agrandit
+            double delta = _vm.Data.ZaapUp ? -e.VerticalChange : e.VerticalChange;
+            double h = Math.Max(120, Math.Min(720, _listScroll.MaxHeight + delta));
+            Reanchor(() => _listScroll.MaxHeight = h);
+        };
+        _resize.DragCompleted += (_, _) => { _vm.Data.ZaapListHeight = _listScroll.MaxHeight; _vm.RequestSave(); };
+
+        Layout();
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(MainViewModel.ZaapCols)) { if (_expanded) Reanchor(Refresh); return; }
+            if (e.PropertyName != nameof(MainViewModel.ZaapUp)) return;
+            Dispatcher.BeginInvoke(new Action(() => { Collapse(); Layout(); }));
+        };
 
         Content = frame;
 
@@ -131,6 +181,48 @@ public class ZaapWindow : Window
             if (_placed) Apply();
         };
         LocationChanged += (_, _) => Remember();
+    }
+
+    /// <summary>Largeur utile de la liste (fenêtre moins cadre, marges et barre de défilement).</summary>
+    private double Inner => Width - 2 - 20 - 16;
+
+    private int Cols => Math.Max(1, Math.Min(3, _vm.Data.ZaapCols ?? 2));
+
+    private double ListHeight() => Math.Max(120, Math.Min(720, _vm.Data.ZaapListHeight ?? 330));
+
+    /// <summary>Ordre des blocs : liste sous la recherche (défaut) ou au-dessus (option « vers le haut »).</summary>
+    private void Layout()
+    {
+        bool up = _vm.Data.ZaapUp;
+        _root.Children.Clear();
+        _listHost.BorderThickness = up ? new Thickness(0, 0, 0, 1) : new Thickness(0, 1, 0, 0);
+        _resize.Margin = new Thickness(0);
+        if (up) { _root.Children.Add(_resize); _root.Children.Add(_listHost); _root.Children.Add(_head); _root.Children.Add(_boxGrid); }
+        else { _root.Children.Add(_head); _root.Children.Add(_boxGrid); _root.Children.Add(_listHost); _root.Children.Add(_resize); }
+        SetChevron();
+    }
+
+    private double Measured()
+    {
+        _root.Measure(new Size(Width, double.PositiveInfinity));
+        return _root.DesiredSize.Height;
+    }
+
+    /// <summary>Change la taille du contenu ; en mode « vers le haut », la fenêtre grandit vers le haut pour que la recherche ne bouge pas.</summary>
+    private void Reanchor(Action change)
+    {
+        double before = Measured();
+        change();
+        double after = Measured();
+        if (_vm.Data.ZaapUp && _placed)
+            Top = Math.Max(SystemParameters.VirtualScreenTop, Top - (after - before));
+    }
+
+    private void SetChevron()
+    {
+        // Flèche vers le bas = « déplier vers le bas » ; en mode haut, la flèche est inversée
+        bool pointsDown = _vm.Data.ZaapUp ? _expanded : !_expanded;
+        ((RotateTransform)_chevron.RenderTransform).Angle = pointsDown ? 0 : 180;
     }
 
     // ── Position mémorisée (comme les autres barres)
@@ -158,24 +250,44 @@ public class ZaapWindow : Window
     {
         if (!_placed || !IsVisible) return;
         _vm.Data.ZaapWinPositions ??= new();
-        _vm.Data.ZaapWinPositions[MiniPlacement.ScreenKey()] = new[] { Left, Top };
+        // Liste vers le haut et dépliée : on retient la place « repliée » (celle où la fenêtre se rouvrira)
+        double top = Top;
+        if (_vm.Data.ZaapUp && _expanded)
+        {
+            double collapsed = _head.DesiredSize.Height + _boxGrid.DesiredSize.Height + 2;
+            top = Top + Math.Max(0, Measured() - collapsed);
+        }
+        _vm.Data.ZaapWinPositions[MiniPlacement.ScreenKey()] = new[] { Left, top };
         _vm.RequestSave();
     }
 
     // ── Déplier / replier
     private void Expand()
     {
-        _expanded = true;
-        _listHost.Visibility = Visibility.Visible;
-        ((RotateTransform)_chevron.RenderTransform).Angle = 180;
-        Refresh();
+        if (!_expanded)
+        {
+            Reanchor(() =>
+            {
+                _expanded = true;
+                _listHost.Visibility = Visibility.Visible;
+                _resize.Visibility = Visibility.Visible;
+                Refresh();
+            });
+            SetChevron();
+        }
+        else Refresh();
     }
 
     private void Collapse()
     {
-        _expanded = false;
-        _listHost.Visibility = Visibility.Collapsed;
-        ((RotateTransform)_chevron.RenderTransform).Angle = 0;
+        if (!_expanded) return;
+        Reanchor(() =>
+        {
+            _expanded = false;
+            _listHost.Visibility = Visibility.Collapsed;
+            _resize.Visibility = Visibility.Collapsed;
+        });
+        SetChevron();
     }
 
     private static string Norm(string s)
@@ -199,16 +311,16 @@ public class ZaapWindow : Window
         _first = favs.FirstOrDefault() ?? rest.FirstOrDefault();
         if (found.Count == 0)
         {
-            _list.Children.Add(Res(new TextBlock { Text = "Aucun Zaap ne correspond.", Margin = new Thickness(4, 6, 0, 6) }, TextBlock.ForegroundProperty, "Dim"));
+            _list.Children.Add(Res(new TextBlock { Text = "Aucun Zaap ne correspond.", Margin = new Thickness(4, 6, 0, 6), Width = Inner }, TextBlock.ForegroundProperty, "Dim"));
             return;
         }
         if (favs.Count > 0) { _list.Children.Add(Header("Favoris")); foreach (var z in favs) _list.Children.Add(Row(z, true)); }
         if (rest.Count > 0) { _list.Children.Add(Header(favs.Count > 0 ? "Autres Zaaps" : "Résultats")); foreach (var z in rest) _list.Children.Add(Row(z, false)); }
     }
 
-    private static UIElement Header(string text)
+    private UIElement Header(string text)
     {
-        var t = new TextBlock { Text = text.ToUpperInvariant(), FontSize = 11, Margin = new Thickness(2, 6, 0, 6) };
+        var t = new TextBlock { Text = text.ToUpperInvariant(), FontSize = 11, Margin = new Thickness(2, 6, 0, 6), Width = Inner };
         t.SetResourceReference(TextBlock.FontFamilyProperty, "BodyXB");
         t.SetResourceReference(TextBlock.ForegroundProperty, "Dim");
         return t;
@@ -216,12 +328,13 @@ public class ZaapWindow : Window
 
     private UIElement Row(ZaapEntry z, bool fav)
     {
+        if (Cols > 1) return RowCompact(z, fav);
         // « Zone · Lieu » : le lieu en gros, la zone dessous
         string name = z.Label, zone = "";
         int i = z.Label.IndexOf(" · ", StringComparison.Ordinal);
         if (i > 0) { zone = z.Label.Substring(0, i); name = z.Label.Substring(i + 3); }
 
-        var card = new Border { CornerRadius = new CornerRadius(8), BorderThickness = new Thickness(1), Padding = new Thickness(8), Margin = new Thickness(0, 0, 0, 6), Cursor = Cursors.Hand };
+        var card = new Border { CornerRadius = new CornerRadius(8), BorderThickness = new Thickness(1), Padding = new Thickness(8), Margin = new Thickness(0, 0, 0, 6), Cursor = Cursors.Hand, Width = Inner };
         Res(card, Border.BackgroundProperty, "Panel");
         Res(card, Border.BorderBrushProperty, "Line");
         card.MouseEnter += (_, _) => card.SetResourceReference(Border.BorderBrushProperty, "Accent");
@@ -270,6 +383,57 @@ public class ZaapWindow : Window
             g.Children.Add(star);
         }
         card.Child = g;
+        return card;
+    }
+
+    /// <summary>Cellule compacte (2 ou 3 Zaaps par ligne) : symbole et étoile en haut, nom (2 lignes au plus), zone, coordonnées.</summary>
+    private UIElement RowCompact(ZaapEntry z, bool fav)
+    {
+        int cols = Cols;
+        string name = z.Label, zone = "";
+        int i = z.Label.IndexOf(" · ", StringComparison.Ordinal);
+        if (i > 0) { zone = z.Label.Substring(0, i); name = z.Label.Substring(i + 3); }
+        double cellW = Math.Floor(Inner / cols) - 6;
+        double nameSize = cols == 3 ? 12 : 13;
+
+        var card = new Border { CornerRadius = new CornerRadius(8), BorderThickness = new Thickness(1), Padding = new Thickness(8), Margin = new Thickness(0, 0, 6, 6), Cursor = Cursors.Hand, Width = cellW };
+        Res(card, Border.BackgroundProperty, "Panel");
+        Res(card, Border.BorderBrushProperty, "Line");
+        card.MouseEnter += (_, _) => card.SetResourceReference(Border.BorderBrushProperty, "Accent");
+        card.MouseLeave += (_, _) => card.SetResourceReference(Border.BorderBrushProperty, "Line");
+        card.MouseLeftButtonUp += (_, _) => Pick(z);
+
+        var st = new StackPanel();
+        var top = new Grid();
+        var tile = new Border { Width = 26, Height = 26, CornerRadius = new CornerRadius(7), BorderThickness = new Thickness(1), HorizontalAlignment = HorizontalAlignment.Left };
+        Res(tile, Border.BackgroundProperty, "AccentSoft");
+        Res(tile, Border.BorderBrushProperty, "Line2");
+        var sym = new Grid { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+        var ring = new Ellipse { Width = 14, Height = 14, StrokeThickness = 2 };
+        Res(ring, Shape.StrokeProperty, "Accent");
+        var dot = new Ellipse { Width = 5, Height = 5 };
+        Res(dot, Shape.FillProperty, "Accent");
+        sym.Children.Add(ring);
+        sym.Children.Add(dot);
+        tile.Child = sym;
+        top.Children.Add(tile);
+        if (fav)
+        {
+            var star = new Path { Data = (Geometry)Application.Current.FindResource("IcoStar"), Width = 12, Height = 12, Stretch = Stretch.Uniform, StrokeThickness = 0, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Top, ToolTip = "Favori" };
+            Res(star, Shape.FillProperty, "Accent");
+            top.Children.Add(star);
+        }
+        st.Children.Add(top);
+
+        var n = new TextBlock { Text = name, FontSize = nameSize, TextWrapping = TextWrapping.Wrap, TextTrimming = TextTrimming.CharacterEllipsis, MaxHeight = nameSize * 2.7, Margin = new Thickness(0, 6, 0, 0) };
+        n.SetResourceReference(TextBlock.FontFamilyProperty, "BodyXB");
+        st.Children.Add(n);
+        if (zone != "") st.Children.Add(Res(new TextBlock { Text = zone, FontSize = 11, TextTrimming = TextTrimming.CharacterEllipsis }, TextBlock.ForegroundProperty, "Dim"));
+        var c = new TextBlock { Text = z.Coord, FontSize = 12, Margin = new Thickness(0, 2, 0, 0) };
+        c.SetResourceReference(TextBlock.FontFamilyProperty, "BodyXB");
+        Res(c, TextBlock.ForegroundProperty, "Muted");
+        st.Children.Add(c);
+        card.Child = st;
         return card;
     }
 

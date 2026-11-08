@@ -52,6 +52,10 @@ public class ZaapsViewModel : ObservableObject
     public bool DetachedZaap { get => _main.DetachedZaap; set => _main.DetachedZaap = value; }
     /// <summary>Garder la liste dépliée après le choix d'un Zaap dans la fenêtre à part.</summary>
     public bool ZaapKeepOpen { get => _main.ZaapKeepOpen; set => _main.ZaapKeepOpen = value; }
+    /// <summary>La liste de la fenêtre Zaaps se déroule vers le haut (sinon vers le bas).</summary>
+    public bool ZaapUp { get => _main.ZaapUp; set => _main.ZaapUp = value; }
+    /// <summary>Nombre de Zaaps par ligne dans la fenêtre (1 à 3), exposé comme index 0 à 2 pour la liste déroulante.</summary>
+    public int ZaapColsIndex { get => _main.ZaapCols - 1; set => _main.ZaapCols = value + 1; }
 
     public ZaapsViewModel(MainViewModel main)
     {
