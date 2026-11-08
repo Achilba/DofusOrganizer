@@ -43,13 +43,48 @@ jobs:
           if (-not (Test-Path publish/DofusTeamOrganizer.exe)) { throw "exe introuvable" }
 
       - name: Publier la release
+        id: rel
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $tag = "v${{ steps.ver.outputs.version }}"
+          $created = "false"
           gh release view $tag 2>$null
           if ($LASTEXITCODE -ne 0) {
             gh release create $tag --target ${{ github.sha }} --title "Version ${{ steps.ver.outputs.version }}" --generate-notes
+            $created = "true"
           }
           gh release upload $tag publish/DofusTeamOrganizer.exe --clobber
+          "created=$created" >> $env:GITHUB_OUTPUT
+
+      # Message Discord (salon de l'appli) : notes de version de l'appli + lien vers la release.
+      # Ne part que pour une nouvelle version, et seulement si le secret DISCORD_WEBHOOK existe.
+      - name: Annoncer sur Discord
+        if: steps.rel.outputs.created == 'true'
+        continue-on-error: true
+        shell: pwsh
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          if (-not $env:DISCORD_WEBHOOK) { Write-Host "Pas de webhook Discord : étape ignorée."; exit 0 }
+          $src = Get-Content Models/PatchNotes.cs -Raw -Encoding UTF8
+          $v = [regex]::Escape($env:VERSION)
+          $m = [regex]::Match($src, '(?s)new\("' + $v + '",\s*"([^"]+)",\s*new\[\]\s*\{(.*?)\}\)')
+          if (-not $m.Success) { Write-Host "Notes introuvables pour $env:VERSION : étape ignorée."; exit 0 }
+          $lines = [regex]::Matches($m.Groups[2].Value, '"((?:[^"\\]|\\.)*)"') | ForEach-Object { $_.Groups[1].Value -replace '\\"','"' -replace '\\\\','\' }
+          $text = ($lines | ForEach-Object { "• " + $_ }) -join "`n"
+          if ($text.Length -gt 1800) { $text = $text.Substring(0, 1800) + "…" }
+          $url = "https://github.com/${{ github.repository }}/releases/tag/v$env:VERSION"
+          $body = @{
+            username = "DOFUS Team Organizer"
+            embeds = @(@{
+              title = "Version $env:VERSION"
+              url = $url
+              description = $text + "`n`n[Télécharger sur GitHub]($url)"
+              color = 15906116
+              footer = @{ text = "Dépôt : github.com/${{ github.repository }}" }
+            })
+          } | ConvertTo-Json -Depth 6
+          Invoke-RestMethod -Uri $env:DISCORD_WEBHOOK -Method Post -ContentType "application/json; charset=utf-8" -Body ([System.Text.Encoding]::UTF8.GetBytes($body))
