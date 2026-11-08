@@ -48,9 +48,13 @@ public class ZaapsViewModel : ObservableObject
 
     public ObservableCollection<ZaapFavRow> View { get; } = new();
 
+    /// <summary>Option « Zaap déporté » (la fenêtre Zaaps à part), réglée depuis cette page.</summary>
+    public bool DetachedZaap { get => _main.DetachedZaap; set => _main.DetachedZaap = value; }
+
     public ZaapsViewModel(MainViewModel main)
     {
         _main = main;
+        _main.DetachedZaapChanged += () => Raise(nameof(DetachedZaap));
         ClearQueryCommand = new RelayCommand(() => Query = "");
         Reload();
     }

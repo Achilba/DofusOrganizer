@@ -91,9 +91,7 @@
                     <CheckBox Style="{StaticResource Switch}" Content="Touche étoile (passer au personnage suivant)" IsChecked="{Binding MiniShowSwap}" Margin="0,0,0,8"/>
                     <CheckBox Style="{StaticResource Switch}" Content="Bouton Invitations" IsChecked="{Binding MiniShowInvites}" Margin="0,0,0,8"/>
                     <CheckBox Style="{StaticResource Switch}" Content="Zaap (barre complète)" IsChecked="{Binding MiniShowZaap}" Margin="0,0,0,8"/>
-                    <CheckBox Style="{StaticResource Switch}" Content="Almanax (barre complète)" IsChecked="{Binding MiniShowAlmanax}" Margin="0,0,0,12"/>
-                    <CheckBox Style="{StaticResource Switch}" Content="Zaap déporté : le Zaap quitte la barre et s'ouvre dans une petite fenêtre à part" IsChecked="{Binding DetachedZaap}" Margin="0,0,0,4"/>
-                    <TextBlock Text="La fenêtre se déplace comme les autres barres et retient sa place. Sa flèche déplie ou replie la liste, qui se replie seule dès qu'un Zaap est choisi." Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap"/>
+                    <CheckBox Style="{StaticResource Switch}" Content="Almanax (barre complète)" IsChecked="{Binding MiniShowAlmanax}" Margin="0,0,0,4"/>
                 </StackPanel>
             </Border>
 

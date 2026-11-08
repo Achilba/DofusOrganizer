@@ -12,6 +12,8 @@
         <StackPanel Margin="0,0,0,14">
             <TextBlock Text="Zaaps" Style="{StaticResource PageTitle}"/>
             <TextBlock Text="Coche un Zaap pour le mettre en favori : il passe en haut de la liste de la barre Mini, par ordre alphabétique" Style="{StaticResource PageSub}"/>
+            <CheckBox Style="{StaticResource Switch}" Content="Zaap déporté : le Zaap quitte la barre Mini et s'ouvre dans une petite fenêtre à part" IsChecked="{Binding DetachedZaap}" Margin="0,12,0,0"/>
+            <TextBlock Text="La fenêtre se déplace comme les autres barres et retient sa place. Sa flèche déplie ou replie la liste, qui se replie seule dès qu'un Zaap est choisi." Foreground="{DynamicResource Dim}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0"/>
         </StackPanel>
 
         <WrapPanel Grid.Row="1" Margin="0,0,0,10">
