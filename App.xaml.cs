@@ -16,6 +16,7 @@ public partial class App : Application
     private MainWindow _main;
     private MiniWindow _mini;
     private SongeMiniWindow _songeMini;
+    private ZaapWindow _zaapWin;
     private bool _songeMiniActive;
     private Storage _storage;
 
@@ -62,6 +63,8 @@ public partial class App : Application
         _main = new MainWindow { DataContext = _vm };
         _mini = new MiniWindow { DataContext = _vm };
         _songeMini = new SongeMiniWindow { DataContext = _vm };
+        _zaapWin = new ZaapWindow(_vm);
+        _vm.DetachedZaapChanged += ApplyZaapWindow;
 
         _vm.ToggleVisibilityRequested += ToggleVisibility;
         _vm.MiniModeRequested += SetMini;
@@ -85,6 +88,7 @@ public partial class App : Application
         };
 
         if (data.StartInMini) SetMini(true); else SetMini(false);
+        ApplyZaapWindow();
 
         _ = _vm.CheckUpdateAsync(silent: true);
         // Revérifie toutes les 5 minutes tant que l'appli est ouverte (la pastille « Paramètres » apparaît alors toute seule)
@@ -165,9 +169,24 @@ public partial class App : Application
 
     private void ToggleVisibility()
     {
-        if (_main.IsVisible || _mini.IsVisible || _songeMini.IsVisible) { _main.Hide(); _mini.Hide(); _songeMini.Hide(); }
-        else if (_songeMiniActive) _songeMini.Show();
-        else SetMini(_vm.Data.StartInMini);
+        if (_main.IsVisible || _mini.IsVisible || _songeMini.IsVisible) { _main.Hide(); _mini.Hide(); _songeMini.Hide(); _zaapWin.Hide(); }
+        else
+        {
+            if (_songeMiniActive) _songeMini.Show();
+            else SetMini(_vm.Data.StartInMini);
+            ApplyZaapWindow();
+        }
+    }
+
+    /// <summary>Option « Zaap déporté » : la fenêtre Zaaps est visible quand l'option est cochée.</summary>
+    private void ApplyZaapWindow()
+    {
+        try
+        {
+            if (_vm.Data.DetachedZaap) { _zaapWin.Show(); _zaapWin.Topmost = _vm.Data.MiniAlwaysOnTop; }
+            else _zaapWin.Hide();
+        }
+        catch (Exception ex) { _storage.LogError("Fenêtre Zaaps : " + ex); }
     }
 
     /// <summary>Fermeture demandée par la mise à jour automatique.</summary>

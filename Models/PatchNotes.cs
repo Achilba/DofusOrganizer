@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.12";
+    public const string Current = "0.14.13";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.13", "08/11/2026", new[]
+        {
+            "NOUVEAU — Option « Zaap déporté » (Paramètres > Mode Mini) : le Zaap quitte la barre Mini et s'ouvre dans une petite fenêtre à part, avec recherche, liste visuelle et favoris en tête. Elle se déplace, retient sa place, et sa liste se replie dès qu'un Zaap est copié.",
+        }),
         new("0.14.12", "06/11/2026", new[]
         {
             "CHANGÉ — La fenêtre « Nouveau compte détecté » reprend le design de l'appli, avec un interrupteur pour afficher la carte sur l'accueil et trois choix : Ajouter, Plus tard (reproposé si la fenêtre Dofus est fermée puis rouverte) et Ne plus proposer.",

@@ -353,6 +353,10 @@ public class AppData
     public bool MiniShowSwap { get; set; } = true;
     public bool MiniShowInvites { get; set; } = true;
     public bool MiniShowZaap { get; set; } = true;
+    /// <summary>Zaap déporté : le Zaap quitte la barre Mini et s'ouvre dans sa propre fenêtre.</summary>
+    public bool DetachedZaap { get; set; }
+    /// <summary>Position de la fenêtre Zaaps, par configuration d'écrans.</summary>
+    public Dictionary<string, double[]> ZaapWinPositions { get; set; } = new();
     public bool MiniShowAlmanax { get; set; } = true;
     /// <summary>Mode discret : pas de message automatique (mise à jour disponible, remise à zéro des tâches).</summary>
     public bool QuietMode { get; set; }
