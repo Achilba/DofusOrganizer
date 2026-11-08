@@ -30,6 +30,9 @@ public class ZaapWindow : Window
     private Thumb _resizeTop;
     private Thumb _resizeBottom;
     private ComboBox _colsBox;
+    private Popup _toast;
+    private TextBlock _toastText;
+    private System.Windows.Threading.DispatcherTimer _toastTimer;
     private bool _expanded;
     private bool _placed;
     private bool _quiet;
@@ -151,6 +154,18 @@ public class ZaapWindow : Window
         _resizeTop = MakeGrip(true);
         _resizeBottom = MakeGrip(false);
 
+        // Bulle « COPIÉ » propre à cette fenêtre (elle n'apparaît plus sous Invitations dans la barre Mini)
+        _toastText = new TextBlock { FontSize = 11, VerticalAlignment = VerticalAlignment.Center };
+        _toastText.SetResourceReference(TextBlock.FontFamilyProperty, "BodyXB");
+        _toastText.SetResourceReference(TextBlock.ForegroundProperty, "Accent");
+        var toastBox = new Border { Height = 32, CornerRadius = new CornerRadius(8), BorderThickness = new Thickness(1), Padding = new Thickness(10, 0, 10, 0), Child = _toastText };
+        toastBox.SetResourceReference(Border.BackgroundProperty, "Side");
+        toastBox.SetResourceReference(Border.BorderBrushProperty, "Accent");
+        _toast = new Popup { PlacementTarget = _head, StaysOpen = true, AllowsTransparency = true, Focusable = false, IsHitTestVisible = false, Child = toastBox };
+        _toastTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1800) };
+        _toastTimer.Tick += (_, _) => { _toastTimer.Stop(); _toast.IsOpen = false; };
+        IsVisibleChanged += (_, _) => { if (!IsVisible) _toast.IsOpen = false; };
+
         Layout();
         _vm.PropertyChanged += (_, e) =>
         {
@@ -234,7 +249,17 @@ public class ZaapWindow : Window
         _head.BorderThickness = up ? new Thickness(0, 1, 0, 0) : new Thickness(0);
         if (up) { _root.Children.Add(_listHost); _root.Children.Add(_boxGrid); _root.Children.Add(_head); }
         else { _root.Children.Add(_head); _root.Children.Add(_boxGrid); _root.Children.Add(_listHost); }
+        _toast.Placement = up ? PlacementMode.Top : PlacementMode.Bottom;
         SetChevron();
+    }
+
+    private void ShowCopied(string text)
+    {
+        _toastText.Text = text == null ? "COPIE IMPOSSIBLE" : "COPIÉ  " + text;
+        _toast.IsOpen = false;
+        _toast.IsOpen = true;
+        _toastTimer.Stop();
+        _toastTimer.Start();
     }
 
     private double Measured()
@@ -487,7 +512,7 @@ public class ZaapWindow : Window
 
     private void Pick(ZaapEntry z)
     {
-        _vm.CopyZaap(z);
+        ShowCopied(_vm.CopyText(z.Command) ? z.Command : null);
         _quiet = true;
         _box.Text = "";
         _quiet = false;

@@ -19,6 +19,10 @@ public class AlmanaxDay
     public bool HasType => !string.IsNullOrEmpty(TypeText);
     public bool HasQuest { get; set; }
     public string QuestText { get; set; }
+    /// <summary>Deuxième quête du jour (Troubles à Bonta / Troubles à Brâkmar : même jour, selon l'alignement).</summary>
+    public bool HasQuest2 { get; set; }
+    public string Quest2Text { get; set; }
+    public RelayCommand Quest2Command { get; set; }
     public string Bonus { get; set; }
     public bool IsToday { get; set; }
     public Brush Bg { get; set; }
@@ -237,7 +241,9 @@ public class AlmanaxViewModel : ObservableObject
             TypeText = AlmanaxTypes.For(o.Resource),
             TypeCategory = AlmanaxTypes.CategoryOf(AlmanaxTypes.For(o.Resource)),
             HasQuest = !string.IsNullOrEmpty(o.Quest),
-            QuestText = "Quête : " + o.Quest + " ↗",
+            QuestText = QuestLinks(o.Quest).Select(q => "Quête : " + q.Text + " ↗").FirstOrDefault() ?? "",
+            HasQuest2 = QuestLinks(o.Quest).Count > 1,
+            Quest2Text = QuestLinks(o.Quest).Skip(1).Select(q => q.Text + " ↗").FirstOrDefault() ?? "",
             Bonus = bonus,
             IsToday = d.Date == DateTime.Today,
             Bg = look.bg,
@@ -253,7 +259,8 @@ public class AlmanaxViewModel : ObservableObject
             DoneCommand = new RelayCommand(() => { SetDay(date, "done"); _main.RequestSave(); Refresh(); }),
             UndoCommand = new RelayCommand(() => { SetDay(date, "todo"); _main.RequestSave(); Refresh(); }),
             CopyCommand = new RelayCommand(() => _main.CopyWithToast(o.Resource, "Copié  " + o.Resource)),
-            QuestCommand = new RelayCommand(() => OpenQuest(date)),
+            QuestCommand = new RelayCommand(() => OpenUrl(QuestLinks(o.Quest).FirstOrDefault().Url)),
+            Quest2Command = new RelayCommand(() => OpenUrl(QuestLinks(o.Quest).Skip(1).FirstOrDefault().Url)),
             CopyBonusCommand = new RelayCommand(() => _main.CopyWithToast(bonus, "Modificateur copié"))
         };
     }
@@ -335,11 +342,46 @@ public class AlmanaxViewModel : ObservableObject
         _main.CopyWithToast(string.Join("\n", lines), "Liste copiée");
     }
 
-    private void OpenQuest(DateTime d)
+    private const string CalendarUrl = "https://www.dofuspourlesnoobs.com/calendrier-de-lalmanax.html";
+
+    /// <summary>Page de chaque quête de l'Almanax sur Dofus pour les Noobs.</summary>
+    private static readonly Dictionary<string, string> QuestUrls = new()
     {
-        var url = d.ToString("MMdd", CultureInfo.InvariantCulture) == "1003"
-            ? "https://www.dofuspourlesnoobs.com/la-fete-aux-tire-fesses.html"
-            : "https://www.dofuspourlesnoobs.com/calendrier-de-lalmanax.html";
+        ["Farine assassine"] = "https://www.dofuspourlesnoobs.com/farine-assassine.html",
+        ["Chasse au trésor de Güss"] = "https://www.dofuspourlesnoobs.com/chasse-au-tresor-de-guss.html",
+        ["Qui vole un œuf cherche l'embrouille"] = "https://www.dofuspourlesnoobs.com/qui-vole-un-oeuf-cherche-l-embrouille.html",
+        ["Chasse au trésor de Scheik"] = "https://www.dofuspourlesnoobs.com/chasse-au-tresor-de-scheik.html",
+        ["Le fabuleux festin d'Amélie Poêlon"] = "https://www.dofuspourlesnoobs.com/le-fabuleux-festin-d-amelie-poelon.html",
+        ["Que le Gwan Kwic me cwoque"] = "https://www.dofuspourlesnoobs.com/que-le-gwan-kwic-me-cwoque.html",
+        ["Bon comme du bon pain"] = "https://www.dofuspourlesnoobs.com/bon-comme-du-bon-pain.html",
+        ["Troubles à Bonta"] = "https://www.dofuspourlesnoobs.com/troubles-a-bonta.html",
+        ["Troubles à Brâkmar"] = "https://www.dofuspourlesnoobs.com/troubles-a-brakmar.html",
+        ["Chasse au trésor de Sad"] = "https://www.dofuspourlesnoobs.com/chasse-au-tresor-de-sad.html",
+        ["La fête aux tire-fesses"] = "https://www.dofuspourlesnoobs.com/la-fete-aux-tire-fesses.html",
+        ["Vols à la charrette"] = "https://www.dofuspourlesnoobs.com/vols-a-la-charrette.html",
+        ["Contrôles anti-baston"] = "https://www.dofuspourlesnoobs.com/controles-anti-baston.html",
+        ["Chasse au trésor de Milivar"] = "https://www.dofuspourlesnoobs.com/chasse-au-tresor-de-milivar.html",
+    };
+
+    /// <summary>Liens de la quête du jour : un seul, ou deux pour « Troubles à Bonta / Troubles à Brâkmar » (selon l'alignement).</summary>
+    private static List<(string Text, string Url)> QuestLinks(string quest)
+    {
+        var list = new List<(string, string)>();
+        if (string.IsNullOrEmpty(quest)) return list;
+        foreach (var part in quest.Split(" / ", StringSplitOptions.RemoveEmptyEntries))
+        {
+            var name = part.Trim();
+            QuestUrls.TryGetValue(name, out var url);
+            var text = name == "Troubles à Bonta" ? name + " (Bontarien)"
+                     : name == "Troubles à Brâkmar" ? name + " (Brâkmarien)" : name;
+            list.Add((text, url ?? CalendarUrl));
+        }
+        return list;
+    }
+
+    private static void OpenUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return;
         try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); } catch { }
     }
 }

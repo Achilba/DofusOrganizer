@@ -5,11 +5,16 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.27";
+    public const string Current = "0.14.29";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.29", "08/11/2026", new[]
+        {
+            "CORRIGÉ — Almanax : chaque quête ouvre maintenant sa propre page sur Dofus pour les Noobs (et plus la page du calendrier). Le jour des « Troubles », deux liens apparaissent : Troubles à Bonta (alignement Bontarien) et Troubles à Brâkmar (alignement Brâkmarien).",
+            "CORRIGÉ — Fenêtre Zaaps : le message « COPIÉ » s'affiche dans la fenêtre Zaaps (au bord de l'entête) et non plus sous le bouton Invitations de la barre Mini.",
+        }),
         new("0.14.27", "08/11/2026", new[]
         {
             "CORRIGÉ — Fenêtre Zaaps, liste vers le haut : tirer le bord du haut ne déplace plus le bas de la fenêtre (l'entête reste en place).",

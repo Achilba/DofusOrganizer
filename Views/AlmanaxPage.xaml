@@ -81,6 +81,8 @@
                                         </Border>
                                         <Button Content="{Binding QuestText}" Command="{Binding QuestCommand}" Style="{StaticResource BtnGhost}" MinHeight="26" Padding="8,0" FontSize="12" Margin="0,2,0,2"
                                                 Visibility="{Binding HasQuest, Converter={StaticResource BoolVis}}"/>
+                                        <Button Content="{Binding Quest2Text}" Command="{Binding Quest2Command}" Style="{StaticResource BtnGhost}" MinHeight="26" Padding="8,0" FontSize="12" Margin="8,2,0,2"
+                                                Visibility="{Binding HasQuest2, Converter={StaticResource BoolVis}}"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                         <Button Content="{Binding PrepLabel}" Command="{Binding PrepCommand}" Margin="0,0,8,0"
