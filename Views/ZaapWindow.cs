@@ -27,7 +27,8 @@ public class ZaapWindow : Window
     private StackPanel _root;
     private Border _head;
     private Grid _boxGrid;
-    private readonly Thumb _resize = new();
+    private Thumb _resizeTop;
+    private Thumb _resizeBottom;
     private ComboBox _colsBox;
     private bool _expanded;
     private bool _placed;
@@ -146,10 +147,50 @@ public class ZaapWindow : Window
         _listScroll.Padding = new Thickness(10, 8, 10, 10);
         _listHost.Child = _listScroll;
 
-        // Poignée de hauteur : au bord du bas (liste vers le bas) ou du haut (liste vers le haut)
-        _resize.Height = 12; _resize.Cursor = Cursors.SizeNS; _resize.Focusable = false; _resize.FocusVisualStyle = null;
-        _resize.ToolTip = "Tirer pour ajuster la hauteur de la liste";
-        _resize.Visibility = Visibility.Collapsed;
+        // Poignées de hauteur : une en haut et une en bas de la fenêtre. Tirer l'une garde l'autre bord en place.
+        _resizeTop = MakeGrip(true);
+        _resizeBottom = MakeGrip(false);
+
+        Layout();
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(MainViewModel.ZaapCols))
+            {
+                if (_colsBox.SelectedIndex != Cols - 1) _colsBox.SelectedIndex = Cols - 1;
+                if (_expanded) Reanchor(Refresh);
+                return;
+            }
+            if (e.PropertyName != nameof(MainViewModel.ZaapUp)) return;
+            Dispatcher.BeginInvoke(new Action(() => { Collapse(); Layout(); }));
+        };
+
+        // Les poignées de hauteur flottent sur les bords haut et bas (elles ne décalent rien)
+        var outer = new Grid();
+        outer.Children.Add(frame);
+        outer.Children.Add(_resizeTop);
+        outer.Children.Add(_resizeBottom);
+        Content = outer;
+
+        Loaded += (_, _) => Place();
+        IsVisibleChanged += (_, _) =>
+        {
+            if (!IsVisible) return;
+            Topmost = _vm.Data.MiniAlwaysOnTop;
+            if (_placed) Apply();
+        };
+        LocationChanged += (_, _) => Remember();
+    }
+
+    /// <summary>Largeur utile de la liste (fenêtre moins cadre, marges et barre de défilement).</summary>
+    private double Inner => Width - 2 - 20 - 16;
+
+    private int Cols => Math.Max(1, Math.Min(3, _vm.Data.ZaapCols ?? 2));
+
+    /// <summary>Poignée de hauteur de la liste. Haut : tirer vers le haut agrandit, le bas reste en place. Bas : tirer vers le bas agrandit, le haut reste en place.</summary>
+    private Thumb MakeGrip(bool top)
+    {
+        var t = new Thumb { Height = 8, VerticalAlignment = top ? VerticalAlignment.Top : VerticalAlignment.Bottom, Cursor = Cursors.SizeNS, Focusable = false, FocusVisualStyle = null, Visibility = Visibility.Collapsed,
+            ToolTip = "Tirer pour ajuster la hauteur de la liste" };
         var grab = new FrameworkElementFactory(typeof(Grid));
         grab.SetValue(Panel.BackgroundProperty, Brushes.Transparent);
         var mark = new FrameworkElementFactory(typeof(Border));
@@ -168,45 +209,16 @@ public class ZaapWindow : Window
         drag.Setters.Add(new Setter(OpacityProperty, 0.9, "mark"));
         tpl.Triggers.Add(hover);
         tpl.Triggers.Add(drag);
-        _resize.Template = tpl;
-        _resize.DragDelta += (_, e) =>
+        t.Template = tpl;
+        t.DragDelta += (_, e) =>
         {
-            // Liste vers le haut : la poignée est en haut, tirer vers le haut agrandit
-            double delta = _vm.Data.ZaapUp ? -e.VerticalChange : e.VerticalChange;
+            double delta = top ? -e.VerticalChange : e.VerticalChange;
             double h = Math.Max(120, Math.Min(720, _listScroll.MaxHeight + delta));
-            Reanchor(() => _listScroll.MaxHeight = h);
+            Reanchor(() => _listScroll.MaxHeight = h, top);
         };
-        _resize.DragCompleted += (_, _) => { _vm.Data.ZaapListHeight = _listScroll.MaxHeight; _vm.RequestSave(); };
-
-        Layout();
-        _vm.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(MainViewModel.ZaapCols))
-            {
-                if (_colsBox.SelectedIndex != Cols - 1) _colsBox.SelectedIndex = Cols - 1;
-                if (_expanded) Reanchor(Refresh);
-                return;
-            }
-            if (e.PropertyName != nameof(MainViewModel.ZaapUp)) return;
-            Dispatcher.BeginInvoke(new Action(() => { Collapse(); Layout(); }));
-        };
-
-        Content = frame;
-
-        Loaded += (_, _) => Place();
-        IsVisibleChanged += (_, _) =>
-        {
-            if (!IsVisible) return;
-            Topmost = _vm.Data.MiniAlwaysOnTop;
-            if (_placed) Apply();
-        };
-        LocationChanged += (_, _) => Remember();
+        t.DragCompleted += (_, _) => { _vm.Data.ZaapListHeight = _listScroll.MaxHeight; _vm.RequestSave(); };
+        return t;
     }
-
-    /// <summary>Largeur utile de la liste (fenêtre moins cadre, marges et barre de défilement).</summary>
-    private double Inner => Width - 2 - 20 - 16;
-
-    private int Cols => Math.Max(1, Math.Min(3, _vm.Data.ZaapCols ?? 2));
 
     private double ListHeight() => Math.Max(120, Math.Min(720, _vm.Data.ZaapListHeight ?? 330));
 
@@ -216,9 +228,8 @@ public class ZaapWindow : Window
         bool up = _vm.Data.ZaapUp;
         _root.Children.Clear();
         _listHost.BorderThickness = up ? new Thickness(0, 0, 0, 1) : new Thickness(0, 1, 0, 0);
-        _resize.Margin = new Thickness(0);
-        if (up) { _root.Children.Add(_resize); _root.Children.Add(_listHost); _root.Children.Add(_head); _root.Children.Add(_boxGrid); }
-        else { _root.Children.Add(_head); _root.Children.Add(_boxGrid); _root.Children.Add(_listHost); _root.Children.Add(_resize); }
+        if (up) { _root.Children.Add(_listHost); _root.Children.Add(_head); _root.Children.Add(_boxGrid); }
+        else { _root.Children.Add(_head); _root.Children.Add(_boxGrid); _root.Children.Add(_listHost); }
         SetChevron();
     }
 
@@ -229,12 +240,12 @@ public class ZaapWindow : Window
     }
 
     /// <summary>Change la taille du contenu ; en mode « vers le haut », la fenêtre grandit vers le haut pour que la recherche ne bouge pas.</summary>
-    private void Reanchor(Action change)
+    private void Reanchor(Action change, bool? anchorBottom = null)
     {
         double before = Measured();
         change();
         double after = Measured();
-        if (_vm.Data.ZaapUp && _placed)
+        if ((anchorBottom ?? _vm.Data.ZaapUp) && _placed)
             Top = Math.Max(SystemParameters.VirtualScreenTop, Top - (after - before));
     }
 
@@ -290,7 +301,8 @@ public class ZaapWindow : Window
             {
                 _expanded = true;
                 _listHost.Visibility = Visibility.Visible;
-                _resize.Visibility = Visibility.Visible;
+                _resizeTop.Visibility = Visibility.Visible;
+                _resizeBottom.Visibility = Visibility.Visible;
                 Refresh();
             });
             SetChevron();
@@ -305,7 +317,8 @@ public class ZaapWindow : Window
         {
             _expanded = false;
             _listHost.Visibility = Visibility.Collapsed;
-            _resize.Visibility = Visibility.Collapsed;
+            _resizeTop.Visibility = Visibility.Collapsed;
+            _resizeBottom.Visibility = Visibility.Collapsed;
         });
         SetChevron();
     }
