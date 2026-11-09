@@ -37,7 +37,7 @@ public partial class App : Application
         _mutex = new Mutex(true, "DofusTeamOrganizer.SingleInstance", out bool first);
         if (!first)
         {
-            MessageBox.Show("DOFUS Team Organizer est déjà lancé (Ctrl+Alt+O pour l'afficher).", "DOFUS Team Organizer");
+            MessageBox.Show("Team Organizer est déjà lancé (Ctrl+Alt+O pour l'afficher).", "Team Organizer");
             Shutdown();
             return;
         }
@@ -47,7 +47,7 @@ public partial class App : Application
         DispatcherUnhandledException += (_, args) =>
         {
             _storage.LogError(args.Exception.ToString());
-            MessageBox.Show("Une erreur est survenue, elle a été notée dans :\n" + _storage.ErrorLogPath, "DOFUS Team Organizer");
+            MessageBox.Show("Une erreur est survenue, elle a été notée dans :\n" + _storage.ErrorLogPath, "Team Organizer");
             args.Handled = true;
         };
 

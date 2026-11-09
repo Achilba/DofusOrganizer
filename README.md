@@ -1,4 +1,4 @@
-# DOFUS Team Organizer
+# Team Organizer
 
 Un petit logiciel Windows pour t'organiser quand tu joues plusieurs personnages sur Dofus : qui fait quoi, ce qu'il reste à faire aujourd'hui, les Zaaps, l'Almanax, les donjons, les songes, des notes, le tout avec une petite barre qui reste à côté du jeu.
 

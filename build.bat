@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul
 echo.
-echo  DOFUS Team Organizer - compilation
+echo  Team Organizer - compilation
 echo  ----------------------------------
 dotnet --list-sdks 2>nul | findstr /B "8." >nul
 if errorlevel 1 goto nosdk

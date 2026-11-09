@@ -407,7 +407,7 @@ public class MainViewModel : ObservableObject
         CopySupportInfoCommand = new RelayCommand(() =>
         {
             var sb = new System.Text.StringBuilder();
-            sb.AppendLine("DOFUS Team Organizer " + PatchNotes.Current);
+            sb.AppendLine("Team Organizer " + PatchNotes.Current);
             sb.AppendLine("Windows : " + Environment.OSVersion.VersionString + " · .NET " + Environment.Version);
             sb.AppendLine("Dossier de données : " + Storage.Dir);
             sb.AppendLine("Personnages : " + Characters.Count + " · thème : " + Data.Theme + " · taille du texte : " + (int)Math.Round(Data.UiScale * 100) + " %");

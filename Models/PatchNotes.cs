@@ -5,11 +5,15 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.30";
+    public const string Current = "0.14.31";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.31", "09/11/2026", new[]
+        {
+            "NOUVEAU — L'appli s'appelle désormais « Team Organizer » (le mot Dofus quitte le nom, l'outil reste non officiel et sans lien avec Ankama). Titres des fenêtres, À propos, README et annonces Discord mis à jour. Tes données et les mises à jour ne changent pas.",
+        }),
         new("0.14.30", "08/11/2026", new[]
         {
             "CORRIGÉ — Fenêtre Zaaps, liste vers le haut : quand la recherche change le nombre de résultats, le haut de la fenêtre bouge et le bas (l'entête) reste en place.",

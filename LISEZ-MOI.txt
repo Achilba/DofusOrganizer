@@ -1,4 +1,4 @@
-DOFUS Team Organizer
+Team Organizer
 
 Outil non officiel, sans lien avec Ankama. Il ne lit pas le jeu et n'envoie aucune donnee.
 

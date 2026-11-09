@@ -78,7 +78,7 @@ jobs:
           if ($text.Length -gt 1800) { $text = $text.Substring(0, 1800) + "…" }
           $url = "https://github.com/${{ github.repository }}/releases/tag/v$env:VERSION"
           $body = @{
-            username = "DOFUS Team Organizer"
+            username = "Team Organizer"
             embeds = @(@{
               title = "Version $env:VERSION"
               url = $url
