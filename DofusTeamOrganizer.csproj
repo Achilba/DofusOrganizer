@@ -6,9 +6,9 @@
     <UseWPF>true</UseWPF>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>DofusTeamOrganizer</AssemblyName>
+    <AssemblyName>TeamOrganizer</AssemblyName>
     <RootNamespace>DofusTeamOrganizer</RootNamespace>
-    <Version>0.14.32</Version>
+    <Version>0.14.33</Version>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
   </PropertyGroup>
 

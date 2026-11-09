@@ -7,10 +7,10 @@ dotnet --list-sdks 2>nul | findstr /B "8." >nul
 if errorlevel 1 goto nosdk
 
 dotnet publish DofusTeamOrganizer.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o "%~dp0publish"
-if not exist "%~dp0publish\DofusTeamOrganizer.exe" goto failed
+if not exist "%~dp0publish\TeamOrganizer.exe" goto failed
 
 echo.
-echo  Termine : %~dp0publish\DofusTeamOrganizer.exe
+echo  Termine : %~dp0publish\TeamOrganizer.exe
 pause
 exit /b 0
 

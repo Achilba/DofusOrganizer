@@ -23,7 +23,7 @@ Un petit logiciel Windows pour t'organiser quand tu joues plusieurs personnages 
 
 ## 1. Installer
 1. Va sur la page des versions : <https://github.com/Achilba/Team-Organizer/releases/latest>
-2. Télécharge `DofusTeamOrganizer.exe` et lance-le. Rien d'autre à installer.
+2. Télécharge `TeamOrganizer.exe` et lance-le. Rien d'autre à installer.
 3. Windows peut afficher « Windows a protégé votre ordinateur » (l'appli n'est pas signée) : clique sur **Informations complémentaires**, puis **Exécuter quand même**.
 
 Les mises à jour sont proposées par l'appli elle-même (voir [Paramètres](#6-paramètres)).

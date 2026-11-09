@@ -21,7 +21,7 @@ public class Updater
 {
     public const string Owner = "Achilba";
     public const string Repo = "Team-Organizer";
-    public const string AssetName = "DofusTeamOrganizer.exe";
+    public const string AssetName = "TeamOrganizer.exe";
 
     private readonly string _dataDir;
     public Updater(string dataDir) { _dataDir = dataDir; }
@@ -42,7 +42,7 @@ public class Updater
     private HttpClient NewClient()
     {
         var c = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
-        c.DefaultRequestHeaders.UserAgent.ParseAdd("DofusTeamOrganizer");
+        c.DefaultRequestHeaders.UserAgent.ParseAdd("TeamOrganizer");
         c.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
         var t = Token;
         if (t.Length > 0) c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", t);

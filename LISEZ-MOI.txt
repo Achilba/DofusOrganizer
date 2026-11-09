@@ -3,7 +3,7 @@ Team Organizer
 Outil non officiel, sans lien avec Ankama. Il ne lit pas le jeu et n'envoie aucune donnee.
 
 INSTALLER
-Telecharge DofusTeamOrganizer.exe sur la page des versions :
+Telecharge TeamOrganizer.exe sur la page des versions :
 https://github.com/Achilba/Team-Organizer/releases/latest
 Si Windows affiche "Windows a protege votre ordinateur" : Informations complementaires > Executer quand meme.
 

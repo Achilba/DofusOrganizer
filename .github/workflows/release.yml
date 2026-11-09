@@ -40,7 +40,7 @@ jobs:
           dotnet publish DofusTeamOrganizer.csproj -c Release -r win-x64 --self-contained true `
             -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
             -p:Version=${{ steps.ver.outputs.version }} -o publish
-          if (-not (Test-Path publish/DofusTeamOrganizer.exe)) { throw "exe introuvable" }
+          if (-not (Test-Path publish/TeamOrganizer.exe)) { throw "exe introuvable" }
 
       - name: Publier la release
         id: rel
@@ -55,6 +55,9 @@ jobs:
             gh release create $tag --target ${{ github.sha }} --title "Version ${{ steps.ver.outputs.version }}" --generate-notes
             $created = "true"
           }
+          gh release upload $tag publish/TeamOrganizer.exe --clobber
+          # Transition : les versions déjà installées cherchent encore l'ancien nom de fichier pour se mettre à jour.
+          Copy-Item publish/TeamOrganizer.exe publish/DofusTeamOrganizer.exe
           gh release upload $tag publish/DofusTeamOrganizer.exe --clobber
           "created=$created" >> $env:GITHUB_OUTPUT
 
