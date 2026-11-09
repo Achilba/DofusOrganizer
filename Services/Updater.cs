@@ -20,7 +20,7 @@ public class UpdateInfo
 public class Updater
 {
     public const string Owner = "Achilba";
-    public const string Repo = "DofusOrganizer";
+    public const string Repo = "Team-Organizer";
     public const string AssetName = "DofusTeamOrganizer.exe";
 
     private readonly string _dataDir;

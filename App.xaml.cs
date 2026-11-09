@@ -65,6 +65,7 @@ public partial class App : Application
         _songeMini = new SongeMiniWindow { DataContext = _vm };
         _zaapWin = new ZaapWindow(_vm);
         _vm.DetachedZaapChanged += ApplyZaapWindow;
+        _vm.ShowZaapWindowRequested += ApplyZaapWindow;
 
         _vm.ToggleVisibilityRequested += ToggleVisibility;
         _vm.MiniModeRequested += SetMini;

@@ -62,10 +62,12 @@ public class ZaapsViewModel : ObservableObject
         _main = main;
         _main.DetachedZaapChanged += () => Raise(nameof(DetachedZaap));
         ClearQueryCommand = new RelayCommand(() => Query = "");
+        ShowWindowCommand = new RelayCommand(() => _main.RequestShowZaapWindow());
         Reload();
     }
 
     public RelayCommand ClearQueryCommand { get; }
+    public RelayCommand ShowWindowCommand { get; }
 
     public string Query { get => _query; set { if (Set(ref _query, value ?? "")) Refresh(); } }
 

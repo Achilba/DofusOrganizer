@@ -5,11 +5,17 @@ public record PatchNote(string Version, string Date, string[] Lines);
 public static class PatchNotes
 {
     /// <summary>Version courante de l'appli (à incrémenter à chaque compilation livrée).</summary>
-    public const string Current = "0.14.31";
+    public const string Current = "0.14.32";
 
     /// <summary>Du plus récent au plus ancien.</summary>
     public static readonly PatchNote[] All =
     {
+        new("0.14.32", "09/11/2026", new[]
+        {
+            "NOUVEAU — Le dépôt GitHub s'appelle maintenant « Team-Organizer » : liens du README et vérification des mises à jour adaptés. Rien à faire de ton côté.",
+            "AMÉLIORÉ — Fenêtre Zaaps : l'option « Zaap déporté » et ses réglages sont enregistrés immédiatement (plus de risque de perte si l'appli est coupée juste après).",
+            "NOUVEAU — Fenêtre Zaaps : un bouton « – » masque la fenêtre sans décocher l'option (le ✕ remet toujours le Zaap dans la barre Mini). Elle se rouvre au lancement suivant ou avec le bouton « Afficher la fenêtre Zaaps » de la page Zaaps.",
+        }),
         new("0.14.31", "09/11/2026", new[]
         {
             "NOUVEAU — L'appli s'appelle désormais « Team Organizer » (le mot Dofus quitte le nom, l'outil reste non officiel et sans lien avec Ankama). Titres des fenêtres, À propos, README et annonces Discord mis à jour. Tes données et les mises à jour ne changent pas.",

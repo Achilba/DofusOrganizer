@@ -116,8 +116,13 @@ public class ZaapWindow : Window
 
         var close = new Button { Content = "✕", Width = 30, Height = 28, MinHeight = 0, Padding = new Thickness(0), ToolTip = "Remettre le Zaap dans la barre Mini" };
         close.Click += (_, _) => _vm.DetachedZaap = false;
-        Grid.SetColumn(close, 3);
-        hg.Children.Add(close);
+        var hide = new Button { Content = "–", Width = 30, Height = 28, MinHeight = 0, Padding = new Thickness(0), ToolTip = "Masquer la fenêtre (l'option reste activée, elle se rouvre au prochain lancement ou depuis la page Zaaps)" };
+        hide.Click += (_, _) => Hide();
+        var btns = new StackPanel { Orientation = Orientation.Horizontal };
+        btns.Children.Add(hide);
+        btns.Children.Add(close);
+        Grid.SetColumn(btns, 3);
+        hg.Children.Add(btns);
         head.Child = hg;
         _head = head;
 

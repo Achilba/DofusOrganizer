@@ -1,6 +1,6 @@
 # Mise en ligne sur GitHub (une seule fois)
 
-Dépôt : https://github.com/Achilba/DofusOrganizer
+Dépôt : https://github.com/Achilba/Team-Organizer
 
 ## 1. Envoyer le code
 Dans le dossier du projet (celui qui contient DofusTeamOrganizer.csproj), ouvre un terminal :
@@ -9,7 +9,7 @@ Dans le dossier du projet (celui qui contient DofusTeamOrganizer.csproj), ouvre 
     git add .
     git commit -m "Version 0.4.0"
     git branch -M main
-    git remote add origin https://github.com/Achilba/DofusOrganizer.git
+    git remote add origin https://github.com/Achilba/Team-Organizer.git
     git push -u origin main
 
 ## 2. Publier une version

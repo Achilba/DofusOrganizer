@@ -652,20 +652,23 @@ public class MainViewModel : ObservableObject
     public bool ShowMiniZaap => MiniFull && Data.MiniShowZaap && !Data.DetachedZaap;
     /// <summary>Levé quand l'option « Zaap déporté » change : l'appli montre ou cache la fenêtre Zaaps.</summary>
     public event Action DetachedZaapChanged;
+    /// <summary>Demande de réafficher la fenêtre Zaaps masquée (l'option reste cochée).</summary>
+    public event Action ShowZaapWindowRequested;
+    public void RequestShowZaapWindow() => ShowZaapWindowRequested?.Invoke();
     public int ZaapCols
     {
         get => Math.Max(1, Math.Min(3, Data.ZaapCols ?? 2));
-        set { var v = Math.Max(1, Math.Min(3, value)); if (ZaapCols != v) { Data.ZaapCols = v; Raise(); RequestSave(); } }
+        set { var v = Math.Max(1, Math.Min(3, value)); if (ZaapCols != v) { Data.ZaapCols = v; Raise(); SaveNow(); } }
     }
     public bool ZaapUp
     {
         get => Data.ZaapUp;
-        set { if (Data.ZaapUp != value) { Data.ZaapUp = value; Raise(); RequestSave(); } }
+        set { if (Data.ZaapUp != value) { Data.ZaapUp = value; Raise(); SaveNow(); } }
     }
     public bool ZaapKeepOpen
     {
         get => Data.ZaapKeepOpen;
-        set { if (Data.ZaapKeepOpen != value) { Data.ZaapKeepOpen = value; Raise(); RequestSave(); } }
+        set { if (Data.ZaapKeepOpen != value) { Data.ZaapKeepOpen = value; Raise(); SaveNow(); } }
     }
     public bool DetachedZaap
     {
@@ -675,7 +678,7 @@ public class MainViewModel : ObservableObject
             if (Data.DetachedZaap == value) return;
             Data.DetachedZaap = value;
             Raise(); Raise(nameof(ShowMiniZaap)); Raise(nameof(ShowMiniSeparator));
-            RequestSave();
+            SaveNow();
             MiniSettingsChanged?.Invoke();
             DetachedZaapChanged?.Invoke();
         }
